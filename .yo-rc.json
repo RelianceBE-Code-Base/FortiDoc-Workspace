@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "18.19.0",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.12.0"
+    },
+    "version": "1.19.0",
+    "libraryName": "digital-workspace-app",
+    "libraryId": "64da7b2d-3f85-45d3-8999-4945557394c5",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "digital-workspace-app",
+    "solutionShortDescription": "digital-workspace-app description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

@@ -1,0 +1,77 @@
+.sidebar {
+    width: 60px;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    transition: width 0.3s ease;
+  }
+  
+  .sidebarToggle {
+    cursor: pointer;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebarToggle:hover {
+    background-color: #e9ecef;
+  }
+  
+  .sidebarContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: width 0.3s ease;
+  }
+  
+  .sidebarContent.open {
+    width: auto; /* Expand width to auto when open */
+  }
+  
+  .sidebarIcon {
+    width: 40px;
+    height: 40px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative; /* Added for tooltip positioning */
+    color: darken(#e6f6fd, 50%); /* Dark variant of #e6f6fd */
+    transition: color 0.3s ease;
+  }
+  
+  .sidebarContent.open .sidebarIcon {
+    color: darken(#e6f6fd, 20%); /* Light color when open */
+  }
+  
+  .sidebarIcon span {
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  .tooltip {
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    top: 50px; /* Adjust tooltip position as needed */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .sidebarIcon:hover .tooltip {
+    display: block; /* Show tooltip on hover */
+  }
+  

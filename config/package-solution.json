@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "digital-workspace-app-client-side-solution",
+    "id": "64da7b2d-3f85-45d3-8999-4945557394c5",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "3473402"
+    },
+      "webApiPermissionRequests": [
+        {
+          "resource": "Microsoft Graph",
+          "scope": "User.Read"
+        },
+        {
+          "resource": "Microsoft Graph",
+          "scope": "Mail.Read"
+        },
+        {
+          "resource": "Microsoft Graph",
+          "scope": "Contacts.Read"
+        }
+      ],
+    
+    "metadata": {
+      "shortDescription": {
+        "default": "digital-workspace-app description"
+      },
+      "longDescription": {
+        "default": "digital-workspace-app description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "digital-workspace-app Feature",
+        "description": "The feature that activates elements of the digital-workspace-app solution.",
+        "id": "a7bb1456-3c77-4fea-9b14-d06ea4bfacc1",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/digital-workspace-app.sppkg"
+  }
+}
