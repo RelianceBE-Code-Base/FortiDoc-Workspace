@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IDigitalWorkspaceProps } from '../IDigitalWorkspaceProps';
 import { sp } from '@pnp/sp';
+import "@pnp/odata";
 import Carousel from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -23,7 +24,7 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({pinned, onPinClick, onRem
   React.useEffect(() => {
     const fetchImages = async (): Promise<void> => {
       try {
-        const items = await sp.web.lists.getByTitle('Gallery Slide').items.select('FileRef').get();
+        const items = await sp.web.lists.getByTitle('Gallery Slide').items.select('FileRef').getAll();
         const imageUrls = items.map(item => item.FileRef);
         setImages(imageUrls);
       } catch (error) {
