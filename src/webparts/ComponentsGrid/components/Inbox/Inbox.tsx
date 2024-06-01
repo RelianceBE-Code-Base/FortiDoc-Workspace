@@ -26,7 +26,7 @@ const Inbox: React.FC<InboxProps> = ({ pinned, onPinClick, onRemove, onRead, onR
       <div className="card-body">
         {/* Message entry */}
         <div className="message-entry">
-          <p>Test now - From: Account - You're sun to receive pniy refers and events in your inpor...</p>
+          <p>Just now - From: Account - You're sun to receive pniy refers and events in your inpor...</p>
           <div>
             <button className="btn btn-sm btn-primary" onClick={onRead}>
               <FontAwesomeIcon icon={faEnvelopeOpen} /> Read
