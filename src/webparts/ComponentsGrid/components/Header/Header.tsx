@@ -1,9 +1,6 @@
 import * as React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './Header.module.scss';
-import { Link } from 'react-router-dom';
-
-
 
 interface HeaderProps {
   onHomeClick: () => void;
@@ -34,10 +31,6 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick }) => {
             <li className="nav-item">
               <a className="nav-link" href="#department">Department</a>
             </li>
-            <Link className={styles['nav-link']} to="/">Home</Link>
-
-            <Link className={styles['nav-link']} to="/chatbot">Chatbot</Link>
-
           </ul>
         </div>
       </div>

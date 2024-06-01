@@ -49,7 +49,7 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({pinned, onPinClick, onRem
   return (
     <div className="card">
       <div className="card-header" style={{backgroundColor: '#e6f6fd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        Gallery Slider Test
+        Gallery Slider
         <div>
           <PinIcon pinned={pinned} onPinClick={onPinClick} />
           <button className="btn btn-sm btn-light" onClick={onRemove} style={{ marginLeft: '0px', backgroundColor: '#e6f6fd' }}>
