@@ -23,7 +23,7 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({pinned, onPinClick, onRem
   React.useEffect(() => {
     const fetchImages = async (): Promise<void> => {
       try {
-        const items = await sp.web.lists.getByTitle('Gallery Slide').items.select('FileRef').get();
+        const items = await sp.web.lists.getByTitle('Gallery Slide').items.select('FileRef').getAll();
         const imageUrls = items.map(item => item.FileRef);
         setImages(imageUrls);
       } catch (error) {

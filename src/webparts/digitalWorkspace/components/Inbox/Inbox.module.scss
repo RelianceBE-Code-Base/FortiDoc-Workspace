@@ -1,0 +1,69 @@
+.inboxCard {
+    margin-bottom: 1rem;
+  }
+  
+  .messageEntry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e6e6e6;
+  }
+  
+  .messageEntry:last-child {
+    border-bottom: none;
+  }
+  
+  .inbox {
+    .messageCard {
+      margin-bottom: 1rem;
+      transition: background-color 0.3s ease;
+  
+      &.read {
+        background-color: #f0f0f0;
+      }
+  
+      .card-header {
+        background-color: #e6f6fd;
+        padding: 0.5rem;
+      }
+  
+      .card-body {
+        padding: 0.5rem;
+        background-color: white;
+        font-size: 0.8rem;
+      }
+  
+      .btn {
+        margin-right: 0.5rem;
+      }
+  
+      .messageFrom {
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+  
+      .messageDate {
+        font-size: 0.8rem;
+      }
+  
+      .messageBody {
+        font-size: 0.8rem;
+      }
+  
+      .clockIcon {
+        margin-right: 0.5rem;
+      }
+  
+      .receivedTime {
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+  
+      .readButton, .replyButton {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+  }
+  

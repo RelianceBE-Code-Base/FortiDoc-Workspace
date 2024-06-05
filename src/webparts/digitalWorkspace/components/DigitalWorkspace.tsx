@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styles from './DigitalWorkspace.module.scss';
-import type { IDigitalWorkspaceProps } from './IDigitalWorkspaceProps';
+import { IDigitalWorkspaceProps } from './IDigitalWorkspaceProps';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
@@ -117,6 +117,10 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
     this.setState({ components: reorderedComponents });
   }
 
+  handleDismissSearchResults = (): void => {
+    // This function will be passed to the Header component to handle search results dismissal
+  }
+
   renderComponents(): React.ReactNode {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -142,6 +146,7 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
                           pinned={component.pinned} 
                           onPinClick={() => this.handlePinComponent(component.name)} 
                           onRemove={() => this.handleRemoveComponent(component.name)} 
+                          graphClient={this.props.graphClient} // Pass the graphClient prop
                         />
                       </div>
                     )}
@@ -161,7 +166,12 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
 
     return (
       <section className={`${styles.digitalWorkspace} ${hasTeamsContext ? styles.teams : ''}`}>
-        <Header onHomeClick={this.handleHomeClick} />
+        <Header 
+          onHomeClick={this.handleHomeClick}
+          graphClient={this.props.graphClient}
+          onDismissSearchResults={this.handleDismissSearchResults} onOptionsClick={function (): void {
+            throw new Error('Function not implemented.');
+          } }        />
         <div className="d-flex">
           <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} />
           <div className="container-fluid">
