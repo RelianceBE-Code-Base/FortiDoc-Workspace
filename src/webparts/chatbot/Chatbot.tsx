@@ -77,7 +77,7 @@ export default class Chatbot extends React.Component<IChatbotProps, IChatbotStat
   public render(): React.ReactElement<IChatbotProps> {
     return (
       <section className={`${styles.chatbot}`}>
-        <div className="container mt-5">
+        <div className="container">
           <div className="card" style={{ height: '400px', overflowY: 'auto', padding: '5px', backgroundColor: '#F0F0F0' }} >
             <div className="card-body p-0">
               {this.state.messages.map((message, index) => (
