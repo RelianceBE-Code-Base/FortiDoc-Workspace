@@ -1,0 +1,52 @@
+@import '~@fluentui/react/dist/sass/References.scss';
+
+
+$headerBorderColor: #ed1b24; /* #cc0000; #be1f2e; */ 
+$headerDarkColor: #01A4EF; /* #00263a */
+$themeColor3: #f47920;
+$themeColor4: #e0e1e2;
+
+.launcher {
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  box-shadow: 0px 1px 5px 1px #c8c6c4;
+  overflow: hidden;
+}
+
+.header {
+  height: 53px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.launcherTitle {
+  padding-right: 55px;
+}
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.iconGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-around;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+}
+
+.iconLink {
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  background-position: center;
+}

@@ -23,6 +23,7 @@ export default class DigitalWorkspaceWebPart extends BaseClientSideWebPart<IDigi
   private _environmentMessage: string = '';
 
   public render(): void {
+<<<<<<< HEAD
     this.context.msGraphClientFactory
       .getClient('3') // Specify the version argument
       .then((client: MSGraphClientV3): void => {
@@ -37,6 +38,19 @@ export default class DigitalWorkspaceWebPart extends BaseClientSideWebPart<IDigi
             graphClient: client // Pass the graphClient to the DigitalWorkspace component
           }
         );
+=======
+    const element: React.ReactElement<IDigitalWorkspaceProps> = React.createElement(
+      DigitalWorkspace,
+      {
+        description: this.properties.description,
+        isDarkTheme: this._isDarkTheme,
+        environmentMessage: this._environmentMessage,
+        hasTeamsContext: !!this.context.sdks.microsoftTeams,
+        userDisplayName: this.context.pageContext.user.displayName,
+        pageContext: this.context.pageContext
+      }
+    );
+>>>>>>> 80bd38a159d636811db8d53902e6b8339ffb836f
 
         ReactDom.render(element, this.domElement);
       });

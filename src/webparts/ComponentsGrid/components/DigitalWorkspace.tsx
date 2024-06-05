@@ -1,18 +1,68 @@
 import * as React from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import styles from './DigitalWorkspace.module.scss';
-import { IDigitalWorkspaceProps } from './IDigitalWorkspaceProps';
+import type { IDigitalWorkspaceProps } from './IDigitalWorkspaceProps';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from './Header/Header';
-import ComponentsGrid from '../../ComponentsGrid/ComponentsGrid';
-import Chatbot from '../../chatbot/Chatbot';
+import Sidebar from './Sidebar/Sidebar';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
-export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceProps> {
+// Import components
+import GallerySlider from './Slider/Galleryslider';
+import Inbox from './Inbox/Inbox';
+import MicrosoftTeams from './Teams/MicrosoftTeams';
+import Task from './Task/Task';
+import Calendar from './Calendar/Calendar';
+import CompanyEvents from './CompanyEvents/CompanyEvents';
+import MicrosoftApps from './MicrosoftApps/MicrosoftApps';
+import BusinessApps from './BusinessApps/BusinessApps';
+import StaffDirectory from './StaffDirectory/StaffDirectory';
+import Announcement from './Announcement/Announcement';
+import DailyPerformanceAnalytics from './DailyPerformanceAnalytics/DailyPerformanceAnalytics';
+import WeeklyAnalytics from './WeeklyAnalytics/WeeklyAnalytics';
+import OpenAI from './OpenAI/OpenAI';
+import OrganisationalCharts from './OrganisationalCharts/OrganisationalCharts';
+import UserProfile from './UserProfile/UserProfile';
+
+export interface ComponentConfig {
+  name: string;
+  component: React.ComponentType<any>; // Specify the correct type for component props if known
+  width: string;
+  pinned: boolean;
+}
+
+interface DigitalWorkspaceState {
+  components: ComponentConfig[];
+}
+
+export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceProps, DigitalWorkspaceState> {
+  constructor(props: IDigitalWorkspaceProps) {
+    super(props);
+    this.state = {
+      components: [
+        { name: 'GallerySlider', component: GallerySlider, width: 'col-md-12', pinned: false },
+        { name: 'UserProfile', component: UserProfile, width: 'col-md-4', pinned: false },
+        { name: 'OpenAI', component: OpenAI, width: 'col-md-4', pinned: false },
+        { name: 'OrganisationalCharts', component: OrganisationalCharts, width: 'col-md-4', pinned: false },
+        { name: 'Inbox', component: Inbox, width: 'col-md-4', pinned: false },
+        { name: 'MicrosoftTeams', component: MicrosoftTeams, width: 'col-md-4', pinned: false },
+        { name: 'Task', component: Task, width: 'col-md-4', pinned: false },
+        { name: 'Calendar', component: Calendar, width: 'col-md-4', pinned: false },
+        { name: 'CompanyEvents', component: CompanyEvents, width: 'col-md-4', pinned: false },
+        { name: 'MicrosoftApps', component: MicrosoftApps, width: 'col-md-4', pinned: false },
+        { name: 'BusinessApps', component: BusinessApps, width: 'col-md-4', pinned: false },
+        { name: 'StaffDirectory', component: StaffDirectory, width: 'col-md-4', pinned: false },
+        { name: 'Announcement', component: Announcement, width: 'col-md-4', pinned: false },
+        { name: 'DailyPerformanceAnalytics', component: DailyPerformanceAnalytics, width: 'col-md-8', pinned: false },
+        { name: 'WeeklyAnalytics', component: WeeklyAnalytics, width: 'col-md-4', pinned: false },
+      ],
+    };
+  }
+
   handleHomeClick = (): void => {
     window.location.reload();
   }
 
-<<<<<<< HEAD
   handlePinComponent = (name: string): void => {
     this.setState((prevState) => ({
       components: prevState.components.map((component) => {
@@ -66,10 +116,6 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
     this.setState({ components: reorderedComponents });
   }
 
-  handleDismissSearchResults = (): void => {
-    // This function will be passed to the Header component to handle search results dismissal
-  }
-
   renderComponents(): React.ReactNode {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -95,7 +141,6 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
                           pinned={component.pinned} 
                           onPinClick={() => this.handlePinComponent(component.name)} 
                           onRemove={() => this.handleRemoveComponent(component.name)} 
-                          graphClient={this.props.graphClient} // Pass the graphClient prop
                         />
                       </div>
                     )}
@@ -110,43 +155,19 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
     );
   }
 
-=======
->>>>>>> 80bd38a159d636811db8d53902e6b8339ffb836f
   public render(): React.ReactElement<IDigitalWorkspaceProps> {
     const { hasTeamsContext } = this.props;
 
     return (
-<<<<<<< HEAD
       <section className={`${styles.digitalWorkspace} ${hasTeamsContext ? styles.teams : ''}`}>
-        <Header 
-          onHomeClick={this.handleHomeClick}
-          graphClient={this.props.graphClient}
-          onDismissSearchResults={this.handleDismissSearchResults} onOptionsClick={function (): void {
-            throw new Error('Function not implemented.');
-          } }        />
         <div className="d-flex">
           <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} />
           <div className="container-fluid">
             {this.renderComponents()}
-=======
-      <Router>
-        <section className={`${styles.digitalWorkspace} ${hasTeamsContext ? styles.teams : ''}`}>
-          <Header onHomeClick={this.handleHomeClick} />
-          <div className="d-flex">
-            
-          
-            <div className="container-fluid">
-              <Switch>
-                <Route exact path="/" component={ComponentsGrid} />
-                {/* <Route path="/" component={Chatbot} /> */}
-               
-                <Route path="/chatbot" render={(props) => <Chatbot pageContext={this.props.pageContext}/>}/>
-              </Switch>
-            </div>
->>>>>>> 80bd38a159d636811db8d53902e6b8339ffb836f
           </div>
-        </section>
-      </Router>
+        </div>
+        <ToastContainer />
+      </section>
     );
   }
 }

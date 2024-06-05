@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IDigitalWorkspaceProps } from '../IDigitalWorkspaceProps';
 import { sp } from '@pnp/sp';
+import "@pnp/odata";
 import Carousel from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';

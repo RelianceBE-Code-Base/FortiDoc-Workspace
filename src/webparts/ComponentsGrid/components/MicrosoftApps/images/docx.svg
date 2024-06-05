@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
+<g id="_x5F_GRID" display="none">
+	<g display="inline">
+		<g>
+			
+				<rect x="22" y="-22" transform="matrix(6.123234e-17 -1 1 6.123234e-17 22 26)" opacity="0.2" fill="#FF00FF" width="4" height="48"/>
+			
+				<rect x="22.5" y="-22.5" transform="matrix(6.123234e-17 -1 1 6.123234e-17 22.5 25.5)" opacity="0.3" fill="#FF00FF" width="3" height="48"/>
+		</g>
+		<g>
+			
+				<rect x="22" y="22" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 70 22)" opacity="0.2" fill="#FF00FF" width="4" height="48"/>
+			
+				<rect x="22.5" y="22.5" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 70.5 22.5)" opacity="0.3" fill="#FF00FF" width="3" height="48"/>
+		</g>
+		<g>
+			<rect x="44" opacity="0.2" fill="#FF00FF" width="4" height="48"/>
+			<rect x="45" opacity="0.3" fill="#FF00FF" width="3" height="48"/>
+		</g>
+		<g>
+			<rect transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 4 48)" opacity="0.2" fill="#FF00FF" width="4" height="48"/>
+			<rect transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 3 48)" opacity="0.3" fill="#FF00FF" width="3" height="48"/>
+		</g>
+	</g>
+</g>
+<g id="ICONS">
+	<path fill="#FFFFFF" stroke="#979593" stroke-miterlimit="10" d="M33.0858,3.5H13.5c-0.5523,0-1,0.4477-1,1v39
+		c0,0.5523,0.4477,1,1,1h29c0.5523,0,1-0.4477,1-1V13.9142c0-0.2652-0.1054-0.5196-0.2929-0.7071l-9.4142-9.4142
+		C33.6054,3.6054,33.351,3.5,33.0858,3.5z"/>
+	<path fill="none" stroke="#979593" stroke-miterlimit="10" d="M33.5,3.5v9c0,0.5523,0.4477,1,1,1h9"/>
+	<g>
+		<path fill="#C8C6C4" d="M39.5,21h-17c-0.2761,0-0.5-0.2239-0.5-0.5l0,0c0-0.2761,0.2239-0.5,0.5-0.5h17
+			c0.2761,0,0.5,0.2239,0.5,0.5l0,0C40,20.7761,39.7761,21,39.5,21z"/>
+		<path fill="#C8C6C4" d="M39.5,24h-17c-0.2761,0-0.5-0.2239-0.5-0.5l0,0c0-0.2761,0.2239-0.5,0.5-0.5h17
+			c0.2761,0,0.5,0.2239,0.5,0.5l0,0C40,23.7761,39.7761,24,39.5,24z"/>
+		<path fill="#C8C6C4" d="M39.5,27h-17c-0.2761,0-0.5-0.2239-0.5-0.5l0,0c0-0.2761,0.2239-0.5,0.5-0.5h17
+			c0.2761,0,0.5,0.2239,0.5,0.5l0,0C40,26.7761,39.7761,27,39.5,27z"/>
+		<path fill="#C8C6C4" d="M39.5,30h-17c-0.2761,0-0.5-0.2239-0.5-0.5l0,0c0-0.2761,0.2239-0.5,0.5-0.5h17
+			c0.2761,0,0.5,0.2239,0.5,0.5l0,0C40,29.7761,39.7761,30,39.5,30z"/>
+		<path fill="#C8C6C4" d="M39.5,33h-17c-0.2761,0-0.5-0.2239-0.5-0.5l0,0c0-0.2761,0.2239-0.5,0.5-0.5h17
+			c0.2761,0,0.5,0.2239,0.5,0.5l0,0C40,32.7761,39.7761,33,39.5,33z"/>
+	</g>
+	<g>
+		<path fill="#185ABD" d="M6,37h18c1.1046,0,2-0.8954,2-2V17c0-1.1046-0.8954-2-2-2H6c-1.1046,0-2,0.8954-2,2v18
+			C4,36.1046,4.8954,37,6,37z"/>
+	</g>
+	<g>
+		<g>
+			<g>
+				<path fill="#F9F7F7" d="M11.829,29.3224c0.0326,0.2618,0.0546,0.4889,0.0648,0.6832h0.0382
+					c0.0153-0.1841,0.0444-0.4071,0.0877-0.6669c0.0433-0.2618,0.0857-0.4807,0.1265-0.6607L13.921,21h2.295l1.836,7.5635
+					c0.0918,0.3733,0.1683,0.8489,0.2295,1.4268h0.0306c0.0255-0.3989,0.0892-0.8591,0.1912-1.3808L19.9721,21h2.0884l-2.5704,11
+					h-2.4403l-1.7518-7.2873c-0.051-0.2097-0.1086-0.4838-0.1724-0.8213s-0.103-0.583-0.1183-0.7364h-0.0306
+					c-0.0204,0.18-0.0602,0.4459-0.1183,0.7978c-0.0592,0.3539-0.1061,0.6137-0.1418,0.7834L13.0719,32h-2.4786L8,21h2.1267
+					l1.5988,7.6944C11.7612,28.8529,11.7954,29.0626,11.829,29.3224z"/>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="CENTERED_x5F_MARGINS" display="none">
+</g>
+<g id="_x5F_FILE_x5F_CENTER" display="none">
+</g>
+<g id="_x5F_RIGHT_x5F_MARGIN" display="none" opacity="0.5">
+	<g display="inline">
+		<rect x="40" fill="#00FFFF" width="8" height="48"/>
+	</g>
+	<g display="inline">
+		<rect x="40" opacity="0.3" fill="#00FFFF" width="8" height="48"/>
+	</g>
+</g>
+<g id="_x5F_THREE_x5F_HEIGHTS" display="none">
+	<rect x="24" y="18" display="inline" opacity="0.2" fill="#F7931E" width="24" height="23"/>
+</g>
+<g id="FOLDER_x5F_INCIDACTORS" display="none">
+</g>
+</svg>
