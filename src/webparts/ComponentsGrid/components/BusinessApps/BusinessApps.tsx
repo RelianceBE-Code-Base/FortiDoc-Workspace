@@ -10,67 +10,77 @@ export default class BusinessApps extends React.Component<{},IBusinessApps>{
     this.state = {
       applications : 
       [{
-        name: require('../BusinessApps/microsoft-excel-2019.svg'),
-        icon: "test",
-        link: "test"
+        name: "test",
+        icon: require('../BusinessApps/icons/computer.svg'),
+        link: "#"
       },
       {
-        name: require('../BusinessApps/Outlook.png'),
-        icon: "test",
-        link: "test"
+        name: "test",
+        icon: require('../BusinessApps/icons/food.png'),
+        link: "#"
+        
       },
       {
-        name: require('../BusinessApps/Outlook.png'),
-        icon: "test",
-        link: "test"
+        name: "test",
+        icon: require('../BusinessApps/icons/hrhub.png'),
+        link: "#"
       },
       {
-        name: require('../BusinessApps/Outlook.png'),
-        icon: "test",
-        link: "test"
+        name: "test",
+        icon: require('../BusinessApps/icons/Incident.png'),
+        link: "#"
       },
       {
-        name: require('../BusinessApps/Outlook.png'),
-        icon: "test",
-        link: "test"
+        name: "test",
+        icon: require('../BusinessApps/icons/leave.png'),
+        link: "#"
+      },
+      {
+        name: "test",
+        icon: require('../BusinessApps/icons/salary-advance.png'),
+        link: "#"
       }
+      ,
+      {
+        name: "test",
+        icon: require('../BusinessApps/icons/Loan.png'),
+        link: "#"
+      },
+      {
+        name: "test",
+        icon: require('../BusinessApps/icons/marketplace.png'),
+        link: "#"
+      },
+      {
+        name: "test",
+        icon: require('../BusinessApps/icons/petty.png'),
+        link: "#"
+      }
+    
+    
     ]
     }
   }
 
   render(): React.ReactNode {
     return(
-      // <section className="card" >
-      //   <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>Business Apps</div>
-      //   <div className={`${styles.iconGrid}}`}>
-      //   {this.state.applications.map((application, index) => {
-      //     return(
-            
-      //       <div key= {index} className={styles.iconLink}>
-      //         <img src={application.name}/>
-      //       </div>
-      //     )
-      //   })
-      // } 
-      //   </div>
-      // </section>
+    
 
-
-      <div className="" >
-      <div className="" style={{ backgroundColor: '#E6f6fd', color: '#1e90ff' }}>
-        <p className="">Line of Business Apps</p>
-      </div>
+      <div className="card" >
+     <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>
+        Line of Business Apps
+    </div>
       <div className="" style={{ backgroundColor: 'white', height: '200px' }}>
         <div className={styles.iconGrid}>
-          <a className={styles.iconLink} href="https://office.com" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/office_96x1.png)' }}></a>
-          <a className={styles.iconLink} href="https://office.com/launch/word" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/word_96x1.png)' }}></a>
-          <a className={styles.iconLink} href="https://office.com/launch/excel" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/excel_96x1.png)' }}></a>
-          <a className={styles.iconLink} href="https://office.com/launch/powerpoint" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/powerpoint_96x1.png)' }}></a>
-          <a className={styles.iconLink} href="https://office.com" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/access_96x1.png)' }}></a>
-          <a className={styles.iconLink} href="https://office.com/launch/onenote" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/onenote_96x1.png)' }}></a>
-          <a className={styles.iconLink} href="https://office.com" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/onedrive_96x1.png)' }}></a>
-          <a className={styles.iconLink} href="https://www.microsoft.com/en-us/microsoft-365/project/project-management-software" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/project_96x1.png)' }}></a>
-          <a className={styles.iconLink} href="https://office.live.com/start/visio.aspx" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/visio_96x1.png)' }}></a>
+
+          {this.state.applications.map((application, index) => {
+            return(
+              <a key={index}  href={application.link}>
+                <img className={styles.iconLink} src={application.icon} alt={application.name}/>
+              </a>
+            )
+          })}
+
         </div>
       </div>
     </div>

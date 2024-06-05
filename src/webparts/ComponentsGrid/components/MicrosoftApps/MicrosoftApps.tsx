@@ -3,9 +3,9 @@ import styles from './MicrosoftApps.module.scss';
 
 const MicrosoftApps: React.FC = () => {
   return (
-    <div className="" >
-  <div className="" style={{ backgroundColor: '#E6f6fd', color: '#1e90ff' }}>
-    <p className="">Microsoft Apps</p>
+    <div className="card" >
+  <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>
+        Microsoft Apps
   </div>
   <div className="" style={{ backgroundColor: 'white', height: '200px' }}>
     <div className={styles.iconGrid}>
