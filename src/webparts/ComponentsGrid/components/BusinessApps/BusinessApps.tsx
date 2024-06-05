@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { IBusinessApps } from './IBusinessAppsState';
+import { IBusinessAppsState } from './IBusinessAppsState';
 import styles from './BusinessApps.module.scss';
 
 
 
-export default class BusinessApps extends React.Component<{},IBusinessApps>{
+export default class BusinessApps extends React.Component<{},IBusinessAppsState>{
   constructor(props: {}){
     super(props);
     this.state = {

@@ -1,4 +1,4 @@
-export interface IBusinessAppsState{
+export interface IMicrosoftAppsState{
     applications : {
         name: string,
         icon: string,
