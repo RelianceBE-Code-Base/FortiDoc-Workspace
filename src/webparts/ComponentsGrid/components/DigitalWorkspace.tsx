@@ -2,7 +2,6 @@ import * as React from 'react';
 import styles from './DigitalWorkspace.module.scss';
 import type { IDigitalWorkspaceProps } from './IDigitalWorkspaceProps';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -161,7 +160,6 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
 
     return (
       <section className={`${styles.digitalWorkspace} ${hasTeamsContext ? styles.teams : ''}`}>
-        <Header onHomeClick={this.handleHomeClick} />
         <div className="d-flex">
           <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} />
           <div className="container-fluid">
