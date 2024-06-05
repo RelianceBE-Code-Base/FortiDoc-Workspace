@@ -3,7 +3,7 @@ import styles from './MicrosoftApps.module.scss';
 
 const MicrosoftApps: React.FC = () => {
   return (
-    <div className="" style={{ height: '380px' }}>
+    <div className="" >
   <div className="" style={{ backgroundColor: '#E6f6fd', color: '#1e90ff' }}>
     <p className="">Microsoft Apps</p>
   </div>

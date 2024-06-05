@@ -56,7 +56,7 @@ export default class BusinessApps extends React.Component<{},IBusinessApps>{
       // </section>
 
 
-      <div className="" style={{ height: '380px' }}>
+      <div className="" >
       <div className="" style={{ backgroundColor: '#E6f6fd', color: '#1e90ff' }}>
         <p className="">Line of Business Apps</p>
       </div>
