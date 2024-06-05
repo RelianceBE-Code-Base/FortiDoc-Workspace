@@ -1,23 +1,83 @@
-// Header.module.scss
 .header {
-    margin-bottom: 20px;
-    padding: 10px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 104%;
-  }
-  
-  .homeButton {
-    border: 2px solid #007bff;
-    border-radius: 5px;
-    background-color: white;
-    color: #007bff;
-  }
-  
-  .navbar-nav .nav-link {
-    color: #333 !important;
-  }
-  
-  .navbar-nav .nav-link:hover {
-    color: #007bff !important;
-  }
-  
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.homeButton {
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  background-color: white;
+  color: #007bff;
+}
+
+.navbar-nav .nav-link {
+  color: #333 !important;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #007bff !important;
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  width: 33%;
+}
+
+.metaIcon {
+  width: 60px;
+  height: 38px;
+  margin-right: 10px;
+}
+
+.searchBox {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  flex: 1;
+  padding-right: 40px; /* Adjust padding to make space for the search button */
+}
+
+.searchButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+  border: none;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.searchResults {
+  position: absolute;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  top: 100%;
+  left: 0;
+}
+
+.searchResults ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.searchResults li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.searchResults li a {
+  color: #007bff;
+  text-decoration: none;
+}
