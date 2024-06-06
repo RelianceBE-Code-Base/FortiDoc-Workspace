@@ -111,15 +111,32 @@ class Inbox extends React.Component<InboxProps, InboxState> {
 
     return (
       <div className="card" style={{ maxHeight: '500px', overflow: 'auto', height: '245px' }}>
-        <div className="card-header" style={{ backgroundColor: '#e6f6fd', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding:'2px' }}>
-          Inbox
+        {/* <div className="card-header container" style={{ backgroundColor: '#e6f6fd', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding:'2px' }}>
+    
+          <div style={{marginLeft:'10px'}}>Inbox</div>
+
           <div>
             <PinIcon pinned={pinned} onPinClick={onPinClick} />
             <button className="btn btn-link text-decoration-none" onClick={onRemove}>
               <FontAwesomeIcon icon={faWindowClose} size="lg" />
             </button>
           </div>
+
+
+        </div> */}
+
+      <div className="card-header" style={{backgroundColor: '#e6f6fd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        Inbox
+        <div>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} />
+          <button className="btn btn-sm btn-light" onClick={onRemove} style={{ marginLeft: '0px', backgroundColor: '#e6f6fd' }}>
+            <FontAwesomeIcon icon={faWindowClose} size="lg" color="red"/>
+          </button>
         </div>
+      </div>
+        
+          
+        
         <div className="card-body" style={{backgroundColor: '#f7f8fa'}}>
           <div className={styles.inbox}>
             {this.state.messages.map((msg) => (

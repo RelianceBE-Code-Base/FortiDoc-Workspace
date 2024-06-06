@@ -48,6 +48,7 @@ const MicrosoftApps: React.FC = () => {
     <div className="card" >
   <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>
         Microsoft Apps
+        
   </div>
   <div className={styles['grid-holder']} style={{ backgroundColor: 'white', height: '200px' }}>
     <div className={styles.iconGrid}>
