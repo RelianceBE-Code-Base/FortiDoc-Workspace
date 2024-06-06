@@ -6,6 +6,8 @@ import Sidebar from './Sidebar/Sidebar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { MSGraphClientV3 } from '@microsoft/sp-http';
+
 
 // Import components
 import GallerySlider from './Slider/Galleryslider';
@@ -36,6 +38,7 @@ interface DigitalWorkspaceState {
 }
 
 export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceProps, DigitalWorkspaceState> {
+  state: DigitalWorkspaceState & { graphClient?: MSGraphClientV3 };
   constructor(props: IDigitalWorkspaceProps) {
     super(props);
     this.state = {
@@ -56,6 +59,7 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
         { name: 'DailyPerformanceAnalytics', component: DailyPerformanceAnalytics, width: 'col-md-8', pinned: false },
         { name: 'WeeklyAnalytics', component: WeeklyAnalytics, width: 'col-md-4', pinned: false },
       ],
+      graphClient: new MSGraphClientV3(),
     };
   }
 

@@ -40,17 +40,23 @@ class Inbox extends React.Component<InboxProps, InboxState> {
   }
 
   componentDidMount() {
-    this.loadMessages();
+    console.log('graphClient prop:', this.props.graphClient);
+    if (this.props.graphClient) {
+      this.loadMessages();
+    } else {
+      console.error('graphClient is not initialized');
+    }
   }
-
+  
   loadMessages = async () => {
     try {
       const response = await this.props.graphClient
-        .api('/me/messages')
+        ?.api('/me/messages')
         .select('id,subject,from,receivedDateTime,bodyPreview,isRead')
         .get();
-
-      const messages = response.value.map((msg: any) => ({
+  
+      if (response) {
+        const messages = response.value.map((msg: any) => ({
         id: msg.id,
         title: msg.subject,
         from: msg.from.emailAddress.name,
@@ -58,13 +64,17 @@ class Inbox extends React.Component<InboxProps, InboxState> {
         body: msg.bodyPreview,
         isRead: msg.isRead,
         receivedTime: this.calculateReceivedTime(msg.receivedDateTime)
-      }));
-
-      this.setState({ messages });
+        }));
+  
+        this.setState({ messages });
+      } else {
+        console.error('No response from graphClient');
+      }
     } catch (error) {
       console.error('Error loading messages', error);
     }
   };
+  
 
   calculateReceivedTime = (receivedDateTime: string): string => {
     const now = new Date();
