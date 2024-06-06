@@ -4,16 +4,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import styles from './Header.module.scss';
-<<<<<<< HEAD
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 
 // Import the Meta AI GIF
 import metaAiIcon from '../../assets/metaAiIcon.gif';
-=======
 import { Link } from 'react-router-dom';
 
 
->>>>>>> 80bd38a159d636811db8d53902e6b8339ffb836f
 
 interface HeaderProps {
   onHomeClick: () => void;
@@ -92,16 +89,13 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
             <li className="nav-item">
               <a className="nav-link" href="#department">Department</a>
             </li>
-<<<<<<< HEAD
             <li className="nav-item">
               <button className="nav-link btn" onClick={onOptionsClick}>Options</button> {/* Update this line */}
             </li>
-=======
             <Link className={styles['nav-link']} to="/">Home</Link>
 
             <Link className={styles['nav-link']} to="/chatbot">Chatbot</Link>
 
->>>>>>> 80bd38a159d636811db8d53902e6b8339ffb836f
           </ul>
           <form className={`d-flex ${styles.searchForm}`} onSubmit={handleSearch}>
             <img src={metaAiIcon} className={styles.metaIcon} alt="Meta AI Icon" />

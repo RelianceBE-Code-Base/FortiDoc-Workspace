@@ -9,8 +9,8 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 import * as strings from 'DigitalWorkspaceWebPartStrings';
-import DigitalWorkspace from './components/DigitalWorkspace';
-import { IDigitalWorkspaceProps } from './components/IDigitalWorkspaceProps';
+import DigitalWorkspace from '../ComponentsGrid/components/DigitalWorkspace'
+import { IDigitalWorkspaceProps } from '../ComponentsGrid/components/IDigitalWorkspaceProps';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 
 export interface IDigitalWorkspaceWebPartProps {
@@ -23,22 +23,9 @@ export default class DigitalWorkspaceWebPart extends BaseClientSideWebPart<IDigi
   private _environmentMessage: string = '';
 
   public render(): void {
-<<<<<<< HEAD
     this.context.msGraphClientFactory
       .getClient('3') // Specify the version argument
       .then((client: MSGraphClientV3): void => {
-        const element: React.ReactElement<IDigitalWorkspaceProps> = React.createElement(
-          DigitalWorkspace,
-          {
-            description: this.properties.description,
-            isDarkTheme: this._isDarkTheme,
-            environmentMessage: this._environmentMessage,
-            hasTeamsContext: !!this.context.sdks.microsoftTeams,
-            userDisplayName: this.context.pageContext.user.displayName,
-            graphClient: client // Pass the graphClient to the DigitalWorkspace component
-          }
-        );
-=======
     const element: React.ReactElement<IDigitalWorkspaceProps> = React.createElement(
       DigitalWorkspace,
       {
@@ -47,10 +34,10 @@ export default class DigitalWorkspaceWebPart extends BaseClientSideWebPart<IDigi
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
         userDisplayName: this.context.pageContext.user.displayName,
-        pageContext: this.context.pageContext
+        graphClient: client 
+        //pageContext: this.context.pageContext
       }
     );
->>>>>>> 80bd38a159d636811db8d53902e6b8339ffb836f
 
         ReactDom.render(element, this.domElement);
       });
