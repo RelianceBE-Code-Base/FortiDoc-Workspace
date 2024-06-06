@@ -68,6 +68,7 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
   return (
     <header className={`navbar navbar-expand-lg navbar-light bg-light ${styles.header}`}>
       <div className="container-fluid">
+        <Link to="/">
         <button 
           className={`btn btn-outline-primary ${styles.homeButton}`} 
           type="button" 
@@ -75,6 +76,7 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
         >
           Home
         </button>
+        </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -92,13 +94,15 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
             <li className="nav-item">
               <button className="nav-link btn" onClick={onOptionsClick}>Options</button> {/* Update this line */}
             </li>
-            <Link className={styles['nav-link']} to="/">Home</Link>
+            {/* <Link className={styles['nav-link']} to="/">Home</Link>
 
-            <Link className={styles['nav-link']} to="/chatbot">Chatbot</Link>
-
+            <Link className={styles['nav-link']} to="/chatbot">Chatbot</Link> */}
+            
           </ul>
+          
           <form className={`d-flex ${styles.searchForm}`} onSubmit={handleSearch}>
-            <img src={metaAiIcon} className={styles.metaIcon} alt="Meta AI Icon" />
+            {/* <img src={metaAiIcon} className={styles.metaIcon} alt="Meta AI Icon" /> */}
+            <Link to="/chatbot"><img src={metaAiIcon} className={styles.metaIcon} alt="Meta AI Icon" /></Link>
             <div className={styles.searchBox}>
               <input
                 className={`form-control ${styles.searchInput}`}

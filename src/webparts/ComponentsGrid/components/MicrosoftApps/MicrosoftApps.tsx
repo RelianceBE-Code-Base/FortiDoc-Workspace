@@ -49,7 +49,7 @@ const MicrosoftApps: React.FC = () => {
   <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>
         Microsoft Apps
   </div>
-  <div className="" style={{ backgroundColor: 'white', height: '200px' }}>
+  <div className={styles['grid-holder']} style={{ backgroundColor: 'white', height: '200px' }}>
     <div className={styles.iconGrid}>
       <a className={styles.iconLink} href="https://office.com" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/office_96x1.png)' }}></a>
       <a className={styles.iconLink} href="https://office.com/launch/word" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/word_96x1.png)' }}></a>
