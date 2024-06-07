@@ -37,7 +37,7 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
               <Switch>
 
 /   
-                <Route exact path="/" render={(props) => <ComponentsGrid {...props}  />} />
+                <Route exact path="/" render={(props) => <ComponentsGrid graphClient={this.props.graphClient}  />} />
              
                 <Route path="/chatbot" render={(props) => <Chatbot pageContext={this.props.pageContext} />} />
               </Switch>
