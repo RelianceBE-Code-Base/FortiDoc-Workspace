@@ -28,12 +28,16 @@ export interface ComponentConfig {
   pinned: boolean;
 }
 
+interface ComponentsGridProps {
+  graphClient: any;
+}
+
 interface ComponentsGridState {
   components: ComponentConfig[];
 }
 
-export default class ComponentsGrid extends React.Component<{}, ComponentsGridState> {
-  constructor(props: {}) {
+export default class ComponentsGrid extends React.Component<ComponentsGridProps, ComponentsGridState> {
+  constructor(props: ComponentsGridProps) {
     super(props);
     this.state = {
       components: [
@@ -122,6 +126,7 @@ export default class ComponentsGrid extends React.Component<{}, ComponentsGridSt
                           pinned={component.pinned} 
                           onPinClick={() => this.handlePinComponent(component.name)} 
                           onRemove={() => this.handleRemoveComponent(component.name)} 
+                          graphClient={this.props.graphClient} 
                         />
                       </div>
                     )}
@@ -150,15 +155,14 @@ export default class ComponentsGrid extends React.Component<{}, ComponentsGridSt
 
   render() {
     return (
-        <section>
-      <div className='d-flex'>
-        <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} />
-        <div className='container-fluid'>
-        {this.renderComponents()}
+      <section>
+        <div className='d-flex'>
+          <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} />
+          <div className='container-fluid'>
+            {this.renderComponents()}
+          </div>
         </div>
-        
-      </div>
-      <ToastContainer />
+        <ToastContainer />
       </section>
     );
   }
