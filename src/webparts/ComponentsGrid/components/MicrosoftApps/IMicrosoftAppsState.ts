@@ -5,4 +5,8 @@ export interface IMicrosoftAppsState{
         link: string
 
     }[]
+
+    pinned: boolean;
+  onPinClick: () => void;
+  onRemove: () => void;
 }
