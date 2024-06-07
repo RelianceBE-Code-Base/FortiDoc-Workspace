@@ -7,7 +7,9 @@ import styles from './Chatbot.module.scss';
 import type { IChatbotProps } from './IChatbotProps';
 import { IChatbotState } from './IChatbotState'; 
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
-import invokePrompt from '../../services/ChatService';
+// import invokePrompt from '../../services/ChatService';
+
+import invokePrompt from './services/ChatService';
 import Spinner from 'react-bootstrap/Spinner';
 
 export default class Chatbot extends React.Component<IChatbotProps, IChatbotState> {
@@ -36,7 +38,7 @@ export default class Chatbot extends React.Component<IChatbotProps, IChatbotStat
   componentDidMount(): void {
     this.setState(prevstate => ({
       // messages: [...prevstate.messages, {role: "assistant", content: `Hello ${this.user_name}. How can I help you?`}]
-      messages: [...prevstate.messages, {role: "assistant", content: `Hello. How can I help you?`}]
+      messages: [...prevstate.messages, {role: "assistant", content: `Hello. How can I assist you?`}]
     }));
   }
 
