@@ -3,6 +3,8 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from './components/Sidebar/Sidebar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 // Import components
 import GallerySlider from './components/Slider/Galleryslider';

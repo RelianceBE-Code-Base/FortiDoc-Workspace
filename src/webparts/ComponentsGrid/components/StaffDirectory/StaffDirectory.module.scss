@@ -50,6 +50,7 @@
   
   .userCard {
     margin-bottom: 10px;
+    cursor: pointer;
   }
   
   .userImage img {
@@ -57,6 +58,12 @@
     width: 60px;
     height: 60px;
     object-fit: cover;
+  }
+  
+  .profileImage {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
   }
   
   .userInfo {
@@ -73,5 +80,31 @@
   .userDetails {
     font-size: 14px;
     color: #555;
+  }
+  
+  .popoverContent {
+    padding: 10px;
+    width: 300px;
+  }
+  
+  .popoverHeader {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .popoverSection {
+    margin-bottom: 10px;
+  }
+  
+  .popoverSectionTitle {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .popoverSectionItem {
+    font-size: 14px;
+    margin-bottom: 3px;
   }
   
