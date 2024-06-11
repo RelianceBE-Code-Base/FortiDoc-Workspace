@@ -43,18 +43,23 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
     this.state = {
       components: [
         { name: 'GallerySlider', component: GallerySlider, width: 'col-md-12', pinned: false },
+
         { name: 'UserProfile', component: UserProfile, width: 'col-md-4', pinned: false },
-        { name: 'OpenAI', component: OpenAI, width: 'col-md-4', pinned: false },
-        { name: 'OrganisationalCharts', component: OrganisationalCharts, width: 'col-md-4', pinned: false },
         { name: 'Inbox', component: Inbox, width: 'col-md-4', pinned: false, msGraphClient: this.props.graphClient },
         { name: 'MicrosoftTeams', component: MicrosoftTeams, width: 'col-md-4', pinned: false },
-        { name: 'Task', component: Task, width: 'col-md-4', pinned: false },
-        { name: 'Calendar', component: Calendar, width: 'col-md-4', pinned: false },
-        { name: 'CompanyEvents', component: CompanyEvents, width: 'col-md-4', pinned: false },
+
         { name: 'MicrosoftApps', component: MicrosoftApps, width: 'col-md-4', pinned: false },
         { name: 'BusinessApps', component: BusinessApps, width: 'col-md-4', pinned: false },
         { name: 'StaffDirectory', component: StaffDirectory, width: 'col-md-4', pinned: false },
+
+        { name: 'Task', component: Task, width: 'col-md-4', pinned: false },
+        { name: 'Calendar', component: Calendar, width: 'col-md-4', pinned: false },
+        { name: 'CompanyEvents', component: CompanyEvents, width: 'col-md-4', pinned: false },
+
+        { name: 'OpenAI', component: OpenAI, width: 'col-md-4', pinned: false },
+        { name: 'OrganisationalCharts', component: OrganisationalCharts, width: 'col-md-4', pinned: false },
         { name: 'Announcement', component: Announcement, width: 'col-md-4', pinned: false },
+
         { name: 'DailyPerformanceAnalytics', component: DailyPerformanceAnalytics, width: 'col-md-8', pinned: false },
         { name: 'WeeklyAnalytics', component: WeeklyAnalytics, width: 'col-md-4', pinned: false },
       ],

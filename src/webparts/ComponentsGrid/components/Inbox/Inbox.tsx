@@ -140,7 +140,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
         <div>
           <PinIcon pinned={pinned} onPinClick={onPinClick} />
           <button className="btn btn-sm btn-light" onClick={onRemove} style={{ marginLeft: '0px', backgroundColor: '#e6f6fd' }}>
-            <FontAwesomeIcon icon={faWindowClose} size="lg" color="red"/>
+            <FontAwesomeIcon icon={faWindowClose} size='sm' color="red"/>
           </button>
         </div>
       </div>
