@@ -8,7 +8,7 @@ export interface IDigitalWorkspaceProps {
   hasTeamsContext: boolean;
   userDisplayName: string;
   graphClient: MSGraphClientV3; 
-  //pageContext: PageContext;
+  displayMode: any;
 }
 
 

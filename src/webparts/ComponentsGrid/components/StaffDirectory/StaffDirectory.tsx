@@ -10,6 +10,7 @@ interface StaffDirectoryProps {
   graphClient: MSGraphClientV3;
 }
 
+
 interface User {
   id: string;
   displayName: string;

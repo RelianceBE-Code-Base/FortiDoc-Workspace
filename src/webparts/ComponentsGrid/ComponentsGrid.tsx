@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Sidebar from './components/Sidebar/Sidebar';
+// import Sidebar from './components/Sidebar/Sidebar';
 
 // Import components
 import GallerySlider from './components/Slider/Galleryslider';
@@ -158,7 +158,7 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
     return (
       <section>
         <div className='d-flex'>
-          <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} />
+          {/* <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} /> */}
           <div className='container-fluid'>
             {this.renderComponents()}
           </div>

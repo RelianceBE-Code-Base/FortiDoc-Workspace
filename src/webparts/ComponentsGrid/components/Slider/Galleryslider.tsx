@@ -8,6 +8,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import PinIcon from '../PinIcon/PinIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+// import styles from './GallerySlider.module.scss';
 
 
 
