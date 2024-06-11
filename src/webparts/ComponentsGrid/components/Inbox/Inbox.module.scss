@@ -80,10 +80,13 @@
   // overflow-y: auto;
   margin: 5px;
   width: auto;
+  margin-right: 10px;
+  scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar {
   width: 0.5px; /* Width of the scrollbar */
+  margin-left: 5px;
 }
 
 * {
