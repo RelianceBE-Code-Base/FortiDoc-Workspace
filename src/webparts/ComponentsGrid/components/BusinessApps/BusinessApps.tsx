@@ -66,11 +66,11 @@ export default class BusinessApps extends React.Component<{},IBusinessAppsState>
     return(
     
 
-    <div className="card" >
-    <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>
-        Line of Business Apps
+    <div className={styles.card} >
+    <div className={styles['card-header']} >
+        <p>Line of Business Apps</p>
     </div>
-      <div className="grid-holder" style={{ backgroundColor: 'white', height: '200px', borderRadius: '0 0 10px 10px' }}>
+      <div className={styles['card-body']}>
         <div className={styles.iconGrid}>
 
           {this.state.applications.map((application, index) => {
