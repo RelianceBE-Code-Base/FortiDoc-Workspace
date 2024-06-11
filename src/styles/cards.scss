@@ -35,7 +35,7 @@ $card-body-background-color: white;
     height: $card-header-height;
     background-color: $card-header-background-color;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     width: $card-header-width;
     border-top-left-radius: $card-border-radius;
     border-top-right-radius: $card-border-radius;
