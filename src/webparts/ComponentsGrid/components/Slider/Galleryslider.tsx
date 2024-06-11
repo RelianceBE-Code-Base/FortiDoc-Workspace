@@ -8,6 +8,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import PinIcon from '../PinIcon/PinIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import styles from './GallerySlider.module.scss';
 
 
 
@@ -43,12 +44,13 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({pinned, onPinClick, onRem
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    arrows: true,
+    arrows: false,
   };
 
   return (
-    <div className="card">
-      <div className="card-header" style={{backgroundColor: '#e6f6fd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    // <div className={styles.card}>
+    <div className='card' style={{ boxShadow: 'rgba(14, 30, 37, 0) 0px 1px 2px 0px, rgba(14, 30, 37, 0.16) 0px 1px 8px 0px' }}>
+      <div className={styles['card-header']}>
         Gallery Slider
         <div>
           <PinIcon pinned={pinned} onPinClick={onPinClick} />
@@ -57,17 +59,19 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({pinned, onPinClick, onRem
           </button>
         </div>
       </div>
-    <div className="card-body">
-    <div className={isDarkTheme ? 'dark-slider' : 'light-slider'}>
-      <Carousel {...sliderSettings}>
+
+      {/* <div className={styles['card-body']}> */}
+      <div className='card-body' style={{marginBottom: '10px'}}>
+    
+      <Carousel {...sliderSettings} >
         {images.map((imageUrl, index) => (
            <div key={index}> {/* Adjust the height here */}
-           <img src={imageUrl} alt={`Slide ${index}`} style={{ height: '33.3%', width: '100%', objectFit: 'cover' }} />
+           <img src={imageUrl} alt={`Slide ${index}`}  style={{ height: '33.3%', width: '100%', objectFit: 'cover' }}/>
           </div>
         ))}
       </Carousel>
     </div>
-    </div>
+    
     </div>
   );
 };

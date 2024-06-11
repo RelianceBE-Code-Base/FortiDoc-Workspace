@@ -120,7 +120,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
     const { selectedMessage, showModal } = this.state;
 
     return (
-      <div className="card" style={{ maxHeight: '500px', overflow: 'auto', height: '245px' }}>
+      <div className={styles.card} >
         {/* <div className="card-header container" style={{ backgroundColor: '#e6f6fd', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding:'2px' }}>
     
           <div style={{marginLeft:'10px'}}>Inbox</div>
@@ -135,7 +135,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
 
         </div> */}
 
-      <div className="card-header" style={{backgroundColor: '#e6f6fd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className={`${styles['card-header']}`}>
         Inbox
         <div>
           <PinIcon pinned={pinned} onPinClick={onPinClick} />
@@ -147,7 +147,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
         
           
         
-        <div className="card-body" style={{backgroundColor: '#f7f8fa'}}>
+        <div className={`${styles.card} ${styles['inbox-content']}` } >
           <div className={styles.inbox}>
             {this.state.messages.map((msg) => (
               <Card key={msg.id} className={`${styles.messageCard} ${msg.isRead ? styles.read : ''}`}>

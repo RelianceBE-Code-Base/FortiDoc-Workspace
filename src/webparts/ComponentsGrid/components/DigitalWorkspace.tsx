@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './DigitalWorkspace.module.scss';
 import type { IDigitalWorkspaceProps } from './IDigitalWorkspaceProps';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Sidebar from './Sidebar/Sidebar';
+// import Sidebar from './Sidebar/Sidebar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
@@ -26,6 +26,7 @@ import OpenAI from './OpenAI/OpenAI';
 import OrganisationalCharts from './OrganisationalCharts/OrganisationalCharts';
 import UserProfile from './UserProfile/UserProfile';
 
+
 export interface ComponentConfig {
   name: string;
   component: React.ComponentType<any>; // Specify the correct type for component props if known
@@ -38,6 +39,9 @@ interface DigitalWorkspaceState {
 }
 
 export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceProps, DigitalWorkspaceState> {
+  
+  
+  
   state: DigitalWorkspaceState & { graphClient?: MSGraphClientV3 };
   constructor(props: IDigitalWorkspaceProps) {
     super(props);
@@ -62,6 +66,8 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
       graphClient: new MSGraphClientV3(),
     };
   }
+
+  
 
   handleHomeClick = (): void => {
     window.location.reload();
@@ -120,8 +126,12 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
     this.setState({ components: reorderedComponents });
   }
 
+  
+
   renderComponents(): React.ReactNode {
     return (
+
+
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="components">
           {(provided) => (
@@ -159,13 +169,15 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
     );
   }
 
+  
+
   public render(): React.ReactElement<IDigitalWorkspaceProps> {
     const { hasTeamsContext } = this.props;
 
     return (
       <section className={`${styles.digitalWorkspace} ${hasTeamsContext ? styles.teams : ''}`}>
         <div className="d-flex">
-          <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} />
+          {/* <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} /> */}
           <div className="container-fluid">
             {this.renderComponents()}
           </div>
@@ -174,4 +186,6 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
       </section>
     );
   }
+
 }
+

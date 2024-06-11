@@ -28,10 +28,11 @@ export interface ComponentConfig {
   component: React.ComponentType<any>; // Specify the correct type for component props if known
   width: string;
   pinned: boolean;
+  msGraphClient?: any; // Add this line
 }
 
 interface ComponentsGridProps {
-  graphClient: any;
+  graphClient: any; // Define graphClient in props
 }
 
 interface ComponentsGridState {
@@ -47,7 +48,7 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
         { name: 'UserProfile', component: UserProfile, width: 'col-md-4', pinned: false },
         { name: 'OpenAI', component: OpenAI, width: 'col-md-4', pinned: false },
         { name: 'OrganisationalCharts', component: OrganisationalCharts, width: 'col-md-4', pinned: false },
-        { name: 'Inbox', component: Inbox, width: 'col-md-4', pinned: false },
+        { name: 'Inbox', component: Inbox, width: 'col-md-4', pinned: false, msGraphClient: this.props.graphClient },
         { name: 'MicrosoftTeams', component: MicrosoftTeams, width: 'col-md-4', pinned: false },
         { name: 'Task', component: Task, width: 'col-md-4', pinned: false },
         { name: 'Calendar', component: Calendar, width: 'col-md-4', pinned: false },
@@ -124,11 +125,11 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
                         {...(component.pinned ? {} : provided.dragHandleProps)}
                         className={`mb-3 ${component.width}`}
                       >
-                        <Component 
-                          pinned={component.pinned} 
-                          onPinClick={() => this.handlePinComponent(component.name)} 
-                          onRemove={() => this.handleRemoveComponent(component.name)} 
-                          graphClient={this.props.graphClient} 
+                        <Component
+                          pinned={component.pinned}
+                          onPinClick={() => this.handlePinComponent(component.name)}
+                          onRemove={() => this.handleRemoveComponent(component.name)}
+                          graphClient={this.props.graphClient} // Pass graphClient to each component
                         />
                       </div>
                     )}
@@ -159,7 +160,7 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
     return (
       <section>
         <div className='d-flex'>
-          <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} />
+          {/* <Sidebar onAddComponent={this.handleAddComponent} addedComponents={[]} /> */}
           <div className='container-fluid'>
             {this.renderComponents()}
           </div>

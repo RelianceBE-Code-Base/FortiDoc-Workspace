@@ -1,5 +1,92 @@
 @import '~@fluentui/react/dist/sass/References.scss';
 
+@import '../../../../styles/cards.scss';
+
+
+// .card{
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   flex-direction: column;
+//   width: 100%;
+//   // height: 200px;
+//   height: 240px;
+//   box-sizing: border-box;
+//   // border-radius: 5mm;
+//   // background: rgb(3, 112, 244);
+//   background: white;
+//   position: relative;
+//   box-shadow: rgba(14, 30, 37, 0) 0px 1px 2px 0px,
+//   rgba(14, 30, 37, 0.16) 0px 1px 8px 0px;
+
+
+
+//   z-index: 2;
+//   transform-style: preserve-3d;
+//   border-radius: 10px;
+// }
+
+
+// .card-header {
+//   height: 15%;
+//   background-color: #e6f6fd;
+//   display: flex;
+//   justify-content: flex-start;
+//   width: 100%;
+//   border-top-left-radius: 10px;
+//   border-top-right-radius: 10px;
+//   padding: 10px;
+//   position: relative;
+//   z-index: 1;
+// }
+
+// .card-body{
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   flex-direction: column;
+//   width: 100%;
+//   height: 85%;
+//   // height: 100%;
+//   box-sizing: border-box;
+//   // border-radius: 5mm;
+//   // background: rgb(3, 112, 244);
+//   background: white;
+//   position: relative;
+//   // box-shadow: rgba(14,30,37,0) 0px 2px 4px 0px,
+//   // rgba(14,30,37,0.32) 0px 2px 16px 0px;
+//   z-index: 2;
+//   transform-style: preserve-3d;
+//   border-bottom-left-radius: 10px;
+//   border-bottom-right-radius: 10px;
+// }
+
+
+.details{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+
+.title{
+  color: black;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 15px;
+
+}
+
+.subtitle{
+  font-size: 20px;
+  color: grey;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+  font-weight: 300;
+}
+
 .user-profile .search-box {
   width: 100%;
   padding: 10px;
@@ -8,11 +95,19 @@
   border: 1px solid #ccc;
 }
 
-.user-profile .profile-image {
-  width: 100px;
-  height: 100px;
+.profile-image {
+  width: 50;
+  height: 50px;
   border-radius: 50%;
   margin-bottom: 10px;
+  margin-top: 10px;
+ 
+}
+
+.profile-image-frame{
+  display: flex;
+  align-self: center;
+  justify-self: center;
 }
 
 .user-profile .notification-badge {
@@ -38,3 +133,6 @@
   border-radius: 50%;
   border: 2px solid #0078d7;
 }
+
+
+

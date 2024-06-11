@@ -45,12 +45,12 @@ const MicrosoftApps: React.FC = () => {
   
 
   return (
-    <div className="card" >
-  <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>
+    <div className={styles.card} >
+  <div className={styles['card-header']} >
         Microsoft Apps
         
   </div>
-  <div className={styles['grid-holder']} style={{ backgroundColor: 'white', height: '200px' }}>
+  <div className={styles['card-body']}>
     <div className={styles.iconGrid}>
       <a className={styles.iconLink} href="https://office.com" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/office_96x1.png)' }}></a>
       <a className={styles.iconLink} href="https://office.com/launch/word" target="_blank" style={{ backgroundImage: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/word_96x1.png)' }}></a>

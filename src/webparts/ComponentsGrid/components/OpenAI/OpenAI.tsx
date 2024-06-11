@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 const OpenAI: React.FC = () => {
+
   return (
     <div className="card">
       <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>

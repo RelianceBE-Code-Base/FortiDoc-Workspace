@@ -6,6 +6,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../components/Header/Header';
 import ComponentsGrid from '../../ComponentsGrid/ComponentsGrid';
 import Chatbot from '../../chatbot/Chatbot';
+// import { Router, Route, Switch } from 'react-router';
+// import { HashRouter } from 'react-router-dom';
+
+
+
+
+
 
 export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceProps> {
   handleHomeClick = (): void => {
@@ -28,15 +35,15 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
           <div className="d-flex">
             <div className="container-fluid">
               <Switch>
-                <Route exact path="/" render={(props) => <ComponentsGrid {...props} graphClient={this.props.graphClient} />} />
-                {/* Correctly commented out line */}
-                {/* <Route path="/" component={Chatbot} /> */}
+
+/   
+                <Route exact path="/" render={(props) => <ComponentsGrid graphClient={this.props.graphClient}  />} />
+             
                 <Route path="/chatbot" render={(props) => <Chatbot pageContext={this.props.pageContext} />} />
               </Switch>
             </div>
           </div>
         </section>
       </Router>
-    );
-  }
-}
+    )}}
+ 
