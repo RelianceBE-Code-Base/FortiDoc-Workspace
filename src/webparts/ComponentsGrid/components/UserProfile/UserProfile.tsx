@@ -6,7 +6,7 @@ import { IUserProfileProps } from './IUserProfileProps';
 
 import { IUserProfileState } from './IUserProfileState';
 
-
+const UserProfileIcon = require('./assets/UserProfile.png')
 
 class UserProfile extends React.Component<IUserProfileProps, IUserProfileState> {
 
@@ -50,12 +50,19 @@ class UserProfile extends React.Component<IUserProfileProps, IUserProfileState> 
     
   }
 
+
+ 
+
   render(): React.ReactNode {
     return(
       <div className={styles.card}>
         <div className={styles['card-header']}>
-          <p>My Profile</p>
+          <img src={UserProfileIcon} style={{display: 'flex'}}/>
+          <p style={{display: 'flex'}}>My Profile</p>
        </div>
+
+
+
        <div className={styles['card-body']}>
          <div className= {styles['profile-image-frame']}>
             <img className= {styles['profile-image']}  src={this.state.profilePhoto} alt='Profile Photo' />
