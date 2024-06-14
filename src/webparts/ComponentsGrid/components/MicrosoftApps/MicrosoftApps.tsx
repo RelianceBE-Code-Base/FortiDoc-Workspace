@@ -1,44 +1,8 @@
 import * as React from 'react';
 import styles from './MicrosoftApps.module.scss'; 
-// import { IMicrosoftAppsState } from './IMicrosoftAppsState';
 
 
-// export default class MicrosoftApps extends React.Component<{},IMicrosoftAppsState>{
-
-//   constructor(props: {}) {
-//     super(props);
-//     this.state = {
-//       applications: [
-//         {name: '',
-//           icon: 'url(https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/png/office_96x1.png)',
-//           link: "https://office.com"
-//         }
-//       ]
-//     }
-//   }
-
-
-//   render(): React.ReactNode {
-//     return(
-
-//       <div className="card" >
-//       <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>
-//             Microsoft Apps
-//       </div>
-//       <div className="" style={{ backgroundColor: 'white', height: '200px' }}>
-//       <div className={styles.iconGrid}>
-//         {this.state.applications.map((application, index) => {
-//           return(
-//             <a className={styles.iconLink} href={application.link} target="_blank" style={{ backgroundImage: application.link }}></a>
-//           )
-//         })}
-//       </div>
-//       </div>
-//       </div>
-//     )
-//   }
-
-// }
+const MicrosoftAppsIcon = require('./assets/MicrosoftAppsIcon.png')
 
 const MicrosoftApps: React.FC = () => {
 
@@ -47,8 +11,9 @@ const MicrosoftApps: React.FC = () => {
   return (
     <div className={styles.card} >
   <div className={styles['card-header']} >
-        Microsoft Apps
-        
+    <img src={MicrosoftAppsIcon} style={{display: 'flex'}}/>
+    <p style={{display: 'flex', justifySelf: 'center'}}>Microsoft Apps</p>
+    <div></div>
   </div>
   <div className={styles['card-body']}>
     <div className={styles.iconGrid}>

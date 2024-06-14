@@ -43,6 +43,11 @@ $card-body-background-color: white;
     padding: $card-header-padding;
     position: relative;
     z-index: 1;
+    font-weight: 500;
+  }
+
+  .card-header img {
+    height: 25px;
   }
   
   .card-body{

@@ -6,6 +6,8 @@ import { IUserProfileProps } from './IUserProfileProps';
 
 import { IUserProfileState } from './IUserProfileState';
 
+import { TestImages } from '@fluentui/example-data';
+
 const UserProfileIcon = require('./assets/UserProfile.png')
 
 class UserProfile extends React.Component<IUserProfileProps, IUserProfileState> {
@@ -45,8 +47,8 @@ class UserProfile extends React.Component<IUserProfileProps, IUserProfileState> 
 
     // this.getProfilePhoto();
 
-    this.setState({profilePhoto: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"})
-
+    // this.setState({profilePhoto: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"})
+    this.setState({profilePhoto: TestImages.personaMale})
     
   }
 
@@ -57,8 +59,9 @@ class UserProfile extends React.Component<IUserProfileProps, IUserProfileState> 
     return(
       <div className={styles.card}>
         <div className={styles['card-header']}>
-          <img src={UserProfileIcon} style={{display: 'flex'}}/>
+          <img src={UserProfileIcon}/>
           <p style={{display: 'flex'}}>My Profile</p>
+          <div></div>
        </div>
 
 

@@ -3,21 +3,14 @@ import { useState, useEffect } from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 import { ListGroup, ListGroupItem, FormControl, Modal, Button, Tabs, Tab } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import styles from './StaffDirectory.module.scss';
 
 import './StaffDirectory.module.scss'
 import { TestImages } from '@fluentui/example-data';
 
-// import { Persona } from '@fluentui/react';
 
-// import { PersonaSize } from '@fluentui/react/lib/Persona';
-
-// import { TestImages } from '@fluentui/example-data';
-
-// import { Image, ImageFit } from '@fluentui/react/lib/Image';
-
-
+const StaffDirectoryIcon = require('./assets/StaffDirectoryIcon.png')
 
 
 interface StaffDirectoryProps {
@@ -145,7 +138,8 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient }) => {
     <div className={styles.card} >
       <div className={styles['card-header']} style={{display: 'flex', flexDirection: 'row'}}>
         
-      <FontAwesomeIcon icon={faUserCircle} className={styles.headerIcon} />
+      {/* <FontAwesomeIcon icon={faUserCircle} className={styles.headerIcon} /> */}
+      <img src={StaffDirectoryIcon} style={{display: 'flex'}}/>
 
         {!showSearchBox &&
         <div >

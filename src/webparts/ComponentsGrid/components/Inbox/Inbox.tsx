@@ -6,6 +6,8 @@ import PinIcon from '../PinIcon/PinIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose, faEnvelopeOpen, faReply, faClock } from '@fortawesome/free-solid-svg-icons';
 
+const InboxIcon = require('./assets/InboxIcon.png')
+
 interface InboxProps {
   pinned: boolean;
   onPinClick: () => void;
@@ -136,8 +138,11 @@ class Inbox extends React.Component<InboxProps, InboxState> {
         </div> */}
 
       <div className={`${styles['card-header']}`}>
-        Inbox
-        <div>
+          <img src={InboxIcon} style={{display: 'flex'}}/>
+          <p style={{display: 'flex', justifySelf: 'center'}}>Inbox</p>
+      <div>
+
+
           <PinIcon pinned={pinned} onPinClick={onPinClick} />
           <button className="btn btn-sm btn-light" onClick={onRemove} style={{ marginLeft: '0px', backgroundColor: '#e6f6fd' }}>
             <FontAwesomeIcon icon={faWindowClose} size='sm' color="red"/>
