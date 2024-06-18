@@ -3,6 +3,9 @@ import { IBusinessAppsState } from './IBusinessAppsState';
 import styles from './BusinessApps.module.scss';
 
 
+const BusinessAppsIcon = require('./assets/BusinessAppsIcon.png')
+
+
 
 export default class BusinessApps extends React.Component<{},IBusinessAppsState>{
   constructor(props: {}){
@@ -67,9 +70,14 @@ export default class BusinessApps extends React.Component<{},IBusinessAppsState>
     
 
     <div className={styles.card} >
-    <div className={styles['card-header']} >
-        <p>Line of Business Apps</p>
+    <div className={styles['card-header']}>
+      <img src={BusinessAppsIcon} style={{display: 'flex'}}/>
+        <p style={{display: 'flex', justifySelf: 'center'}}>Line of Business Apps</p>
+      <div></div>
     </div>
+
+
+
       <div className={styles['card-body']}>
         <div className={styles.iconGrid}>
 

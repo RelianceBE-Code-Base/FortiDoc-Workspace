@@ -6,6 +6,8 @@ import PinIcon from '../PinIcon/PinIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose, faEnvelopeOpen, faReply, faClock } from '@fortawesome/free-solid-svg-icons';
 
+const InboxIcon = require('./assets/InboxIcon.png')
+
 interface InboxProps {
   pinned: boolean;
   onPinClick: () => void;
@@ -60,7 +62,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
         id: msg.id,
         title: msg.subject,
         from: msg.from.emailAddress.name,
-        date: new Date(msg.receivedDateTime).toLocaleString(),
+        date: new Date(msg.receivedDateTime).toLocaleDateString(),
         body: msg.bodyPreview,
         isRead: msg.isRead,
         receivedTime: this.calculateReceivedTime(msg.receivedDateTime)
@@ -136,13 +138,19 @@ class Inbox extends React.Component<InboxProps, InboxState> {
         </div> */}
 
       <div className={`${styles['card-header']}`}>
-        Inbox
-        <div>
+          
+          <img src={InboxIcon} style={{display: 'flex'}}/>
+          
+          <p style={{display: 'flex', justifySelf: 'center'}}>Inbox</p>
+          
+          <div style={{display: 'flex'}}>
+
+          
           <PinIcon pinned={pinned} onPinClick={onPinClick} />
-          <button className="btn btn-sm btn-light" onClick={onRemove} style={{ marginLeft: '0px', backgroundColor: '#e6f6fd' }}>
-            <FontAwesomeIcon icon={faWindowClose} size='sm' color="red"/>
-          </button>
-        </div>
+          
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+           
+          </div>
       </div>
         
           
@@ -157,21 +165,26 @@ class Inbox extends React.Component<InboxProps, InboxState> {
                     <div className={styles.receivedTime}>{msg.receivedTime}</div>
                   </div>
                 </Card.Header>
-                <Card.Body className={styles["card-body"]}>
-                  <div className="d-flex justify-content-between align-items-center">
+                <div className={styles["card-body"]}>
+
+                  <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
                     <Card.Title className={styles.messageFrom}>From: {msg.from}</Card.Title>
-                    <div className={styles.messageDate}>{msg.date}</div>
+                    {/* <p className={styles.messageFrom}>From: {msg.from}</p> */}
+                    <p className={styles.messageDate}>{msg.date}</p>
                   </div>
-                  <Card.Text className={styles.messageBody}>{msg.body}</Card.Text>
-                  <div className="d-flex justify-content-end">
-                    <Button className={styles.readButton} onClick={() => this.markAsRead(msg.id)}>
+
+                  <Card.Text className={styles.messageBody}>{msg.body.split(/\s+/).slice(0,15).join(' ') + ' ...'}</Card.Text>
+
+
+                  <div className={styles['button-holder']}>
+                    <button className={styles.readButton} onClick={() => this.markAsRead(msg.id)}>
                       <FontAwesomeIcon icon={faEnvelopeOpen} /> Read
-                    </Button>
-                    <Button className={styles.replyButton} onClick={() => this.replyToMessage(msg.id)}>
+                    </button>
+                    <button className={styles.replyButton} onClick={() => this.replyToMessage(msg.id)}>
                       <FontAwesomeIcon icon={faReply} /> Reply
-                    </Button>
+                    </button>
                   </div>
-                </Card.Body>
+                </div>
               </Card>
             ))}
           </div>

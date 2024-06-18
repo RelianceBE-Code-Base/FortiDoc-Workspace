@@ -35,6 +35,7 @@ $card-body-background-color: white;
     height: $card-header-height;
     background-color: $card-header-background-color;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     width: $card-header-width;
     border-top-left-radius: $card-border-radius;
@@ -42,6 +43,11 @@ $card-body-background-color: white;
     padding: $card-header-padding;
     position: relative;
     z-index: 1;
+    font-weight: 500;
+  }
+
+  .card-header img {
+    height: 25px;
   }
   
   .card-body{

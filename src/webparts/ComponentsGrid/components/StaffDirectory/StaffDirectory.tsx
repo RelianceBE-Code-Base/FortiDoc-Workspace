@@ -1,10 +1,17 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
-import { Card, ListGroup, ListGroupItem, FormControl, Modal, Button, Tabs, Tab } from 'react-bootstrap';
+import { ListGroup, ListGroupItem, FormControl, Modal, Button, Tabs, Tab } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import styles from './StaffDirectory.module.scss';
+
+import './StaffDirectory.module.scss'
+import { TestImages } from '@fluentui/example-data';
+
+
+const StaffDirectoryIcon = require('./assets/StaffDirectoryIcon.png')
+
 
 interface StaffDirectoryProps {
   graphClient: MSGraphClientV3;
@@ -35,6 +42,7 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showSearchBox, setShowSearchBox] = useState<boolean>(false);
 
   useEffect(() => {
     fetchUsers();
@@ -124,11 +132,22 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient }) => {
 
   const handleClose = () => setShowModal(false);
 
+  const handleSearchIconClick = () => setShowSearchBox(!showSearchBox);
+
   return (
-    <div className="card" style={{ maxHeight: '500px', overflow: 'auto', height: '245px' }}>
-      <div className="card-header" style={{ backgroundColor: '#e6f6fd', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '2px' }}>
-        <FontAwesomeIcon icon={faUserCircle} className={styles.headerIcon} />
-        <span>Staff Directory</span>
+    <div className={styles.card} >
+      <div className={styles['card-header']} style={{display: 'flex', flexDirection: 'row'}}>
+        
+      {/* <FontAwesomeIcon icon={faUserCircle} className={styles.headerIcon} /> */}
+      <img src={StaffDirectoryIcon} style={{display: 'flex'}}/>
+
+        {!showSearchBox &&
+        <div >
+          
+          <p>Staff Directory</p>
+        </div>}
+
+        {showSearchBox &&
         <div className={styles.searchContainer}>
           <FormControl
             type="text"
@@ -137,11 +156,16 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient }) => {
             onChange={handleSearch}
             className={styles.searchInput}
           />
-          <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
+
         </div>
+        }
+
+        <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} onClick={handleSearchIconClick}/>
+
+        
       </div>
-      <Card.Body className={styles.cardBody}>
-        {filteredUsers.map(user => (
+      <div className={`${styles.cardBody} `}>
+        {/* {filteredUsers.map(user => (
           <Card key={user.id} className={styles.userCard} onClick={() => handleUserClick(user)}>
             <Card.Body className="d-flex">
               <div className={styles.userImage}>
@@ -166,8 +190,68 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient }) => {
               </div>
             </Card.Body>
           </Card>
-        ))}
-      </Card.Body>
+        ))}  */}
+
+
+
+      {filteredUsers.map(user => (
+        // <Card key={user.id} className={styles.userCard} onClick={() => handleUserClick(user)}>
+        //   <Card.Body className="d-flex">
+            
+              // <Persona key={user.id} className={styles.userCard} onClick={() => handleUserClick(user)}
+              //   // imageUrl={`https://graph.microsoft.com/v1.0/users/${user.id}/photo/$value`}
+              //   // onRenderInitials={() => (
+              //   //   <Image
+              //   //     src="https://via.placeholder.com/60"
+              //   //     alt={`${user.displayName}'s profile`}
+              //   //     imageFit={ImageFit.cover}
+              //   //     width={60}
+              //   //     height={60}
+                    
+              //   //   />
+              //   // )}
+              //   imageUrl= {TestImages.personaMale}
+              //   // text={user.displayName}
+              //   secondaryText={user.department}
+              //   tertiaryText={user.jobTitle}
+              //   optionalText={user.mail}
+              //   showSecondaryText={true}
+              //   size={PersonaSize.size72}
+              //   coinSize={50}
+              // />
+
+
+              <div className={styles.userCard} onClick={() => handleUserClick(user)}>
+                  <img className= {styles.profileImage}  src={TestImages.personaMale} />
+                  <div className={styles.details}>
+                  <h2 className={styles.title}>{user.displayName}</h2>
+                  <p className={styles.subtitle}>{user.jobTitle}</p>
+                  {/* <p className={styles.subtitle}>{user.mail}</p> */}
+                  {/* <p className={styles.subtitle}>{user.mobilePhone}</p> */}
+                 
+                </div>
+              </div>
+
+
+          
+            /* <div className={styles.userInfo}>
+              <Card.Title className={styles.userName}>{user.displayName}</Card.Title>
+              <Card.Subtitle className="mb-2 text-muted">{user.department}</Card.Subtitle>
+              <ListGroup className="list-group-flush">
+                <ListGroupItem className={styles.userDetails}>{user.jobTitle}</ListGroupItem>
+                <ListGroupItem className={styles.userDetails}>{user.mail}</ListGroupItem>
+                <ListGroupItem className={styles.userDetails}>{user.mobilePhone || user.businessPhones.join(', ')}</ListGroupItem>
+                <ListGroupItem className={styles.userDetails}>{user.officeLocation}</ListGroupItem>
+              </ListGroup>
+            </div> 
+          </Card.Body>
+        </Card> */
+      ))}
+
+
+
+
+      </div>
 
       {selectedUser && (
         <Modal show={showModal} onHide={handleClose} size="lg">

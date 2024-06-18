@@ -3,25 +3,31 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 //import Sidebar from './components/Sidebar/Sidebar';
+// import Sidebar from './components/Sidebar/Sidebar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 // Import components
 import GallerySlider from './components/Slider/Galleryslider';
+
+import UserProfile from './components/UserProfile/UserProfile';
 import Inbox from './components/Inbox/Inbox';
 import MicrosoftTeams from './components/Teams/MicrosoftTeams';
-import Task from './components/Task/Task';
-import Calendar from './components/Calendar/Calendar';
-import CompanyEvents from './components/CompanyEvents/CompanyEvents';
+
 import MicrosoftApps from './components/MicrosoftApps/MicrosoftApps';
 import BusinessApps from './components/BusinessApps/BusinessApps';
 import StaffDirectory from './components/StaffDirectory/StaffDirectory';
-import Announcement from './components/Announcement/Announcement';
-import DailyPerformanceAnalytics from './components/DailyPerformanceAnalytics/DailyPerformanceAnalytics';
-import WeeklyAnalytics from './components/WeeklyAnalytics/WeeklyAnalytics';
-import OpenAI from './components/OpenAI/OpenAI';
-import OrganisationalCharts from './components/OrganisationalCharts/OrganisationalCharts';
-import UserProfile from './components/UserProfile/UserProfile';
+
+
+// import Task from './components/Task/Task';
+// import Calendar from './components/Calendar/Calendar';
+// import CompanyEvents from './components/CompanyEvents/CompanyEvents';
+
+// import Announcement from './components/Announcement/Announcement';
+// import DailyPerformanceAnalytics from './components/DailyPerformanceAnalytics/DailyPerformanceAnalytics';
+// import WeeklyAnalytics from './components/WeeklyAnalytics/WeeklyAnalytics';
+// import OpenAI from './components/OpenAI/OpenAI';
+// import OrganisationalCharts from './components/OrganisationalCharts/OrganisationalCharts';
 
 export interface ComponentConfig {
   name: string;
@@ -54,16 +60,16 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
         { name: 'BusinessApps', component: BusinessApps, width: 'col-md-4', pinned: false },
         { name: 'StaffDirectory', component: StaffDirectory, width: 'col-md-4', pinned: false },
 
-        { name: 'Task', component: Task, width: 'col-md-4', pinned: false },
-        { name: 'Calendar', component: Calendar, width: 'col-md-4', pinned: false },
-        { name: 'CompanyEvents', component: CompanyEvents, width: 'col-md-4', pinned: false },
+        // { name: 'Task', component: Task, width: 'col-md-4', pinned: false },
+        // { name: 'Calendar', component: Calendar, width: 'col-md-4', pinned: false },
+        // { name: 'CompanyEvents', component: CompanyEvents, width: 'col-md-4', pinned: false },
 
-        { name: 'OpenAI', component: OpenAI, width: 'col-md-4', pinned: false },
-        { name: 'OrganisationalCharts', component: OrganisationalCharts, width: 'col-md-4', pinned: false },
-        { name: 'Announcement', component: Announcement, width: 'col-md-4', pinned: false },
+        // { name: 'OpenAI', component: OpenAI, width: 'col-md-4', pinned: false },
+        // { name: 'OrganisationalCharts', component: OrganisationalCharts, width: 'col-md-4', pinned: false },
+        // { name: 'Announcement', component: Announcement, width: 'col-md-4', pinned: false },
 
-        { name: 'DailyPerformanceAnalytics', component: DailyPerformanceAnalytics, width: 'col-md-8', pinned: false },
-        { name: 'WeeklyAnalytics', component: WeeklyAnalytics, width: 'col-md-4', pinned: false },
+        // { name: 'DailyPerformanceAnalytics', component: DailyPerformanceAnalytics, width: 'col-md-8', pinned: false },
+        // { name: 'WeeklyAnalytics', component: WeeklyAnalytics, width: 'col-md-4', pinned: false },
       ],
     };
   }
