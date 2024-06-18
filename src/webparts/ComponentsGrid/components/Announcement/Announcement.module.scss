@@ -45,8 +45,21 @@
   align-items: center;
 }
 
+.Announcement-content {
+  max-height: '500px'; 
+  overflow: 'auto'; 
+  height: '245px';
+  // padding: 10px;
+  // overflow-y: auto;
+  margin: 5px;
+  width: auto;
+  margin-right: 10px;
+  scrollbar-width: thin;
+}
+
+
 .image {
-  width: 125%;
+  width: 95%;
   height: 110px;
   object-fit: cover;
   margin: 5px 2px 5px 5px;

@@ -2,13 +2,15 @@ import * as React from 'react';
 import { sp } from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Announcement.module.scss'; 
+const AnnouncementImg = require('./assets/Announcement.png')
 
 
 interface IAnnouncement {
+  ID: number;
   Title: string;
   Description: string;
-  ImageUrl: string;
   LinkUrl: string;
+  ImageUrl: string; // This will hold the attachment URL
 }
 
 const Announcement: React.FC = () => {
@@ -18,8 +20,15 @@ const Announcement: React.FC = () => {
   React.useEffect(() => {
     const fetchAnnouncements = async (): Promise<void> => {
       try {
-        const items: IAnnouncement[] = await sp.web.lists.getByTitle('Announcement').items.select('Title', 'Description', 'ImageUrl', 'LinkUrl').get();
-        setAnnouncements(items);
+        const items = await sp.web.lists.getByTitle('Announcement').items.select('ID', 'Title', 'Description', 'LinkUrl').expand('AttachmentFiles').get();
+
+        // Fetch attachments for each item
+        const itemsWithAttachments = items.map(item => ({
+          ...item,
+          ImageUrl: item.AttachmentFiles.length > 0 ? item.AttachmentFiles[0].ServerRelativeUrl : '', // Use the first attachment as the image
+        }));
+
+        setAnnouncements(itemsWithAttachments);
       } catch (error) {
         console.error('Error fetching announcements:', error);
         setError('Failed to load announcements.');
@@ -35,23 +44,28 @@ const Announcement: React.FC = () => {
 
   return (
     <div className={styles.card}>
-        <div className={styles['card-header']}>
-        {/* <i className={`ms-Icon ms-Icon--Megaphone ${styles.icon}`} aria-hidden="true"></i> */}
-        Announcement
+      <div className={styles['card-header']}>
+      <img src={AnnouncementImg}/>
+      <p style={{display: 'flex', justifySelf: 'center'}}> Announcement</p>
+      <div></div>
       </div>
-      <div className={styles['card-body']}>
+        <div className={styles['Announcement-content']}>
+        <div className={styles['card-body']}> 
         {announcements.map((announcement, index) => (
           <div key={index} className={styles.announcement}>
             <div className={styles.productLaunch}>{announcement.Title}</div>
-            
             <p className={styles.Description}>{announcement.Description}</p>
             <div className={styles.medizee}>
-            <a href={announcement.LinkUrl}>
-              <img src={announcement.ImageUrl} alt={announcement.Title} className={styles.image} />  
-              </a>
-            </div> 
+              {announcement.ImageUrl && (
+                <a href={announcement.LinkUrl} target="_blank" rel="noopener noreferrer">
+                  <img src={announcement.ImageUrl} alt={announcement.Title} className={styles.image} />
+                </a>
+              )}
+            </div>
           </div>
+          
         ))}
+        </div>
       </div>
     </div>
   );

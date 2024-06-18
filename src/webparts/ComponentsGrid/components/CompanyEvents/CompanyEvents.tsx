@@ -1,16 +1,67 @@
 import * as React from 'react';
+import { sp } from '@pnp/sp';
+import '@pnp/odata';
+import styles from './CompanyEvents.module.scss';
+
+const EventsImg = require('./assets/Events.png')
+
+
+interface ICompanyEvent {
+  ID: number;
+  Title: string;
+  Location: string;
+  EventDate: string;
+  EndDate: string;
+}
 
 const CompanyEvents: React.FC = () => {
+  const [events, setEvents] = React.useState<ICompanyEvent[]>([]);
+  const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchEvents = async (): Promise<void> => {
+      try {
+        const items = await sp.web.lists.getByTitle('Events').items.select('ID', 'Title', 'Location', 'EventDate', 'EndDate').get();
+        setEvents(items);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        setError('Failed to load events.');
+      }
+    };
+
+    fetchEvents().catch(error => console.error('Error in fetchEvents:', error));
+  }, []);
+
+  if (error) {
+    return <div className={styles.error}>{error}</div>;
+  }
+
   return (
-    <div className="card">
-      <div className="card-header" style={{backgroundColor: '#e6f6fd' }}>
-        Company Events
+    <div className={styles.card}>
+      <div className={styles['card-header']}>
+      <img src={EventsImg}/>
+      <p style={{display: 'flex', justifySelf: 'center'}}>Company Events</p>
+      <div></div>
       </div>
-      <div className="card-body">
-        <p>Just now - From: Account - Message...</p>
-        <p>A day ago - From: IT Support - Message...</p>
-        <p>2 days ago - From: IT Support - Message...</p>
+      <div className={styles['Events-content']}>
+      <div className={styles['card-body']}>
+      {events.map((event, index) => (
+          <div key={index} className={`${styles.event} ${index % 2 === 0 ? styles.eventEven : styles.eventOdd}`}>
+            <div className={styles.date}>
+              <span className={styles.day}>{new Date(event.EventDate).getDate()}</span>
+              <span className={styles.month}>{new Date(event.EventDate).toLocaleString('default', { month: 'short' })}</span>
+            </div>
+            <div className={styles.details}>
+              <div className={styles.title}>{event.Title}</div>
+              <div className={styles.venue}>Venue: {event.Location}</div>
+              <div className={styles.time}>
+                {new Date(event.EventDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(event.EndDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
+    </div>
     </div>
   );
 };
