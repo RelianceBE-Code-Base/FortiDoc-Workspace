@@ -7,7 +7,7 @@ import styles from './Header.module.scss';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 
 // Import the Meta AI GIF
-import metaAiIcon from '../../assets/metaAiIcon.gif';
+import metaAiIcon from '../../assets/metaAiIcon.png';
 import { Link } from 'react-router-dom';
 
 
@@ -85,9 +85,9 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
             <li className="nav-item">
               <a className="nav-link" href="#general-library">General Library</a>
             </li>
-            <li className="nav-item">
+           {/* <li className="nav-item">
               <a className="nav-link" href="#product-catalogue">Product Catalogue</a>
-            </li>
+            </li>*/}
             <li className="nav-item">
               <a className="nav-link" href="#department">Department</a>
             </li>

@@ -1,0 +1,72 @@
+@import '../../../../styles/cards.scss';
+
+// .card {
+//   box-shadow: rgba(14, 30, 37, 0) 0px 1px 2px 0px, rgba(14, 30, 37, 0.16) 0px 1px 8px 0px;
+//   margin: 20px;
+//   padding: 20px;
+// }
+
+// .cardHeader {
+//   background-color: #e6f6fd;
+//   padding: 10px;
+//   font-size: 20px;
+//   font-weight: bold;
+//   display: flex;
+//   align-items: center;
+// }
+
+// .icon {
+//   margin-right: 10px;
+// }
+
+// .cardBody {
+//   padding: 20px;
+// }
+
+.announcement {
+  margin-bottom: 20px;
+}
+
+.productLaunch {
+  font-size: 16px;
+  font-weight: bold;
+  color: #0078d4;
+  text-align: center;
+}
+
+.Description{
+  text-align: start;
+  margin: 10px;
+  font-size: small;
+}
+
+.medizee {
+  display: flex;
+  align-items: center;
+}
+
+.image {
+  width: 125%;
+  height: 110px;
+  object-fit: cover;
+  margin: 5px 2px 5px 5px;
+
+  }
+
+.checkItOutButton {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 2px 3px;
+  background-color: #0078d4;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  height: 35px;
+    width: 70px;
+    font-size: smaller;
+    text-align: center;
+}
+
+.error {
+  color: red;
+}
