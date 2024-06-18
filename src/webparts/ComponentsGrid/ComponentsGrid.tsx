@@ -19,11 +19,16 @@ import BusinessApps from './components/BusinessApps/BusinessApps';
 import StaffDirectory from './components/StaffDirectory/StaffDirectory';
 
 
-// import Task from './components/Task/Task';
-// import Calendar from './components/Calendar/Calendar';
+import Task from './components/Task/Task';
+import Calendar from './components/Calendar/Calendar';
 import CompanyEvents from './components/CompanyEvents/CompanyEvents';
 
 import Announcement from './components/Announcement/Announcement';
+import Birthday from './components/Birthday/Birthday';
+import Anniversary from './components/Anniversary/Anniversary';
+
+
+
 // import DailyPerformanceAnalytics from './components/DailyPerformanceAnalytics/DailyPerformanceAnalytics';
 // import WeeklyAnalytics from './components/WeeklyAnalytics/WeeklyAnalytics';
 // import OpenAI from './components/OpenAI/OpenAI';
@@ -60,13 +65,17 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
         { name: 'BusinessApps', component: BusinessApps, width: 'col-md-4', pinned: false },
         { name: 'StaffDirectory', component: StaffDirectory, width: 'col-md-4', pinned: false },
 
-        // { name: 'Task', component: Task, width: 'col-md-4', pinned: false },
-        // { name: 'Calendar', component: Calendar, width: 'col-md-4', pinned: false },
+        { name: 'Task', component: Task, width: 'col-md-4', pinned: false },
+        { name: 'Calendar', component: Calendar, width: 'col-md-4', pinned: false },
         { name: 'CompanyEvents', component: CompanyEvents, width: 'col-md-4', pinned: false },
 
         // { name: 'OpenAI', component: OpenAI, width: 'col-md-4', pinned: false },
         // { name: 'OrganisationalCharts', component: OrganisationalCharts, width: 'col-md-4', pinned: false },
         { name: 'Announcement', component: Announcement, width: 'col-md-4', pinned: false },
+        { name: 'Birthday', component: Birthday, width: 'col-md-4', pinned: false },
+        { name: 'Anniversary', component: Anniversary, width: 'col-md-4', pinned: false },
+
+
 
         // { name: 'DailyPerformanceAnalytics', component: DailyPerformanceAnalytics, width: 'col-md-8', pinned: false },
         // { name: 'WeeklyAnalytics', component: WeeklyAnalytics, width: 'col-md-4', pinned: false },

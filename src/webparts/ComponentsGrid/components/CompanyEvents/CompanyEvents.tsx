@@ -46,7 +46,7 @@ const CompanyEvents: React.FC = () => {
       <div className={styles['Events-content']}>
       <div className={styles['card-body']}>
       {events.map((event, index) => (
-          <div key={index} className={`${styles.event} ${index % 2 === 0 ? styles.eventEven : styles.eventOdd}`}>
+         <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
             <div className={styles.date}>
               <span className={styles.day}>{new Date(event.EventDate).getDate()}</span>
               <span className={styles.month}>{new Date(event.EventDate).toLocaleString('default', { month: 'short' })}</span>
