@@ -50,6 +50,7 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient }) => {
         </div>
         <div className={styles['Calendar-content']}>
       <div className={styles['card-body']}>
+        {events.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No upcoming events</p>}
         {events.map((event, index) => (
            <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
             <div className={styles.date}>

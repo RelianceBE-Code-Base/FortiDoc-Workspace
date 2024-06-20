@@ -1,5 +1,7 @@
 @import '~@fluentui/react/dist/sass/References.scss';
 
+@import '../../styles/cards.scss';
+
 .chatbot {
   overflow: hidden;
   padding: 1em;
@@ -8,6 +10,12 @@
   &.teams {
     font-family: $ms-font-family-fallbacks;
   }
+
+  border: none;
+}
+
+.container{
+  border: none;
 }
 
 .welcome {
@@ -34,9 +42,56 @@
 }
 
 
-// .userChat {
-//   max-width: '80%', 
-//   margin-left: 'auto', 
-//   marginRight: '10px', 
-//   marginBottom: '10px' 
-// }
+.card{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 50vw;
+  height: auto;
+  box-sizing: border-box;
+  background: white;
+  position: relative;
+  box-shadow: rgba(14, 30, 37, 0) 0px 1px 2px 0px,
+  rgba(14, 30, 37, 0.16) 0px 1px 8px 0px;
+
+  z-index: 2;
+  transform-style: preserve-3d;
+  border-radius: 10px;
+
+  position: sticky;
+  bottom: 0;
+}
+
+.sendButton {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  margin: 5px;
+  background-color: #04a4ec;
+  border-color: #04a4ec;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  width: 50px;
+  align-self: flex-end;
+}
+
+.spinner{
+  padding: 0.25rem 0.5rem;
+  margin: 5px;
+  align-self: flex-end;
+
+
+}
+
+.input{
+  background-color: white;
+  border: none;
+  border-radius: 10px;
+  margin: 5px;
+ 
+}
+
+input:focus {
+  outline: none;
+}

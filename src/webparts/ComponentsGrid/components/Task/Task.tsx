@@ -86,6 +86,8 @@ const Task: React.FC<TaskProps> = ({ graphClient }) => {
       </div>
       <div className={styles['Task-content']}>
         <div className={styles['card-body']}>
+        {/* {tasks.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No pending tasks</p>} */}
+
           {tasks.map((task, index) => (
             <div
               key={task.id}
