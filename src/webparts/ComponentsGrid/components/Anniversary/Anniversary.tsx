@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { sp } from '@pnp/sp';
+import { Web} from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Anniversary.module.scss';
 
@@ -20,7 +20,15 @@ const Anniversary: React.FC = () => {
   React.useEffect(() => {
     const fetchAnniversaries = async (): Promise<void> => {
       try {
-        const items = await sp.web.lists.getByTitle('Staff Details').items.select('ID', 'FirstName', 'LastName', 'ResumptionDate', 'Designation').get();
+        const listName = 'Staff Details';
+        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Replace with your tenant-specific URL
+        const web = new Web(tenantUrl);
+        const list = await web.lists.getByTitle(listName);
+        if (!list) {
+          console.error(`List '${listName}' does not exist`);
+          return;
+        }
+        const items = await list.items.select('ID', 'FirstName', 'LastName', 'ResumptionDate', 'Designation').get();
         setAnniversaries(items);
       } catch (error) {
         console.error('Error fetching anniversaries:', error);

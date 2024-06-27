@@ -15,19 +15,51 @@
       "mpnId": "3473402"
     },
       "webApiPermissionRequests": [
-        {
-          "resource": "Microsoft Graph",
-          "scope": "User.Read"
-        },
-        {
-          "resource": "Microsoft Graph",
-          "scope": "Mail.Read"
-        },
-        {
-          "resource": "Microsoft Graph",
-          "scope": "Contacts.Read"
-        }
-      ],
+  {
+    "resource": "Microsoft Graph",
+    "scope": "Mail.ReadWrite"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "User.Read.All"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "Calendars.Read"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "Directory.Read.All"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "Group.ReadWrite.All"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "ChannelMessage.Read.All"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "Sites.ReadWrite.All"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "Files.Read.All"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "People.Read"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "Analytics.Read"
+  },
+  {
+    "resource": "Microsoft Graph",
+    "scope": "Chat.ReadWrite"
+  }
+],
     
     "metadata": {
       "shortDescription": {

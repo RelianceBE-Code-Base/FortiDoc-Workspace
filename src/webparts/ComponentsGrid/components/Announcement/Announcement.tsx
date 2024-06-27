@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { sp } from '@pnp/sp';
+import { Web} from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Announcement.module.scss'; 
 const AnnouncementImg = require('./assets/Announcement.png')
@@ -20,7 +20,15 @@ const Announcement: React.FC = () => {
   React.useEffect(() => {
     const fetchAnnouncements = async (): Promise<void> => {
       try {
-        const items = await sp.web.lists.getByTitle('Announcement').items.select('ID', 'Title', 'Description', 'LinkUrl').expand('AttachmentFiles').get();
+        const listName = 'Announcement';
+        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Replace with your tenant-specific URL
+        const web = new Web(tenantUrl);
+        const list = await web.lists.getByTitle(listName);
+        if (!list) {
+          console.error(`List '${listName}' does not exist`);
+          return;
+        }
+        const items = await list.items.select('ID', 'Title', 'Description', 'LinkUrl').expand('AttachmentFiles').get();
 
         // Fetch attachments for each item
         const itemsWithAttachments = items.map(item => ({

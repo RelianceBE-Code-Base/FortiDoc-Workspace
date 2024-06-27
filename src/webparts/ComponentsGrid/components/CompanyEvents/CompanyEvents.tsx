@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { sp } from '@pnp/sp';
+import { Web } from '@pnp/sp';
 import '@pnp/odata';
 import styles from './CompanyEvents.module.scss';
 
-const EventsImg = require('./assets/Events.png')
-
+const EventsImg = require('./assets/Events.png');
 
 interface ICompanyEvent {
   ID: number;
@@ -21,17 +20,25 @@ const CompanyEvents: React.FC = () => {
   React.useEffect(() => {
     const fetchEvents = async (): Promise<void> => {
       try {
-        const items = await sp.web.lists.getByTitle('Events').items.select('ID', 'Title', 'Location', 'EventDate', 'EndDate').get();
+        const listName = 'Events';
+        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Replace with your tenant-specific URL
+        const web = new Web(tenantUrl);
+        const list = await web.lists.getByTitle(listName);
+        if (!list) {
+          console.error(`List '${listName}' does not exist`);
+          return;
+        }
+        const items = await list.items.select('ID', 'Title', 'Location', 'EventDate', 'EndDate').get();
         setEvents(items);
       } catch (error) {
         console.error('Error fetching events:', error);
         setError('Failed to load events.');
       }
     };
-
+  
     fetchEvents().catch(error => console.error('Error in fetchEvents:', error));
   }, []);
-
+  
   if (error) {
     return <div className={styles.error}>{error}</div>;
   }
@@ -39,29 +46,29 @@ const CompanyEvents: React.FC = () => {
   return (
     <div className={styles.card}>
       <div className={styles['card-header']}>
-      <img src={EventsImg}/>
-      <p style={{display: 'flex', justifySelf: 'center'}}>Company Events</p>
-      <div></div>
+        <img src={EventsImg}/>
+        <p style={{display: 'flex', justifySelf: 'center'}}>Company Events</p>
+        <div></div>
       </div>
       <div className={styles['Events-content']}>
-      <div className={styles['card-body']}>
-      {events.map((event, index) => (
-         <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
-            <div className={styles.date}>
-              <span className={styles.day}>{new Date(event.EventDate).getDate()}</span>
-              <span className={styles.month}>{new Date(event.EventDate).toLocaleString('default', { month: 'short' })}</span>
-            </div>
-            <div className={styles.details}>
-              <div className={styles.title}>{event.Title}</div>
-              <div className={styles.venue}>Venue: {event.Location}</div>
-              <div className={styles.time}>
-                {new Date(event.EventDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(event.EndDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        <div className={styles['card-body']}>
+          {events.map((event, index) => (
+            <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
+              <div className={styles.date}>
+                <span className={styles.day}>{new Date(event.EventDate).getDate()}</span>
+                <span className={styles.month}>{new Date(event.EventDate).toLocaleString('default', { month: 'short' })}</span>
+              </div>
+              <div className={styles.details}>
+                <div className={styles.title}>{event.Title}</div>
+                <div className={styles.venue}>Venue: {event.Location}</div>
+                <div className={styles.time}>
+                  {new Date(event.EventDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(event.EndDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
     </div>
   );
 };
