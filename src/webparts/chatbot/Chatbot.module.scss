@@ -1,42 +1,99 @@
 @import '~@fluentui/react/dist/sass/References.scss';
 
+@import '../../styles/cards.scss';
+
 .chatbot {
   overflow: hidden;
   padding: 1em;
+ 
   color: "[theme:bodyText, default: #323130]";
   color: var(--bodyText);
   &.teams {
     font-family: $ms-font-family-fallbacks;
   }
+
+  border: none;
 }
 
-.welcome {
-  text-align: center;
-}
-
-.welcomeImage {
-  width: 100%;
-  max-width: 420px;
-}
-
-.links {
-  a {
-    text-decoration: none;
-    color: "[theme:link, default:#03787c]";
-    color: var(--link); // note: CSS Custom Properties support is limited to modern browsers only
-
-    &:hover {
-      text-decoration: underline;
-      color: "[theme:linkHovered, default: #014446]";
-      color: var(--linkHovered); // note: CSS Custom Properties support is limited to modern browsers only
-    }
-  }
-}
-
-
-// .userChat {
-//   max-width: '80%', 
-//   margin-left: 'auto', 
-//   marginRight: '10px', 
-//   marginBottom: '10px' 
+// .container{
+//   border: none;
 // }
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px; // Adjust this value to control how close to the top the banner appears
+  height: 100vh;
+  width: 100%;
+}
+
+
+
+.sendButton {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  margin: 5px;
+  background-color: #04a4ec;
+  border-color: #04a4ec;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  width: 50px;
+  align-self: flex-end;
+}
+
+.spinner{
+  padding: 0.25rem 0.5rem;
+  margin: 5px;
+  align-self: flex-end;
+
+
+}
+
+.input{
+  background-color: white;
+  border: none;
+  border-radius: 10px;
+  margin: 5px;
+ 
+}
+
+input:focus {
+  outline: none;
+}
+
+.metaIcon{
+  width: 15px;
+  height: 15px;
+  align-self: center;
+  margin-right: 5px;
+}
+
+
+.custom-btn-group {
+  display: flex;
+  justify-content: center; /* Centers the button group horizontally */
+  margin: 0 auto; /* Adds automatic left and right margins */
+  max-width: 300px; /* Optional: Limits the width of the button group */
+}
+
+.btn-group .btn {
+  font-size: 12px; /* Makes the buttons' text smaller */
+  padding: 5px 10px; /* Adjusts padding for a smaller button size */
+}
+
+.btn-group {
+  display: inline-flex; /* Keeps the buttons inline */
+}
+
+
+.banner{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 50px;  
+
+}
