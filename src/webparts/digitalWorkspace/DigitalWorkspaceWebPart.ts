@@ -32,7 +32,7 @@ export default class DigitalWorkspaceWebPart extends BaseClientSideWebPart<IDigi
       .getClient('3') // Specify the version argument
       .then((client: MSGraphClientV3): void => {
         const element: React.ReactElement<IDigitalWorkspaceProps> = React.createElement(
-          DigitalWorkspace,
+          DigitalWorkspace, 
           {
        
             pageContext: this.context.pageContext,

@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   padding: 10px;
+  width: 100%;
   border-radius: 5px;
   margin-bottom: 10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -30,7 +31,7 @@
   overflow: auto;
   height: 245px;
   margin: 5px;
-  width: auto;
+  width: 96%;
   margin-right: 10px;
   scrollbar-width: thin;
 }

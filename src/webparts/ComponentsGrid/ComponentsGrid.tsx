@@ -59,8 +59,7 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
 
         { name: 'UserProfile', component: UserProfile, width: 'col-md-4', pinned: false },
         { name: 'Inbox', component: Inbox, width: 'col-md-4', pinned: false, msGraphClient: this.props.graphClient },
-        { name: 'MicrosoftTeams', component: MicrosoftTeams, width: 'col-md-4', pinned: false },
-
+        { name: 'MicrosoftTeams', component: MicrosoftTeams, width: 'col-md-4', pinned: false, msGraphClient: this.props.graphClient },
         { name: 'MicrosoftApps', component: MicrosoftApps, width: 'col-md-4', pinned: false },
         { name: 'BusinessApps', component: BusinessApps, width: 'col-md-4', pinned: false },
         { name: 'StaffDirectory', component: StaffDirectory, width: 'col-md-4', pinned: false },

@@ -1,27 +1,39 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { MSGraphClientV3 } from '@microsoft/sp-http';
+import { MSGraphClient } from '@microsoft/sp-http';
+import { Modal } from 'react-bootstrap';
 import styles from './MicrosoftTeams.module.scss';
 
 const TeamsIcon = require('./assets/TeamsIcon.png');
 
 interface MicrosoftTeamsProps {
-  graphClient: MSGraphClientV3;
+  graphClient: MSGraphClient;
 }
 
 interface Chat {
   id: string;
-  topic: string;
+  lastMessage: {
+    sender: {
+      user: {
+        displayName: string;
+        userId: string;
+      } | null;
+    } | null;
+    body: {
+      content: string;
+    } | null;
+    createdDateTime: string | null;
+  } | null;
+  photo: string;
 }
 
-interface ChatMessage {
+interface Message {
   id: string;
   from: {
     user: {
       displayName: string;
-      id: string;
-    };
-  } | null; // from can be null
+    } | null;
+  };
   body: {
     content: string;
   };
@@ -30,165 +42,151 @@ interface ChatMessage {
 
 const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient }) => {
   const [chats, setChats] = useState<Chat[]>([]);
-  const [messages, setMessages] = useState<{ [key: string]: ChatMessage[] }>({});
+  const [showModal, setShowModal] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
-  const [selectedChatMessages, setSelectedChatMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [photoUrls, setPhotoUrls] = useState<{ [key: string]: string | null }>({});
-  const [loginUserId, setLoginUserId] = useState<string>('');
 
   useEffect(() => {
     fetchChats();
-    fetchLoginUser();
   }, []);
-
-  const fetchLoginUser = async () => {
-    try {
-      const response = await graphClient.api('/me').get();
-      setLoginUserId(response.id);
-    } catch (error) {
-      console.error('Error fetching login user', error);
-    }
-  };
 
   const fetchChats = async () => {
     try {
       const response = await graphClient.api('/me/chats').get();
-      const chats: Chat[] = response.value;
-      setChats(chats);
-      fetchMessagesForChats(chats);
+      const chatData: Chat[] = await Promise.all(
+        response.value.map(async (chat: any) => {
+          if (chat.lastMessage?.sender) {
+            try {
+              const photoResponse = await graphClient.api(`/users/${chat.lastMessage.sender.user.userId}/photo/$value`).get();
+              if (photoResponse.ok) {
+                const photoBlob = await photoResponse.blob();
+                const photoUrl = URL.createObjectURL(photoBlob);
+                return {
+                  ...chat,
+                  photo: photoUrl,
+                };
+              } else {
+                console.error(`Failed to fetch photo for user ${chat.lastMessage.sender.user.userId}`);
+                return {
+                  ...chat,
+                  photo: 'https://via.placeholder.com/50',
+                };
+              }
+            } catch (error) {
+              console.error(`Error fetching photo for user ${chat.lastMessage.sender.user.userId}:`, error);
+              return {
+                ...chat,
+                photo: 'https://via.placeholder.com/50',
+              };
+            }
+          } else {
+            return {
+              ...chat,
+              photo: 'https://via.placeholder.com/50',
+            };
+          }
+        })
+      );
+      setChats(chatData);
+      setLoading(false);
     } catch (error) {
-      console.error('Error fetching chats', error);
-      setError('Failed to load chats.');
+      setError('Error fetching chats');
+      setLoading(false);
     }
   };
 
-  const fetchMessagesForChats = async (chats: Chat[]) => {
+  const fetchMessages = async (chatId: string) => {
     try {
-      const allMessages: { [key: string]: ChatMessage[] } = {};
-      for (const chat of chats) {
-        const response = await graphClient.api(`/me/chats/${chat.id}/messages`).get();
-        allMessages[chat.id] = response.value;
-      }
-      setMessages(allMessages);
+      const response = await graphClient.api(`/me/chats/${chatId}/messages`).get();
+      const messagesData: Message[] = response.value;
+      setMessages(messagesData);
     } catch (error) {
-      console.error('Error fetching messages', error);
-      setError('Failed to load messages.');
+      console.error('Error fetching messages:', error);
     }
   };
-
-  const fetchUserPhoto = async (userId: string) => {
-    try {
-      const response = await graphClient.api(`/users/${userId}/photo/$value`).get();
-      const url = URL.createObjectURL(response);
-      setPhotoUrls((prevPhotoUrls) => ({ ...prevPhotoUrls, [userId]: url }));
-    } catch (error) {
-      console.error('Error fetching user photo', error);
-      setPhotoUrls((prevPhotoUrls) => ({ ...prevPhotoUrls, [userId]: null }));
-    }
-  };
-
-  useEffect(() => {
-    Object.values(messages).reduce((acc, curr) => [...acc, ...curr], []).forEach((message) => {
-      if (message.from && message.from.user && message.from.user.id) {
-        fetchUserPhoto(message.from.user.id);
-      }
-    });
-  }, [messages, graphClient]);
 
   const handleChatClick = (chat: Chat) => {
     setSelectedChat(chat);
-    setSelectedChatMessages(messages[chat.id] || []);
+    setShowModal(true);
+    fetchMessages(chat.id);
   };
 
-  const handleCloseModal = () => {
+  const handleClose = () => {
+    setShowModal(false);
     setSelectedChat(null);
-    setSelectedChatMessages([]);
+    setMessages([]);
   };
 
-  const formatMessagePreview = (message: ChatMessage) => {
-  const content = message.body.content.replace(/<[^>]+>/g, ''); // Remove HTML tags
-  if (message.from && message.from.user) {
-    return message.from.user.id === loginUserId? `You: ${content}` : content;
-  } else {
-    return content; // Display the message body even if the sender is unknown
+  if (loading) {
+    return <div>Loading...</div>;
   }
-};
 
   if (error) {
-    return <div className={styles.error}>{error}</div>;
+    return <div>{error}</div>;
   }
 
   return (
     <div className={styles.card}>
-      <div className={styles['card-header']} style={{ backgroundColor: '#e6f6fd' }}>
-        <img src={TeamsIcon} style={{ display: 'flex' }} />
-        <p style={{ display: 'flex', justifySelf: 'center' }}>Microsoft Teams</p>
-        <div></div>
-      </div>
-      <div className={styles['card-body']}>
-        {chats.map((chat) => {
-          const lastMessage = messages[chat.id] ? messages[chat.id][messages[chat.id].length - 1] : null;
-          if (!lastMessage) return null;
-          return (
-<div key={chat.id} className={styles.message} onClick={() => handleChatClick(chat)}>
-              <div className={styles.messageHeader}>
-                {lastMessage.from && lastMessage.from.user? (
-                  <>
-                    <img src={photoUrls[lastMessage.from.user.id] || ''} className={styles.avatar} alt="Avatar" />
-                    <div className={styles.messageInfo}>
-                      <div className={styles.senderName}>{lastMessage.from.user.displayName}</div>
-                      <div className={styles.messagePreview} dangerouslySetInnerHTML={{ __html: formatMessagePreview(lastMessage) }} />
-                    </div>
-                  </>
-                ) : (
-                  <div className={styles.messageInfo}>
-                    <div className={styles.senderName}>Unknown Sender</div>
-                    <div className={styles.messagePreview} dangerouslySetInnerHTML={{ __html: formatMessagePreview(lastMessage) }} />
-                  </div>
-                )}
-              </div>
-              <div className={styles.messageTime}>
-                {new Date(lastMessage.createdDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      {selectedChat && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <span className={styles.close} onClick={handleCloseModal}>
-              &times;
-            </span>
-            {selectedChatMessages.map((message) => (
-              <div key={message.id} className={styles.chatMessage}>
-                <div className={styles.messageHeader}>
-                  {message.from && message.from.user? (
-                    <>
-                      <img src={photoUrls[message.from.user.id] || ''} className={styles.avatar} alt="Avatar" />
-                      <div className={styles.messageInfo}>
-                        <div className={styles.senderName}>
-                          {message.from.user.id === loginUserId? 'You' : message.from.user.displayName}
-                        </div>
-                        <div className={styles.messageContent} dangerouslySetInnerHTML={{ __html: message.body.content }} />
-                      </div>
-                    </>
-                  ) : (
-                    <div className={styles.messageInfo}>
-                      <div className={styles.senderName}>Unknown Sender</div>
-                      <div className={styles.messageContent} dangerouslySetInnerHTML={{ __html: message.body.content }} />
-                    </div>
-                  )}
-                </div>
-                <div className={styles.messageTime}>
-                  {new Date(message.createdDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </div>
-              </div>
-            ))}
-          </div>
+      <div className={styles['card-header']}>
+          <img src={TeamsIcon} style={{ display: 'flex' }} alt="Teams Icon" />
+          <p style={{ display: 'flex', justifySelf: 'center' }}>Microsoft Teams</p>
+          <div></div>
         </div>
-      )}
+        <div className={styles['Teams-content']}>
+        <div className={styles['card-body']}>
+        {chats.map((chat) => (
+  <div key={chat.id} className={styles.chatItem} onClick={() => handleChatClick(chat)}>
+    <img src={chat.photo} alt="User Photo" className={styles.userPhoto} />
+    <div className={styles.chatDetails}>
+      <div className={styles.senderName}>
+        {chat.lastMessage && chat.lastMessage.sender && chat.lastMessage.sender.user
+         ? chat.lastMessage.sender.user.displayName
+          : 'You'}
+      </div>
+      <div className={styles.chatSnippet}>
+        {chat.lastMessage && chat.lastMessage.body? chat.lastMessage.body.content : ''}
+      </div>
+    </div>
+    <div className={styles.chatTime}>
+      {chat.lastMessage && chat.lastMessage.createdDateTime
+       ? new Date(chat.lastMessage.createdDateTime).toLocaleTimeString()
+        : ''}
+    </div>
+  </div>
+))}
+        </div>
+      </div>
+      
+
+      <Modal show={showModal} onHide={handleClose} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Conversation with {selectedChat?.lastMessage?.sender?.user?.displayName || 'You'}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        {messages.map((message) => (
+  <div key={message.id} className={styles.message}>
+    <div className={styles.messageHeader}>
+      <img
+        src={selectedChat?.photo || 'https://via.placeholder.com/50'}
+        alt="User Photo"
+        className={styles.userPhoto}
+      />
+      <div className={styles.senderName}>
+        {message.from && message.from.user? message.from.user.displayName : 'Unknown'}
+      </div>
+      <div className={styles.messageTime}>
+        {new Date(message.createdDateTime).toLocaleTimeString()}
+      </div>
+    </div>
+    <div className={styles.messageBody}>{message.body.content}</div>
+  </div>
+))}
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
