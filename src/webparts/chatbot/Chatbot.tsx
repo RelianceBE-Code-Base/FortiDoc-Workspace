@@ -64,12 +64,24 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [temperature, setTemperature] = useState(0);
+  const [themeColor, setThemeColor] = useState('#04a4ec')
+  const [selectedButton, setSelectedButton] = useState('Balanced');
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
     setQuery(event.currentTarget.value);
   };
+
+
+  const handleTemperatureButtonClick = (temperature:number, color:string) => {
+
+    setThemeColor(color)
+    
+    setTemperature(temperature)
+
+    setSelectedButton(temperature === 1 ? 'Creative' : temperature === 0 ? 'Precise' : 'Balanced');
+  }
 
   const handleClick = async () => {
     if (query.trim() === "") {
@@ -120,25 +132,45 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
               </div>
             ))}
           </div>
+
           {messages.length === 0 &&
-            <div>
+
+            <div style={{display : 'flex', flexDirection: 'column'}}>
               <Carousel items={carouselItems} />
-              <div className="d-flex justify-content-center my-4">
-                <div className="btn-group" role="group" aria-label="Basic example">
-                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setTemperature(1)}>Creative</button>
-                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setTemperature(0.5)}>Balanced</button>
-                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setTemperature(0)}>Precise</button>
+
+
+              <div className={styles['button-card']}>
+                <div className = {styles['btn-group']}>
+                  <button type="button" 
+                    className = {styles.temperatureButton} 
+                    style={{ backgroundColor: selectedButton === 'Creative'? themeColor: 'white', color: selectedButton === 'Creative'? 'white' : 'black'}} 
+                    onClick={() => handleTemperatureButtonClick(1,'purple')}>Creative</button>
+
+                  <button type="button" 
+                    className = {styles.temperatureButton} 
+                    style={{ backgroundColor: selectedButton === 'Balanced'? themeColor: 'white', color: selectedButton === 'Balanced'? 'white' : 'black' }} 
+                    onClick={() => handleTemperatureButtonClick(0.5,'#04a4ec')}>Balanced</button>
+
+                  <button type="button" 
+                  className = {styles.temperatureButton} 
+                  style={{ backgroundColor: selectedButton === 'Precise'? themeColor: 'white', color: selectedButton === 'Precise'? 'white' : 'black'}} 
+                  onClick={() => handleTemperatureButtonClick(0,'#154c79')}>Precise</button>
+                  
                 </div>
               </div>
+
             </div>
+
+
           }
           <div style={{ display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
-            <button className={styles.sendButton} style={{ alignSelf: 'flex-start', borderRadius: '50%' }} onClick={clearHistory}>New Topic</button>
-            <div className={`card ${styles['input-card']}`}>
+            <button className={styles.sendButton} style={{ alignSelf: 'flex-start', borderRadius: '50%', backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory} >New Topic</button>
+
+            <div className={`card ${styles['input-card']}`} style={{ borderBottomColor: themeColor }}>
               <form className="" style={{ display: 'flex', flexDirection: 'column' }}>
                 <input id="messageInput" className={styles.input} disabled={isLoading} placeholder="Ask me anything..." onChange={handleInputChange} value={query} />
                 {isLoading && <Spinner animation="border" className={styles.spinner} />}
-                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton}>Send</button>}
+                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{backgroundColor: themeColor, borderColor: themeColor}}>Send</button>}
                 {SendIcon}
               </form>
             </div>
