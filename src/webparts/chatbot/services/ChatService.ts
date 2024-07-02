@@ -2,7 +2,7 @@ import { OpenAIClient, AzureKeyCredential }from '@azure/openai'
 
 
 
-async function invokePrompt(messages: {role:string, content:string}[]) : Promise<string>{
+async function invokePrompt(messages: {role:string, content:string}[], temp: number = 0.5) : Promise<string>{
 
     const deployment_id = "gpt-35-turbo"
     // const endpoint = "https://ai-kojoai010105560994.openai.azure.com/"
@@ -13,10 +13,11 @@ async function invokePrompt(messages: {role:string, content:string}[]) : Promise
     const client = new OpenAIClient(
         endpoint,
         new AzureKeyCredential(azure_openai_key)
+    
     )
     
 
-    const events = await client.getChatCompletions(deployment_id, messages, { maxTokens: 1000 }, );
+    const events = await client.getChatCompletions(deployment_id, messages, { maxTokens: 1000, temperature: temp }, );
 
 
     let response: string =  events.choices[0].message?.content!

@@ -5,4 +5,6 @@ export interface IChatbotState{
     query: string
 
     isLoading : boolean
+
+    temperature: number
 }
