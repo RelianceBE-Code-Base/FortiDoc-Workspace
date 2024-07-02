@@ -5,7 +5,7 @@ import '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free';
 import styles from './Chatbot.module.scss';
 import type { IChatbotProps } from './IChatbotProps';
-import { IChatbotState } from './IChatbotState'; 
+// import { IChatbotState } from './IChatbotState'; 
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import { SendIcon } from '@fluentui/react-icons-mdl2';
 
@@ -22,10 +22,45 @@ import AiImage from './assets/AI.png';
 import invokePrompt from './services/ChatService';
 import Spinner from 'react-bootstrap/Spinner';
 
+const carouselItems = [
+  {
+    image: googleImage,
+    alt: 'Google',
+    caption: 'How big is Google?',
+    description: 'Explore the scale and impact of this tech giant'
+  },
+  {
+    image: microsoftImage,
+    alt: 'Microsoft',
+    caption: 'Tell me about Microsoft',
+    description: 'Discover the history and products of Microsoft'
+  },
+  {
+    image: AiImage,
+    alt: 'AI',
+    caption: 'How is AI going to shape the future',
+    description: 'Is AI with or against us?'
+  },
+  {
+    image: dogImage,
+    alt: 'dog',
+    caption: 'Describe dog breeds',
+    description: 'Learn about various dog breeds and their characteristics'
+  }
+]
+
+
+type Message = {
+  role: string;
+  content: string;
+};
+
+
 const Chatbot: React.FC<IChatbotProps> = (props) => {
+
   const user_name = props.pageContext?.user?.displayName || 'Guest';
 
-  const [messages, setMessages] = useState<IChatbotState["messages"]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [temperature, setTemperature] = useState(0);
@@ -87,32 +122,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
           </div>
           {messages.length === 0 &&
             <div>
-              <Carousel items={[
-                {
-                  image: googleImage,
-                  alt: 'Google',
-                  caption: 'How big is Google?',
-                  description: 'Explore the scale and impact of this tech giant'
-                },
-                {
-                  image: microsoftImage,
-                  alt: 'Microsoft',
-                  caption: 'Tell me about Microsoft',
-                  description: 'Discover the history and products of Microsoft'
-                },
-                {
-                  image: AiImage,
-                  alt: 'AI',
-                  caption: 'How is AI going to shape the future',
-                  description: 'Is AI with or against us?'
-                },
-                {
-                  image: dogImage,
-                  alt: 'dog',
-                  caption: 'Describe dog breeds',
-                  description: 'Learn about various dog breeds and their characteristics'
-                }
-              ]} />
+              <Carousel items={carouselItems} />
               <div className="d-flex justify-content-center my-4">
                 <div className="btn-group" role="group" aria-label="Basic example">
                   <button type="button" className="btn btn-secondary btn-sm" onClick={() => setTemperature(1)}>Creative</button>
