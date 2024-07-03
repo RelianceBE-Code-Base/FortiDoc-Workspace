@@ -155,7 +155,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
                   className = {styles.temperatureButton} 
                   style={{ backgroundColor: selectedButton === 'Precise'? themeColor: 'white', color: selectedButton === 'Precise'? 'white' : 'black'}} 
                   onClick={() => handleTemperatureButtonClick(0,'#154c79')}>Precise</button>
-                  
+
                 </div>
               </div>
 
