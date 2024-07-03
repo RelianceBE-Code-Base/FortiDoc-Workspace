@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
- s
+  # vmImage: ubuntu-latest
   name: testAgent
 
 steps:
