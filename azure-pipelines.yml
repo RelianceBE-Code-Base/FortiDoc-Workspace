@@ -1,0 +1,54 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSource: 'spec'
+    versionSpec: '20.14.0'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+  displayName: 'npm install'
+
+- task: gulp@0
+  inputs:
+    gulpFile: 'gulpfile.js'
+    targets: 'bundle'
+    arguments: '--ship'
+    gulpjs: 'node_modules/gulp/bin/gulp.js'
+    enableCodeCoverage: false
+  displayName: 'gulp bundle --ship'
+
+- task: gulp@0
+  inputs:
+    gulpFile: 'gulpfile.js'
+    targets: 'package-solution'
+    arguments: '--ship'
+    gulpjs: 'node_modules/gulp/bin/gulp.js'
+    enableCodeCoverage: false
+  displayName: 'gulp package-solution'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.Repository.LocalPath)/sharepoint/solution'
+    Contents: '*.sppkg'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/drop'
+  displayName: 'Copy Files'
+
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/drop'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  displayName: 'Publish build artifacts'
