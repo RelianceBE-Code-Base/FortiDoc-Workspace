@@ -171,7 +171,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
               <form className="" style={{ display: 'flex', flexDirection: 'column' }}>
                 <input id="messageInput" className={styles.input} disabled={isLoading} placeholder="Ask me anything..." onChange={handleInputChange} value={query} />
                 {isLoading && <Spinner animation="border" className={styles.spinner} />}
-                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{backgroundColor: themeColor, borderColor: themeColor}}><Icon iconName='FolderHorizontal'/></button>}
+                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{backgroundColor: themeColor, borderColor: themeColor}}><Icon iconName='Send'/></button>}
                 {SendIcon}
               </form>
             </div>
