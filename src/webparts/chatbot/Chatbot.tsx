@@ -165,13 +165,16 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
 
           }
           <div style={{ display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
-            <button className={styles.sendButton} style={{ alignSelf: 'flex-start', borderRadius: '50%', backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory} >New Topic</button>
+            
+              <button title='New Chat' className={styles.clearChat} style={{ backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory}><Icon iconName='SkypeMessage' style={{ width: '24px', height: '24px', display: 'block' }} /></button> 
+           
+
 
             <div className={`card ${styles['input-card']}`} style={{ borderBottomColor: themeColor }}>
               <form className="" style={{ display: 'flex', flexDirection: 'column' }}>
                 <input id="messageInput" className={styles.input} disabled={isLoading} placeholder="Ask me anything..." onChange={handleInputChange} value={query} />
                 {isLoading && <Spinner animation="border" className={styles.spinner} />}
-                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{backgroundColor: themeColor, borderColor: themeColor}}><Icon iconName='Send'/></button>}
+                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{color: themeColor}}><Icon iconName='Send'/></button>}
                 {SendIcon}
               </form>
             </div>
