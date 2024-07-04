@@ -4,8 +4,8 @@ import { OpenAIClient, AzureKeyCredential }from '@azure/openai'
 
 async function invokePrompt(messages: {role:string, content:string}[], temp: number = 0.5) : Promise<string>{
 
-    const deployment_id = "gpt-35-turbo"
-    // const deployment_id = "KojoGPT4o"
+    // const deployment_id = "gpt-35-turbo"
+    const deployment_id = "KojoGPT4o"
     // const endpoint = "https://ai-kojoai010105560994.openai.azure.com/"
     const endpoint = "https://ai-kojoeastus482385420656.openai.azure.com/"
     // const azure_openai_key = "a892286df8914ab8bb804a06e0331189"
