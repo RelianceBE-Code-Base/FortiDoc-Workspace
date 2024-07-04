@@ -8,6 +8,7 @@ import type { IChatbotProps } from './IChatbotProps';
 // import { IChatbotState } from './IChatbotState'; 
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import { SendIcon } from '@fluentui/react-icons-mdl2';
+import { Icon } from '@fluentui/react/lib/Icon';
 
 import Carousel from './Carousel';
 
@@ -170,7 +171,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
               <form className="" style={{ display: 'flex', flexDirection: 'column' }}>
                 <input id="messageInput" className={styles.input} disabled={isLoading} placeholder="Ask me anything..." onChange={handleInputChange} value={query} />
                 {isLoading && <Spinner animation="border" className={styles.spinner} />}
-                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{backgroundColor: themeColor, borderColor: themeColor}}>Send</button>}
+                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{backgroundColor: themeColor, borderColor: themeColor}}><Icon iconName='FolderHorizontal'/></button>}
                 {SendIcon}
               </form>
             </div>
