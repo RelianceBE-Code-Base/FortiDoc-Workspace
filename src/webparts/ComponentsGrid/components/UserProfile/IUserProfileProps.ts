@@ -6,4 +6,7 @@ export interface IUserProfileProps {
   isDarkTheme: boolean;
   userDisplayName: string;
   graphClient: MSGraphClientV3;
+    pinned: boolean;
+    onPinClick: () => void;
+    onRemove: () => void;   
 }

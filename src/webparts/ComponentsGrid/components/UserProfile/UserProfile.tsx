@@ -10,6 +10,12 @@ import { TestImages } from '@fluentui/example-data';
 
 const UserProfileIcon = require('./assets/UserProfile.png')
 
+import PinIcon from '../PinIcon/PinIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowClose} from '@fortawesome/free-solid-svg-icons';
+
+
+
 class UserProfile extends React.Component<IUserProfileProps, IUserProfileState> {
 
   constructor(props: IUserProfileProps){
@@ -56,12 +62,21 @@ class UserProfile extends React.Component<IUserProfileProps, IUserProfileState> 
  
 
   render(): React.ReactNode {
+      const { pinned, onPinClick, onRemove } = this.props;
+
     return(
       <div className={styles.card}>
         <div className={styles['card-header']}>
           <img src={UserProfileIcon}/>
           <p style={{display: 'flex'}}>My Profile</p>
-          <div></div>
+          <div style={{display: 'flex'}}>
+
+          
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+           
+          </div>
        </div>
 
 

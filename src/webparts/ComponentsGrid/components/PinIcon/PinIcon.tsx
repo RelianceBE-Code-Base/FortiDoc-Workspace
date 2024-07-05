@@ -1,15 +1,19 @@
-// PinIcon.tsx
 import * as React from 'react';
 
 interface PinIconProps {
-  pinned: boolean;
+  componentName: string;
   onPinClick: () => void;
+  pinned: boolean;
 }
 
-const PinIcon: React.FC<PinIconProps> = ({ pinned, onPinClick }) => {
+const PinIcon: React.FC<PinIconProps> = ({ componentName, onPinClick, pinned }) => {
+  const togglePin = async () => {
+    onPinClick();
+  };
+
   return (
-    <span onClick={onPinClick} style={{ cursor: 'pointer' }}>
-      {pinned ? '📌' : '📍'}
+    <span onClick={togglePin} style={{ cursor: 'pointer' }}>
+      {pinned? '📌' : '📍'}
     </span>
   );
 };

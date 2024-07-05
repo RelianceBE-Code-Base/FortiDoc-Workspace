@@ -3,11 +3,17 @@ import { useState, useEffect } from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 import styles from './Calendar.module.scss';
 import './Calendar.module.scss';
+import PinIcon from '../PinIcon/PinIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowClose} from '@fortawesome/free-solid-svg-icons';
 
 const CalendarIcon = require('./assets/CalendarIcon.png');
 
 interface CalendarProps {
   graphClient: MSGraphClientV3;
+    pinned: boolean;
+    onPinClick: () => void;
+    onRemove: () => void; 
 }
 
 interface Event {
@@ -18,7 +24,7 @@ interface Event {
   location: { displayName: string };
 }
 
-const Calendar: React.FC<CalendarProps> = ({ graphClient }) => {
+const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, onRemove }) => {
   const [events, setEvents] = useState<Event[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,7 +52,10 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient }) => {
     <div className={styles['card-header']}>
         <img src={CalendarIcon} style={{ display: 'flex' }} />
         <p style={{ display: 'flex', justifySelf: 'center' }}>Calendar</p>
-        <div></div>
+        <div style={{display: 'flex'}}>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          </div>
         </div>
         <div className={styles['Calendar-content']}>
       <div className={styles['card-body']}>

@@ -17,6 +17,8 @@ interface IGallerySliderProps extends Pick<IDigitalWorkspaceProps, 'isDarkTheme'
   // Define any additional props needed for GallerySlider
 }
 
+ const MicrosoftAppsIcon = require('./assets/MicrosoftAppsIcon.png')
+
 const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRemove, isDarkTheme }) => {
   const [images, setImages] = React.useState<string[]>([]);
   const [error, setError] = React.useState<string>('');
@@ -62,9 +64,10 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRe
   return (
     <div className='card' style={{ boxShadow: 'rgba(14, 30, 37, 0) 0px 1px 2px 0px, rgba(14, 30, 37, 0.16) 0px 1px 8px 0px' }}>
       <div className={styles['card-header']}>
+      <img src={MicrosoftAppsIcon} style={{display: 'flex'}}/>
         Gallery Slider
         <div>
-          <PinIcon pinned={pinned} onPinClick={onPinClick} />
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
           <button className="btn btn-sm btn-light" onClick={onRemove} style={{ marginLeft: '0px', backgroundColor: '#e6f6fd' }}>
             <FontAwesomeIcon icon={faWindowClose} size="lg" color="red"/>
           </button>
@@ -85,6 +88,19 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRe
         )}
       </div>
     </div>
+    // <div>
+    //    {error ? (
+    //       <div style={{ color: 'red' }}>{error}</div>
+    //     ) : (
+    //       <Carousel {...sliderSettings} >
+    //         {images.map((imageUrl, index) => (
+    //           <div key={index}> {/* Adjust the height here */}
+    //             <img src={imageUrl} alt={`Slide ${index}`}  style={{ height: '33.3%', width: '100%', objectFit: 'cover' }}/>
+    //           </div>
+    //         ))}
+    //       </Carousel>
+    //     )}
+    // </div>
   );
 };
 

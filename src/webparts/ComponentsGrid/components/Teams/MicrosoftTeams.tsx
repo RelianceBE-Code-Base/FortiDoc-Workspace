@@ -3,11 +3,17 @@ import { useState, useEffect } from 'react';
 import { MSGraphClient } from '@microsoft/sp-http';
 import { Modal } from 'react-bootstrap';
 import styles from './MicrosoftTeams.module.scss';
+import PinIcon from '../PinIcon/PinIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
 const TeamsIcon = require('./assets/TeamsIcon.png');
 
 interface MicrosoftTeamsProps {
   graphClient: MSGraphClient;
+  pinned: boolean;
+  onPinClick: () => void;
+  onRemove: () => void; 
 }
 
 interface Chat {
@@ -40,13 +46,14 @@ interface Message {
   createdDateTime: string;
 }
 
-const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient }) => {
+const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient, pinned, onPinClick, onRemove }) => {
   const [chats, setChats] = useState<Chat[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
 
   useEffect(() => {
     fetchChats();
@@ -127,12 +134,19 @@ const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient }) => {
     return <div>{error}</div>;
   }
 
+  
+   
   return (
     <div className={styles.card}>
       <div className={styles['card-header']}>
           <img src={TeamsIcon} style={{ display: 'flex' }} alt="Teams Icon" />
           <p style={{ display: 'flex', justifySelf: 'center' }}>Microsoft Teams</p>
-          <div></div>
+          <div style={{display: 'flex'}}>
+
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          </div>
         </div>
         <div className={styles['Teams-content']}>
         <div className={styles['card-body']}>

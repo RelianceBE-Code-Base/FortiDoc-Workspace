@@ -31,13 +31,15 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
     return (
       <Router>
         <section className={styles.digitalWorkspace}>
-          <Header onHomeClick={this.handleHomeClick} graphClient={this.props.graphClient} onDismissSearchResults={this.handleDismissSearchResults} onOptionsClick={this.handleOptionsClick} />
+          <Header onHomeClick={this.handleHomeClick} graphClient={this.props.graphClient} onDismissSearchResults={this.handleDismissSearchResults} onOptionsClick={this.handleOptionsClick} onComponentAdd={function (componentName: string): void {
+            throw new Error('Function not implemented.');
+          } } />
           <div className="d-flex">
             <div className="container-fluid">
               <Switch>
 
 /   
-                <Route exact path="/" render={(props) => <ComponentsGrid graphClient={this.props.graphClient}  />} />
+                <Route exact path="/" render={(props) => <ComponentsGrid graphClient={this.props.graphClient} tenantUrl={''} listName={''} context={undefined}  />} />
              
                 <Route path="/chatbot" render={(props) => <Chatbot pageContext={this.props.pageContext} />} />
               </Switch>

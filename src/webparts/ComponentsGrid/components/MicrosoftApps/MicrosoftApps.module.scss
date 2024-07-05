@@ -28,6 +28,18 @@ $themeColor4: #e0e1e2;
   padding-right: 55px;
 }
 
+// .MApp-content {
+//   max-height: '500px'; 
+//   overflow: 'auto'; 
+//   height: '245px';
+//   // padding: 10px;
+//   // overflow-y: auto;
+//   margin: 5px;
+//   width: 96%;
+//   margin-right: 10px;
+//   scrollbar-width: thin;
+// }
+
 .content {
   flex-grow: 1;
   display: flex;
@@ -42,7 +54,8 @@ $themeColor4: #e0e1e2;
   gap: 10px;
   justify-content: space-around;
   width: 100%;
-  height: 100%;
+  height: 95%;
+  max-height: 275px;
   padding: 5px;
   overflow: auto;
 }

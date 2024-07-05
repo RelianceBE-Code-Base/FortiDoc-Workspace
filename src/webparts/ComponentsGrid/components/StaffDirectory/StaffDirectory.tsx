@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 import { ListGroup, ListGroupItem, FormControl, Modal, Button, Tabs, Tab } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import styles from './StaffDirectory.module.scss';
-
+import PinIcon from '../PinIcon/PinIcon';
 import './StaffDirectory.module.scss'
 import { TestImages } from '@fluentui/example-data';
 
@@ -15,6 +15,9 @@ const StaffDirectoryIcon = require('./assets/StaffDirectoryIcon.png')
 
 interface StaffDirectoryProps {
   graphClient: MSGraphClientV3;
+    pinned: boolean;
+    onPinClick: () => void;
+    onRemove: () => void; // specify the type as () => void
 }
 
 
@@ -37,7 +40,7 @@ interface UserDetails extends User {
   linkedinProfile?: any;
 }
 
-const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient }) => {
+const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onPinClick, onRemove }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
@@ -145,6 +148,10 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient }) => {
         <div >
           
           <p>Staff Directory</p>
+          <div style={{display: 'flex'}}>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} /> 
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          </div>
         </div>}
 
         {showSearchBox &&
@@ -164,6 +171,7 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient }) => {
 
         
       </div>
+
       <div className={`${styles.cardBody} `}>
         {/* {filteredUsers.map(user => (
           <Card key={user.id} className={styles.userCard} onClick={() => handleUserClick(user)}>

@@ -2,8 +2,17 @@ import * as React from 'react';
 import { Web} from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Birthday.module.scss';
+import PinIcon from '../PinIcon/PinIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
 const BirthdayIcon = require('./assets/Birthday.png');
+
+interface MicrosoftBirthdayProps {
+  pinned: boolean;
+  onPinClick: () => void;
+  onRemove: () => void;
+}
 
 interface IBirthday {
   ID: number;
@@ -13,7 +22,7 @@ interface IBirthday {
   Designation: string;
 }
 
-const Birthday: React.FC = () => {
+const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemove }) => {
   const [birthdays, setBirthdays] = React.useState<IBirthday[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -61,7 +70,10 @@ const Birthday: React.FC = () => {
       <div className={styles['card-header']}>
         <img src={BirthdayIcon} style={{ display: 'flex' }} />
         <p style={{ display: 'flex', justifySelf: 'center' }}>Birthdays</p>
-        <div></div>
+        <div style={{display: 'flex'}}>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          </div>
       </div>
       <div className={styles['Birthday-content']}>
         <div className={styles['card-body']}>
