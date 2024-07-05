@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styles from './UserProfile.module.scss';
 import { IUserProfileProps } from './IUserProfileProps';
 import { ResponseType } from '@microsoft/microsoft-graph-client';
-// import { TestImages } from '@fluentui/example-data';
 
 const UserProfileIcon = require('./assets/UserProfile.png');
 
@@ -10,7 +9,8 @@ const UserProfile: React.FC<IUserProfileProps> = (props) => {
   const [profilePhoto, setProfilePhoto] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [userJobTitle, setUserJobTitle] = useState<string>('');
-
+  
+  
   const getProfilePhoto = async () => {
     try {
       const response = await props.graphClient
@@ -21,7 +21,7 @@ const UserProfile: React.FC<IUserProfileProps> = (props) => {
       const imageUrl = URL.createObjectURL(response);
       setProfilePhoto(imageUrl);
     } catch (error) {
-      console.log("Image not found");
+      console.log("Profile image not found");
       setProfilePhoto("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
     }
   };
@@ -37,15 +37,15 @@ const UserProfile: React.FC<IUserProfileProps> = (props) => {
     }
   };
 
+  
+  
+
+  
+
   useEffect(() => {
-    // Uncomment the following lines to fetch the profile photo and user details from the Graph API
+    
     getProfilePhoto();
     getUserDetails();
-
-    // Set default values for testing purposes
-    // setProfilePhoto(TestImages.personaMale);
-    // setUserName("Toba Gbeleyi");
-    // setUserJobTitle("Developer");
   }, []);
 
   return (
