@@ -3,6 +3,12 @@ import { useState, useEffect } from 'react';
 import { MSGraphClient } from '@microsoft/sp-http';
 import styles from './MicrosoftTeams.module.scss';
 
+import { Card } from 'react-bootstrap';
+
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelopeOpen, faReply, faClock } from '@fortawesome/free-solid-svg-icons';
+
 const TeamsIcon = require('./assets/TeamsIcon.png');
 
 interface MicrosoftTeamsProps {

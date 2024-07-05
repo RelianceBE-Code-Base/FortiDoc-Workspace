@@ -123,19 +123,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
 
     return (
       <div className={styles.card} >
-        {/* <div className="card-header container" style={{ backgroundColor: '#e6f6fd', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding:'2px' }}>
-    
-          <div style={{marginLeft:'10px'}}>Inbox</div>
-
-          <div>
-            <PinIcon pinned={pinned} onPinClick={onPinClick} />
-            <button className="btn btn-link text-decoration-none" onClick={onRemove}>
-              <FontAwesomeIcon icon={faWindowClose} size="lg" />
-            </button>
-          </div>
-
-
-        </div> */}
+        
 
       <div className={`${styles['card-header']}`}>
           
@@ -146,7 +134,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
           <div style={{display: 'flex'}}>
 
           
-          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''}/>
           
           <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
            
