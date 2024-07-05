@@ -2,11 +2,17 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 import styles from './Task.module.scss';
+import PinIcon from '../PinIcon/PinIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
 const TaskIcon = require('./assets/TaskIcon.png');
 
 interface TaskProps {
   graphClient: MSGraphClientV3;
+    pinned: boolean;
+    onPinClick: () => void;
+    onRemove: () => void; // specify the type as () => void
 }
 
 interface Task {
@@ -17,7 +23,7 @@ interface Task {
   status?: string; // Make status optional
 }
 
-const Task: React.FC<TaskProps> = ({ graphClient }) => {
+const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemove }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -82,7 +88,10 @@ const Task: React.FC<TaskProps> = ({ graphClient }) => {
       <div className={styles['card-header']}>
         <img src={TaskIcon} style={{ display: 'flex' }} />
         <p style={{ display: 'flex', justifySelf: 'center' }}>Tasks</p>
-        <div></div>
+        <div style={{display: 'flex'}}>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          </div>
       </div>
       <div className={styles['Task-content']}>
         <div className={styles['card-body']}>

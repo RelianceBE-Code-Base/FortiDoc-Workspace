@@ -2,8 +2,17 @@ import * as React from 'react';
 import { Web} from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Anniversary.module.scss';
+import PinIcon from '../PinIcon/PinIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
 const AnniversaryIcon = require('./assets/Anniversary.png');
+
+interface MicrosoftAnniversaryProps {
+  pinned: boolean;
+  onPinClick: () => void;
+  onRemove: () => void;
+}
 
 interface IAnniversary {
   ID: number;
@@ -13,7 +22,7 @@ interface IAnniversary {
   Designation: string;
 }
 
-const Anniversary: React.FC = () => {
+const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, onRemove }) => {
   const [anniversaries, setAnniversaries] = React.useState<IAnniversary[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -67,7 +76,10 @@ const Anniversary: React.FC = () => {
       <div className={styles['card-header']}>
         <img src={AnniversaryIcon} style={{ display: 'flex' }} />
         <p style={{ display: 'flex', justifySelf: 'center' }}>Anniversaries</p>
-        <div></div>
+        <div style={{display: 'flex'}}>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          </div>
       </div>
       <div className={styles['Anniversary-content']}>
         <div className={styles['card-body']}>

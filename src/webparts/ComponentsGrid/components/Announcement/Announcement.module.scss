@@ -60,10 +60,12 @@
 
 
 .image {
-  width: 95%;
-  height: 110px;
-  object-fit: cover;
-  margin: 5px 2px 5px 5px;
+  height: 190px;
+    margin: 5px 10px 0px 10px;
+    max-height: 200px;
+    object-fit: cover;
+    width: 400px;
+    max-width: 500px;
 
   }
 

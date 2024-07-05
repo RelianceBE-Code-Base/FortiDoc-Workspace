@@ -5,24 +5,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import styles from './Header.module.scss';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
-
-// Import the Meta AI GIF
 import metaAiIcon from '../../assets/metaAiIcon.png';
 import { Link } from 'react-router-dom';
-
-
 
 interface HeaderProps {
   onHomeClick: () => void;
   graphClient: MSGraphClientV3;
   onDismissSearchResults: () => void;
-  onOptionsClick: () => void;  // Add this line
+  onOptionsClick: () => void;
+  onComponentAdd: (componentName: string) => void; // Add this line
 }
 
-const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSearchResults, onOptionsClick }) => {  // Update the props here
+const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSearchResults, onOptionsClick, onComponentAdd }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const searchResultsRef = useRef<HTMLDivElement>(null);
+  const [optionsVisible, setOptionsVisible] = useState(false);
 
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -65,17 +63,37 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
     };
   }, [onDismissSearchResults]);
 
+  const handleOptionsClick = () => {
+    setOptionsVisible(!optionsVisible);
+    onOptionsClick();
+  };
+  const componentsList = [
+    { name: 'GallerySlider', icon: '📸' },
+    { name: 'UserProfile', icon: '👤' },
+    { name: 'Inbox', icon: '📥' },
+    { name: 'MicrosoftTeams', icon: '👥' },
+    { name: 'MicrosoftApps', icon: '📦' },
+    { name: 'BusinessApps', icon: '💼' },
+    { name: 'StaffDirectory', icon: '📇' },
+    { name: 'Task', icon: '📝' },
+    { name: 'Calendar', icon: '📅' },
+    { name: 'CompanyEvents', icon: '🎉' },
+    { name: 'Announcement', icon: '📢' },
+    { name: 'Birthday', icon: '🎂' },
+    { name: 'Anniversary', icon: '🎉' },
+  ];
+
   return (
     <header className={`navbar navbar-expand-lg navbar-light bg-light ${styles.header}`}>
       <div className="container-fluid">
         <Link to="/">
-        <button 
-          className={`btn btn-outline-primary ${styles.homeButton}`} 
-          type="button" 
-          onClick={onHomeClick}
-        >
-          Home
-        </button>
+          <button 
+            className={`btn btn-outline-primary ${styles.homeButton}`} 
+            type="button" 
+            onClick={onHomeClick}
+          >
+            Home
+          </button>
         </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
@@ -85,23 +103,15 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
             <li className="nav-item">
               <a className="nav-link" href="#general-library">General Library</a>
             </li>
-           {/* <li className="nav-item">
-              <a className="nav-link" href="#product-catalogue">Product Catalogue</a>
-            </li>*/}
             <li className="nav-item">
               <a className="nav-link" href="#department">Department</a>
             </li>
             <li className="nav-item">
-              <button className="nav-link btn" onClick={onOptionsClick}>Options</button> {/* Update this line */}
+              <button className="nav-link btn" onClick={handleOptionsClick}>Options</button>
             </li>
-            {/* <Link className={styles['nav-link']} to="/">Home</Link>
-
-            <Link className={styles['nav-link']} to="/chatbot">Chatbot</Link> */}
-            
           </ul>
           
           <form className={`d-flex ${styles.searchForm}`} onSubmit={handleSearch}>
-            {/* <img src={metaAiIcon} className={styles.metaIcon} alt="Meta AI Icon" /> */}
             <Link to="/chatbot"><img src={metaAiIcon} className={styles.metaIcon} alt="Meta AI Icon" /></Link>
             <div className={styles.searchBox}>
               <input
@@ -130,6 +140,22 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
               </li>
             ))}
           </ul>
+        </div>
+      )}
+      {optionsVisible && (
+        <div className={`dropdown-menu ${styles.optionsDropdown}`} style={{ display: 'block' }}>
+          <div className="row">
+            {componentsList.map((component, index) => (
+              <div className="col-6" key={index}>
+                <button
+                  className="btn btn-light"
+                  onClick={() => onComponentAdd(component.name)}
+                >
+                  {component.icon} {component.name}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </header>

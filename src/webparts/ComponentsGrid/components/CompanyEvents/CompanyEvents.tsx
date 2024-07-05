@@ -2,8 +2,17 @@ import * as React from 'react';
 import { Web } from '@pnp/sp';
 import '@pnp/odata';
 import styles from './CompanyEvents.module.scss';
+import PinIcon from '../PinIcon/PinIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
 const EventsImg = require('./assets/Events.png');
+
+interface MicrosoftEventProps {
+  pinned: boolean;
+  onPinClick: () => void;
+  onRemove: () => void;
+}
 
 interface ICompanyEvent {
   ID: number;
@@ -13,7 +22,7 @@ interface ICompanyEvent {
   EndDate: string;
 }
 
-const CompanyEvents: React.FC = () => {
+const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRemove }) => {
   const [events, setEvents] = React.useState<ICompanyEvent[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -35,10 +44,10 @@ const CompanyEvents: React.FC = () => {
         setError('Failed to load events.');
       }
     };
-  
+
     fetchEvents().catch(error => console.error('Error in fetchEvents:', error));
   }, []);
-  
+
   if (error) {
     return <div className={styles.error}>{error}</div>;
   }
@@ -46,14 +55,17 @@ const CompanyEvents: React.FC = () => {
   return (
     <div className={styles.card}>
       <div className={styles['card-header']}>
-        <img src={EventsImg}/>
-        <p style={{display: 'flex', justifySelf: 'center'}}>Company Events</p>
-        <div></div>
+        <img src={EventsImg} />
+        <p style={{ display: 'flex', justifySelf: 'center' }}>Company Events</p>
+        <div style={{ display: 'flex' }}>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{ margin: '5px', cursor: 'pointer' }} />
+        </div>
       </div>
       <div className={styles['Events-content']}>
         <div className={styles['card-body']}>
           {events.map((event, index) => (
-            <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
+            <div key={index} className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 4 + 1}`]}`}>
               <div className={styles.date}>
                 <span className={styles.day}>{new Date(event.EventDate).getDate()}</span>
                 <span className={styles.month}>{new Date(event.EventDate).toLocaleString('default', { month: 'short' })}</span>

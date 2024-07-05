@@ -2,8 +2,17 @@ import * as React from 'react';
 import { Web} from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Announcement.module.scss'; 
+import PinIcon from '../PinIcon/PinIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+
 const AnnouncementImg = require('./assets/Announcement.png')
 
+interface MicrosoftAnnouncementProps {
+  pinned: boolean;
+  onPinClick: () => void;
+  onRemove: () => void;
+}
 
 interface IAnnouncement {
   ID: number;
@@ -13,7 +22,7 @@ interface IAnnouncement {
   ImageUrl: string; // This will hold the attachment URL
 }
 
-const Announcement: React.FC = () => {
+const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick, onRemove }) => {
   const [announcements, setAnnouncements] = React.useState<IAnnouncement[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -55,7 +64,10 @@ const Announcement: React.FC = () => {
       <div className={styles['card-header']}>
       <img src={AnnouncementImg}/>
       <p style={{display: 'flex', justifySelf: 'center'}}> Announcement</p>
-      <div></div>
+      <div style={{display: 'flex'}}>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          </div>
       </div>
         <div className={styles['Announcement-content']}>
         <div className={styles['card-body']}> 
@@ -70,6 +82,7 @@ const Announcement: React.FC = () => {
                 </a>
               )}
             </div>
+            <p className={styles.Description}> ==================[ END ]==================</p>
           </div>
           
         ))}

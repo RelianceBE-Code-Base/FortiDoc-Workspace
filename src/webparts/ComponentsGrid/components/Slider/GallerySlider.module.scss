@@ -1,73 +1,73 @@
-// @import '../../../../styles/cards.scss';
+@import '../../../../styles/cards.scss';
 
 
 
 
-$card-height: 240px;
-$card-width: 100%;
-$card-border-radius: 10px;
+// $card-height: 240px;
+// $card-width: 100%;
+// $card-border-radius: 10px;
 
 
-$card-header-height: 15%;
-$card-header-background-color: #e6f6fd;
-$card-header-width: 100%;
-$card-header-padding: 10px;
+// $card-header-height: 15%;
+// $card-header-background-color: #e6f6fd;
+// $card-header-width: 100%;
+// $card-header-padding: 10px;
 
-$card-body-width: 100%;
-$card-body-height: 85%;
-$card-body-background-color: white;
+// $card-body-width: 100%;
+// $card-body-height: 85%;
+// $card-body-background-color: white;
 
-.card{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    width: $card-width;
-    height: $card-height;
-    box-sizing: border-box;
-    background: white;
-    position: relative;
-    box-shadow: rgba(14, 30, 37, 0) 0px 1px 2px 0px,
-    rgba(14, 30, 37, 0.16) 0px 1px 8px 0px;
+// .card{
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     flex-direction: column;
+//     width: $card-width;
+//     height: $card-height;
+//     box-sizing: border-box;
+//     background: white;
+//     position: relative;
+//     box-shadow: rgba(14, 30, 37, 0) 0px 1px 2px 0px,
+//     rgba(14, 30, 37, 0.16) 0px 1px 8px 0px;
 
-    z-index: 2;
-    transform-style: preserve-3d;
-    border-radius: $card-border-radius;
-  }
+//     z-index: 2;
+//     transform-style: preserve-3d;
+//     border-radius: $card-border-radius;
+//   }
   
   
-  .card-header {
-    height: $card-header-height;
-    background-color: $card-header-background-color;
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    width: $card-header-width;
-    border-top-left-radius: $card-border-radius;
-    border-top-right-radius: $card-border-radius;
-    padding: $card-header-padding;
-    position: relative;
-    z-index: 1;
-  }
+//   .card-header {
+//     height: $card-header-height;
+//     background-color: $card-header-background-color;
+//     align-items: center;
+//     display: flex;
+//     justify-content: space-between;
+//     width: $card-header-width;
+//     border-top-left-radius: $card-border-radius;
+//     border-top-right-radius: $card-border-radius;
+//     padding: $card-header-padding;
+//     position: relative;
+//     z-index: 1;
+//   }
   
-  .card-body{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    // justify-content: space-between;
-    // flex-direction: column;
-    width: $card-body-width;
-    height: 240px;
-    // height: 300px;
-    box-sizing: border-box;  
-    background-color: $card-body-background-color;
-    position: relative;
-    z-index: 2;
-    transform-style: preserve-3d;
-    border-bottom-left-radius: $card-border-radius;
-    border-bottom-right-radius: $card-border-radius;
-  }
+//   .card-body{
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     flex-direction: row;
+//     // justify-content: space-between;
+//     // flex-direction: column;
+//     width: $card-body-width;
+//     height: 240px;
+//     // height: 300px;
+//     box-sizing: border-box;  
+//     background-color: $card-body-background-color;
+//     position: relative;
+//     z-index: 2;
+//     transform-style: preserve-3d;
+//     border-bottom-left-radius: $card-border-radius;
+//     border-bottom-right-radius: $card-border-radius;
+//   }
 
   // style={{ height: '33.3%', width: '100%', objectFit: 'cover' }}
 
