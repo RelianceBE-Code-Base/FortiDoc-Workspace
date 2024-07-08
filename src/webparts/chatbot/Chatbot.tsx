@@ -3,69 +3,34 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import styles from './Chatbot.module.scss';
 import type { IChatbotProps } from './IChatbotProps';
-// import { IChatbotState } from './IChatbotState'; 
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import { SendIcon } from '@fluentui/react-icons-mdl2';
 import { Icon } from '@fluentui/react/lib/Icon';
 
-import Carousel from './Carousel';
-
 import metaIcon from './assets/metaAiIcon.png';
 import userIcon from './assets/user.png';
 
-import dogImage from './assets/Dog.png';
-import microsoftImage from './assets/Microsoft.png';
-import googleImage from './assets/Google.png';
-import AiImage from './assets/AI.png';
-
-import invokePrompt from './services/ChatService';
+import invokePrompt from '../../services/ChatService';
 import Spinner from 'react-bootstrap/Spinner';
-
-const carouselItems = [
-  {
-    image: googleImage,
-    alt: 'Google',
-    caption: 'How big is Google?',
-    description: 'Explore the scale and impact of this tech giant'
-  },
-  {
-    image: microsoftImage,
-    alt: 'Microsoft',
-    caption: 'Tell me about Microsoft',
-    description: 'Discover the history and products of Microsoft'
-  },
-  {
-    image: AiImage,
-    alt: 'AI',
-    caption: 'How is AI going to shape the future',
-    description: 'Is AI with or against us?'
-  },
-  {
-    image: dogImage,
-    alt: 'dog',
-    caption: 'Describe dog breeds',
-    description: 'Learn about various dog breeds and their characteristics'
-  }
-]
-
+import CardGrid from './CardGrid';
 
 type Message = {
   role: string;
   content: string;
 };
 
-
 const Chatbot: React.FC<IChatbotProps> = (props) => {
-
   const user_name = props.pageContext?.user?.displayName || 'Guest';
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [temperature, setTemperature] = useState(0);
-  const [themeColor, setThemeColor] = useState('#04a4ec')
+  const [themeColor, setThemeColor] = useState('#04a4ec');
   const [selectedButton, setSelectedButton] = useState('Balanced');
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -74,15 +39,11 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery(event.currentTarget.value);
   };
 
-
-  const handleTemperatureButtonClick = (temperature:number, color:string) => {
-
-    setThemeColor(color)
-    
-    setTemperature(temperature)
-
+  const handleTemperatureButtonClick = (temperature: number, color: string) => {
+    setThemeColor(color);
+    setTemperature(temperature);
     setSelectedButton(temperature === 1 ? 'Creative' : temperature === 0 ? 'Precise' : 'Balanced');
-  }
+  };
 
   const handleClick = async () => {
     if (query.trim() === "") {
@@ -107,8 +68,8 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
   };
 
   const clearHistory = () => {
-    setMessages([])
-  }
+    setMessages([]);
+  };
 
   return (
     <section className={styles.chatbot}>
@@ -117,7 +78,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
           <div className="card-body p-0">
             {messages.length === 0 &&
               <div className={styles.banner}>
-                <img src={metaIcon} style={{ height: '40px', width: '40px', margin: '10px' }} />
+                <img src={metaIcon} style={{ height: '40px', width: '40px', margin: '10px' }} alt="meta icon" />
                 <h1>Reliance AI</h1>
               </div>
             }
@@ -125,56 +86,49 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
               <div key={index} className={`card mb-2`} style={{ maxWidth: '80%', marginLeft: message.role === 'user' ? 'auto' : '10px', marginRight: message.role === 'user' ? '10px' : 'auto', marginBottom: '10px', backgroundColor: 'transparent' }}>
                 <div className="card-body py-2 px-3">
                   <div className='d-flex'>
-                    <img src={message.role === 'user' ? userIcon : metaIcon} className={styles.metaIcon} />
+                    <img src={message.role === 'user' ? userIcon : metaIcon} className={styles.metaIcon} alt={message.role} />
                     <div className={`font-weight-bold text-${message.role === 'user' ? 'primary' : 'secondary'}`}>{message.role === 'user' ? user_name : 'Chatbot'}</div>
                   </div>
-                  <div>{message.content}</div>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
                 </div>
               </div>
             ))}
           </div>
 
           {messages.length === 0 &&
-
-            <div style={{display : 'flex', flexDirection: 'column'}}>
-              <Carousel items={carouselItems} />
-
-
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <CardGrid />
               <div className={styles['button-card']}>
-                <div className = {styles['btn-group']}>
-                  <button type="button" 
-                    className = {styles.temperatureButton} 
-                    style={{ backgroundColor: selectedButton === 'Creative'? themeColor: 'white', color: selectedButton === 'Creative'? 'white' : 'black'}} 
-                    onClick={() => handleTemperatureButtonClick(1,'purple')}>Creative</button>
+                <div className={styles['btn-group']}>
+                  <button type="button"
+                    className={styles.temperatureButton}
+                    style={{ backgroundColor: selectedButton === 'Creative' ? themeColor : 'white', color: selectedButton === 'Creative' ? 'white' : 'black' }}
+                    onClick={() => handleTemperatureButtonClick(1, 'purple')}>Creative</button>
 
-                  <button type="button" 
-                    className = {styles.temperatureButton} 
-                    style={{ backgroundColor: selectedButton === 'Balanced'? themeColor: 'white', color: selectedButton === 'Balanced'? 'white' : 'black' }} 
-                    onClick={() => handleTemperatureButtonClick(0.5,'#04a4ec')}>Balanced</button>
+                  <button type="button"
+                    className={styles.temperatureButton}
+                    style={{ backgroundColor: selectedButton === 'Balanced' ? themeColor : 'white', color: selectedButton === 'Balanced' ? 'white' : 'black' }}
+                    onClick={() => handleTemperatureButtonClick(0.5, '#04a4ec')}>Balanced</button>
 
-                  <button type="button" 
-                  className = {styles.temperatureButton} 
-                  style={{ backgroundColor: selectedButton === 'Precise'? themeColor: 'white', color: selectedButton === 'Precise'? 'white' : 'black'}} 
-                  onClick={() => handleTemperatureButtonClick(0,'#154c79')}>Precise</button>
-
+                  <button type="button"
+                    className={styles.temperatureButton}
+                    style={{ backgroundColor: selectedButton === 'Precise' ? themeColor : 'white', color: selectedButton === 'Precise' ? 'white' : 'black' }}
+                    onClick={() => handleTemperatureButtonClick(0, '#154c79')}>Precise</button>
                 </div>
               </div>
-
             </div>
-
-
           }
-          <div style={{ display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
-            
-              <button title='New Chat' className={styles.clearChat} style={{ backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory}><Icon iconName='SkypeMessage' style={{ width: '24px', height: '24px', display: 'block' }} /></button> 
-           
 
+          <div style={{ display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
+            <button title='New Chat' className={styles.clearChat} style={{ backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory}>
+              <Icon iconName='SkypeMessage' style={{ width: '24px', height: '24px', display: 'block' }} />
+            </button>
 
             <div className={`card ${styles['input-card']}`} style={{ borderBottomColor: themeColor }}>
               <form className="" style={{ display: 'flex', flexDirection: 'column' }}>
                 <input id="messageInput" className={styles.input} disabled={isLoading} placeholder="Ask me anything..." onChange={handleInputChange} value={query} />
                 {isLoading && <Spinner animation="border" className={styles.spinner} />}
-                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{color: themeColor}}><Icon iconName='Send'/></button>}
+                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{ color: themeColor }}><Icon iconName='Send' /></button>}
                 {SendIcon}
               </form>
             </div>
