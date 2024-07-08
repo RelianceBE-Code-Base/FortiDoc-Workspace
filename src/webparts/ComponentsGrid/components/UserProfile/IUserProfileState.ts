@@ -1,3 +1,3 @@
-// export interface IUserProfileState {
-//     profilePhoto: string
-// }
+export interface IUserProfileState {
+    profilePhoto: string
+}

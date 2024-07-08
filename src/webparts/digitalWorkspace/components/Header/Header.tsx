@@ -67,6 +67,7 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
     setOptionsVisible(!optionsVisible);
     onOptionsClick();
   };
+
   const componentsList = [
     { name: 'GallerySlider', icon: '📸' },
     { name: 'UserProfile', icon: '👤' },
