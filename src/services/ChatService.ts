@@ -6,10 +6,12 @@ async function invokePrompt(messages: {role:string, content:string}[], temp: num
 
     // const deployment_id = "gpt-35-turbo"
     const deployment_id = "KojoGPT4o"
+  
     // const endpoint = "https://ai-kojoai010105560994.openai.azure.com/"
     const endpoint = "https://ai-kojoeastus482385420656.openai.azure.com/"
     // const azure_openai_key = "a892286df8914ab8bb804a06e0331189"
     const azure_openai_key = "381f94fa10d14aaa879b798fb7c2b571"
+
 
     const client = new OpenAIClient(
         endpoint,

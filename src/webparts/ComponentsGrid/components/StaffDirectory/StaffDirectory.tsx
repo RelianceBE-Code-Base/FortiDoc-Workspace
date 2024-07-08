@@ -7,7 +7,7 @@ import { faSearch, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import styles from './StaffDirectory.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
 import './StaffDirectory.module.scss'
-import { TestImages } from '@fluentui/example-data';
+// import { TestImages } from '@fluentui/example-data';
 
 
 const StaffDirectoryIcon = require('./assets/StaffDirectoryIcon.png')
@@ -30,6 +30,7 @@ interface User {
   officeLocation: string;
   department: string;
   businessPhones: string[];
+  photoUrl: string | null;
 }
 
 interface UserDetails extends User {
@@ -46,23 +47,36 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onP
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showSearchBox, setShowSearchBox] = useState<boolean>(false);
+  const [defaultProfileImage, setDefaultProfileImage] = useState("");
 
   useEffect(() => {
     fetchUsers();
+    setDefaultProfileImage("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png")
   }, []);
 
   const fetchUsers = async () => {
     try {
       const response = await graphClient.api('/users').get();
-      const usersData: User[] = response.value.map((user: any) => ({
-        id: user.id,
-        displayName: user.displayName,
-        jobTitle: user.jobTitle,
-        mail: user.mail,
-        mobilePhone: user.mobilePhone,
-        officeLocation: user.officeLocation,
-        department: user.department,
-        businessPhones: user.businessPhones,
+      const usersData: User[] = await Promise.all(response.value.map(async (user: any) => {
+        let photoUrl = null;
+        try {
+          const photoResponse = await graphClient.api(`/users/${user.id}/photo/$value`).get();
+          photoUrl = URL.createObjectURL(photoResponse);
+        } catch (photoError) {
+          console.warn(`Failed to fetch photo for user ${user.id}`, photoError);
+        }
+        
+        return {
+          id: user.id,
+          displayName: user.displayName,
+          jobTitle: user.jobTitle,
+          mail: user.mail,
+          mobilePhone: user.mobilePhone,
+          officeLocation: user.officeLocation,
+          department: user.department,
+          businessPhones: user.businessPhones,
+          photoUrl: photoUrl,
+        };
       }));
       setUsers(usersData);
     } catch (error) {
@@ -133,7 +147,10 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onP
     setShowModal(true);
   };
 
-  const handleClose = () => setShowModal(false);
+  const handleClose = () => {
+    setShowModal(false);
+    setSelectedUser(null);
+  };
 
   const handleSearchIconClick = () => setShowSearchBox(!showSearchBox);
 
@@ -173,87 +190,20 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onP
       </div>
 
       <div className={`${styles.cardBody} `}>
-        {/* {filteredUsers.map(user => (
-          <Card key={user.id} className={styles.userCard} onClick={() => handleUserClick(user)}>
-            <Card.Body className="d-flex">
-              <div className={styles.userImage}>
-                <img
-                  src={`https://graph.microsoft.com/v1.0/users/${user.id}/photo/$value`}
-                  alt={`${user.displayName}'s profile`}
-                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                    e.currentTarget.src = 'https://via.placeholder.com/60'; // Placeholder image URL
-                  }}
-                  className={styles.userImage}
-                />
-              </div>
-              <div className={styles.userInfo}>
-                <Card.Title className={styles.userName}>{user.displayName}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">{user.department}</Card.Subtitle>
-                <ListGroup className="list-group-flush">
-                  <ListGroupItem className={styles.userDetails}>{user.jobTitle}</ListGroupItem>
-                  <ListGroupItem className={styles.userDetails}>{user.mail}</ListGroupItem>
-                  <ListGroupItem className={styles.userDetails}>{user.mobilePhone || user.businessPhones.join(', ')}</ListGroupItem>
-                  <ListGroupItem className={styles.userDetails}>{user.officeLocation}</ListGroupItem>
-                </ListGroup>
-              </div>
-            </Card.Body>
-          </Card>
-        ))}  */}
+        
 
 
 
       {filteredUsers.map(user => (
-        // <Card key={user.id} className={styles.userCard} onClick={() => handleUserClick(user)}>
-        //   <Card.Body className="d-flex">
-            
-              // <Persona key={user.id} className={styles.userCard} onClick={() => handleUserClick(user)}
-              //   // imageUrl={`https://graph.microsoft.com/v1.0/users/${user.id}/photo/$value`}
-              //   // onRenderInitials={() => (
-              //   //   <Image
-              //   //     src="https://via.placeholder.com/60"
-              //   //     alt={`${user.displayName}'s profile`}
-              //   //     imageFit={ImageFit.cover}
-              //   //     width={60}
-              //   //     height={60}
-                    
-              //   //   />
-              //   // )}
-              //   imageUrl= {TestImages.personaMale}
-              //   // text={user.displayName}
-              //   secondaryText={user.department}
-              //   tertiaryText={user.jobTitle}
-              //   optionalText={user.mail}
-              //   showSecondaryText={true}
-              //   size={PersonaSize.size72}
-              //   coinSize={50}
-              // />
-
+       
 
               <div className={styles.userCard} onClick={() => handleUserClick(user)}>
-                  <img className= {styles.profileImage}  src={TestImages.personaMale} />
+                  <img className= {styles.profileImage}  src={user.photoUrl || defaultProfileImage} />
                   <div className={styles.details}>
                   <h2 className={styles.title}>{user.displayName}</h2>
                   <p className={styles.subtitle}>{user.jobTitle}</p>
-                  {/* <p className={styles.subtitle}>{user.mail}</p> */}
-                  {/* <p className={styles.subtitle}>{user.mobilePhone}</p> */}
-                 
                 </div>
               </div>
-
-
-          
-            /* <div className={styles.userInfo}>
-              <Card.Title className={styles.userName}>{user.displayName}</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">{user.department}</Card.Subtitle>
-              <ListGroup className="list-group-flush">
-                <ListGroupItem className={styles.userDetails}>{user.jobTitle}</ListGroupItem>
-                <ListGroupItem className={styles.userDetails}>{user.mail}</ListGroupItem>
-                <ListGroupItem className={styles.userDetails}>{user.mobilePhone || user.businessPhones.join(', ')}</ListGroupItem>
-                <ListGroupItem className={styles.userDetails}>{user.officeLocation}</ListGroupItem>
-              </ListGroup>
-            </div> 
-          </Card.Body>
-        </Card> */
       ))}
 
 

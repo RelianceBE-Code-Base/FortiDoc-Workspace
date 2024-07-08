@@ -1,0 +1,44 @@
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+  
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .cardIcon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  
+  .cardTitle {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .cardDescription {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .emptyCard {
+    // Style as needed, or leave empty for blank spaces
+    border: none;
+  }
