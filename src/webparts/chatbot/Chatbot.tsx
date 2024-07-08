@@ -39,6 +39,29 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery(event.currentTarget.value);
   };
 
+  const handleCardGridClick = async (query: string) => {
+    setQuery(query);
+    if (query.trim() === "") {
+      return;
+    }
+
+    setIsLoading(true);
+    setMessages(prevMessages => [...prevMessages, { role: "user", content: query }]);
+    setQuery("");
+
+    try {
+      const botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
+      setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse.toString() }]);
+    } catch (error) {
+      console.error('Error invoking prompt:', error);
+    } finally {
+      setIsLoading(false);
+      if (containerRef.current) {
+        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      }
+    }
+  }
+
   const handleTemperatureButtonClick = (temperature: number, color: string) => {
     setThemeColor(color);
     setTemperature(temperature);
@@ -68,6 +91,8 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
   };
 
   const clearHistory = () => {
+    setIsLoading(false);
+    setQuery("");
     setMessages([]);
   };
 
@@ -97,7 +122,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
 
           {messages.length === 0 &&
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <CardGrid />
+              <CardGrid handleClick={handleCardGridClick}/>
               <div className={styles['button-card']}>
                 <div className={styles['btn-group']}>
                   <button type="button"

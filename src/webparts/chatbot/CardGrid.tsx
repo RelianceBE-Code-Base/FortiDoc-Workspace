@@ -1,6 +1,10 @@
 import React from 'react';
 import styles from './CardGrid.module.scss';
 
+interface CardGridProps{
+    handleClick: ( query: string) => void;
+}
+
 interface CardProps {
   icon: string;
   title: string;
@@ -16,11 +20,11 @@ const Card: React.FC<CardProps> = ({ icon, title, description, onClick }) => (
   </div>
 );
 
-const CardGrid: React.FC = () => {
-  const handleClick = (description: string) => {
-    console.log(`Card clicked: ${description}`);
-    // You can add more logic here, such as updating state or calling an API
-  };
+const CardGrid: React.FC<CardGridProps> = ({handleClick}) => {
+//   const handleClick = (description: string) => {
+//     console.log(`Card clicked: ${description}`);
+//     // You can add more logic here, such as updating state or calling an API
+//   };
 
   const cards: Omit<CardProps, 'onClick'>[] = [
     { icon: '💡', title: 'Generate blog ideas', description: "Create a list of engaging blog post ideas for our company's tech blog." },
@@ -34,7 +38,7 @@ const CardGrid: React.FC = () => {
   return (
     <div className={styles.cardGrid}>
       {cards.map((card, index) => (
-        <Card key={index} {...card} onClick={handleClick} />
+        <Card key={index} {...card} onClick={(query) => handleClick(card.description)} />
       ))}
       <div className={styles.emptyCard}></div>
       <div className={styles.emptyCard}></div>
