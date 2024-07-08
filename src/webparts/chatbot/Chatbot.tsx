@@ -41,6 +41,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
 
   const handleCardGridClick = async (query: string) => {
     setQuery(query);
+    
     if (query.trim() === "") {
       return;
     }
