@@ -27,6 +27,7 @@
   padding-top: 20px; // Adjust this value to control how close to the top the banner appears
   height: 100vh;
   width: 100%;
+  min-height: 100vh;
 }
 
 
@@ -95,6 +96,7 @@ input:focus {
   justify-content: center;
   width: 100%;
   margin-top: 50px;  
+  margin-bottom: 50px;
 
 }
 
