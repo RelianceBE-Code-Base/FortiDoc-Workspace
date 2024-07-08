@@ -124,7 +124,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
           {messages.length === 0 &&
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <CardGrid handleClick={handleCardGridClick}/>
-              <div className={styles['button-card']}>
+              <div className={`${styles['button-card']} ${styles.card}`} style={{height: 'max-content'}}>
                 <div className={styles['btn-group']}>
                   <button type="button"
                     className={styles.temperatureButton}
@@ -145,7 +145,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
             </div>
           }
 
-          <div style={{ display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
+          <div style={{position: 'relative', display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
             <button title='New Chat' className={styles.clearChat} style={{ backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory}>
               <Icon iconName='SkypeMessage' style={{ width: '24px', height: '24px', display: 'block' }} />
             </button>

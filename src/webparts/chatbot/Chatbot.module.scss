@@ -111,12 +111,12 @@ input:focus {
   display: flex;
   margin: 32px;
   background-color: white;
-  // padding: 2px;
+  padding: 3px;
   width: auto;
   justify-self: center;
   align-self: center;
-  // border: solid 1px;
   justify-content: center;
+  height: max-content;
 }
 
 .carousel{
