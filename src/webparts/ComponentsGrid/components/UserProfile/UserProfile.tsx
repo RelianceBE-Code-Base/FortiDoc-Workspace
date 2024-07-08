@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+
 import styles from './UserProfile.module.scss';
+
 import { IUserProfileProps } from './IUserProfileProps';
 import { ResponseType } from '@microsoft/microsoft-graph-client';
 import PinIcon from '../PinIcon/PinIcon';
