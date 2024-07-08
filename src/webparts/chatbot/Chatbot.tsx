@@ -105,7 +105,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
             {messages.length === 0 &&
               <div className={styles.banner}>
                 <img src={metaIcon} style={{ height: '40px', width: '40px', margin: '10px' }} alt="meta icon" />
-                <h1>Cloudware AI</h1>
+                <h1>Reliance AI</h1>
               </div>
             }
             {messages.map((message, index) => (
