@@ -102,10 +102,10 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
       <div className={styles.container}>
         <div className="card" style={{ width: '100%', height: '100vh', overflowY: 'scroll', padding: '5px', backgroundColor: '#f4f4f4', overflowX: 'hidden' }} ref={containerRef}>
           <div className="card-body p-0">
-            {messages.length === 0 &&
+            {messages.length === 0 && 
               <div className={styles.banner}>
                 <img src={metaIcon} style={{ height: '40px', width: '40px', margin: '10px' }} alt="meta icon" />
-                <h1>Reliance AI</h1>
+                <h1>Cloudware AI</h1>
               </div>
             }
             {messages.map((message, index) => (
@@ -145,7 +145,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
             </div>
           }
 
-          <div style={{position: 'relative', display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
             <button title='New Chat' className={styles.clearChat} style={{ backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory}>
               <Icon iconName='SkypeMessage' style={{ width: '24px', height: '24px', display: 'block' }} />
             </button>
