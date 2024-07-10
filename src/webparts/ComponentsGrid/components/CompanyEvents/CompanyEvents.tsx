@@ -11,7 +11,8 @@ const EventsImg = require('./assets/Events.png');
 interface MicrosoftEventProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemove: () => void;
+  onRemoveClick: () => void; // Correct prop name
+  tenantUrl: string;
 }
 
 interface ICompanyEvent {
@@ -22,7 +23,7 @@ interface ICompanyEvent {
   EndDate: string;
 }
 
-const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRemove }) => {
+const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl }) => { // Correct prop name
   const [events, setEvents] = React.useState<ICompanyEvent[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -30,7 +31,6 @@ const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRe
     const fetchEvents = async (): Promise<void> => {
       try {
         const listName = 'Events';
-        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Replace with your tenant-specific URL
         const web = new Web(tenantUrl);
         const list = await web.lists.getByTitle(listName);
         if (!list) {
@@ -46,7 +46,7 @@ const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRe
     };
 
     fetchEvents().catch(error => console.error('Error in fetchEvents:', error));
-  }, []);
+  }, [tenantUrl]);
 
   if (error) {
     return <div className={styles.error}>{error}</div>;
@@ -59,7 +59,7 @@ const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRe
         <p style={{ display: 'flex', justifySelf: 'center' }}>Company Events</p>
         <div style={{ display: 'flex' }}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{ margin: '5px', cursor: 'pointer' }} />
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{ margin: '5px', cursor: 'pointer' }} />
         </div>
       </div>
       <div className={styles['Events-content']}>

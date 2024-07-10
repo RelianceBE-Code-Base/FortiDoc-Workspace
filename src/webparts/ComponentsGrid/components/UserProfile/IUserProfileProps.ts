@@ -8,5 +8,5 @@ export interface IUserProfileProps {
   graphClient: MSGraphClientV3;
     pinned: boolean;
     onPinClick: () => void;
-    onRemove: () => void;   
+    onRemoveClick: () => void; // Correct prop name 
 }

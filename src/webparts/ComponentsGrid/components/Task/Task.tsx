@@ -12,7 +12,7 @@ interface TaskProps {
   graphClient: MSGraphClientV3;
     pinned: boolean;
     onPinClick: () => void;
-    onRemove: () => void; // specify the type as () => void
+    onRemoveClick: () => void; // Correct prop name
 }
 
 interface Task {
@@ -23,7 +23,7 @@ interface Task {
   status?: string; // Make status optional
 }
 
-const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemove }) => {
+const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemoveClick }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -90,7 +90,7 @@ const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemove }
         <p style={{ display: 'flex', justifySelf: 'center' }}>Tasks</p>
         <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
           </div>
       </div>
       <div className={styles['Task-content']}>

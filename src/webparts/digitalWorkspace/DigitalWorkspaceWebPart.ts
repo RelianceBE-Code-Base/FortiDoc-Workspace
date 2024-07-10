@@ -31,12 +31,15 @@ export default class DigitalWorkspaceWebPart extends BaseClientSideWebPart<IDigi
     this.context.msGraphClientFactory
       .getClient('3') // Specify the version argument
       .then((client: MSGraphClientV3): void => {
+        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Define your tenant URL here
+        console.log('Tenant URL in WebPart:', tenantUrl); // Debug log
         const element: React.ReactElement<IDigitalWorkspaceProps> = React.createElement(
           DigitalWorkspace, 
           {
        
             pageContext: this.context.pageContext,
             graphClient: client,// Pass the graphClient to the DigitalWorkspace component
+            tenantUrl: tenantUrl, // Pass the tenantUrl to the DigitalWorkspace component
        
           }
         );

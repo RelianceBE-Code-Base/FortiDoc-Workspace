@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { Web} from '@pnp/sp';
+import { Web } from '@pnp/sp';
 import '@pnp/odata';
-import styles from './Announcement.module.scss'; 
+import styles from './Announcement.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
-const AnnouncementImg = require('./assets/Announcement.png')
+const AnnouncementImg = require('./assets/Announcement.png');
 
 interface MicrosoftAnnouncementProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemove: () => void;
+  onRemoveClick: () => void; // Correct prop name
+  tenantUrl: string; // Add tenantUrl as a prop
 }
 
 interface IAnnouncement {
@@ -22,7 +23,7 @@ interface IAnnouncement {
   ImageUrl: string; // This will hold the attachment URL
 }
 
-const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick, onRemove }) => {
+const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl }) => {
   const [announcements, setAnnouncements] = React.useState<IAnnouncement[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -30,7 +31,6 @@ const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick
     const fetchAnnouncements = async (): Promise<void> => {
       try {
         const listName = 'Announcement';
-        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Replace with your tenant-specific URL
         const web = new Web(tenantUrl);
         const list = await web.lists.getByTitle(listName);
         if (!list) {
@@ -53,7 +53,7 @@ const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick
     };
 
     fetchAnnouncements().catch(error => console.error('Error in fetchAnnouncements:', error));
-  }, []);
+  }, [tenantUrl]);
 
   if (error) {
     return <div className={styles.error}>{error}</div>;
@@ -62,30 +62,29 @@ const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick
   return (
     <div className={styles.card}>
       <div className={styles['card-header']}>
-      <img src={AnnouncementImg}/>
-      <p style={{display: 'flex', justifySelf: 'center'}}> Announcement</p>
-      <div style={{display: 'flex'}}>
+        <img src={AnnouncementImg} />
+        <p style={{ display: 'flex', justifySelf: 'center' }}> Announcement</p>
+        <div style={{ display: 'flex' }}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
-          </div>
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{ margin: '5px', cursor: 'pointer' }} />
+        </div>
       </div>
-        <div className={styles['Announcement-content']}>
-        <div className={styles['card-body']}> 
-        {announcements.map((announcement, index) => (
-          <div key={index} className={styles.announcement}>
-            <div className={styles.productLaunch}>{announcement.Title}</div>
-            <p className={styles.Description}>{announcement.Description}</p>
-            <div className={styles.medizee}>
-              {announcement.ImageUrl && (
-                <a href={announcement.LinkUrl} target="_blank" rel="noopener noreferrer">
-                  <img src={announcement.ImageUrl} alt={announcement.Title} className={styles.image} />
-                </a>
-              )}
+      <div className={styles['Announcement-content']}>
+        <div className={styles['card-body']}>
+          {announcements.map((announcement, index) => (
+            <div key={index} className={styles.announcement}>
+              <div className={styles.productLaunch}>{announcement.Title}</div>
+              <p className={styles.Description}>{announcement.Description}</p>
+              <div className={styles.medizee}>
+                {announcement.ImageUrl && (
+                  <a href={announcement.LinkUrl} target="_blank" rel="noopener noreferrer">
+                    <img src={announcement.ImageUrl} alt={announcement.Title} className={styles.image} />
+                  </a>
+                )}
+              </div>
+              <p className={styles.Description}> ==================[ END ]==================</p>
             </div>
-            <p className={styles.Description}> ==================[ END ]==================</p>
-          </div>
-          
-        ))}
+          ))}
         </div>
       </div>
     </div>

@@ -25,20 +25,10 @@
   width: 33%;
 }
 
-.optionsDropdown{
-  width: 85%;
-  height: auto;
-  display: flex;
-  align-items: center;
-
-  padding: 10px 5px 10px 5px;
-}
-
 .metaIcon {
-  width:30px;
-  height: 3G0px;
+  width: 30px;
+  height: 30px;
   margin-right: 10px;
-  //margin-right: 20px;
   border-radius: 20%;
 }
 
@@ -91,4 +81,15 @@
 .searchResults li a {
   color: #007bff;
   text-decoration: none;
+}
+
+.optionIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
 }

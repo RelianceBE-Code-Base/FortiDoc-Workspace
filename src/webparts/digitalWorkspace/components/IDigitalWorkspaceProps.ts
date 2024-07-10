@@ -10,4 +10,5 @@ export interface IDigitalWorkspaceProps {
   // userDisplayName: string;
   graphClient: MSGraphClientV3; 
   pageContext: PageContext;
+  tenantUrl: string;
 }

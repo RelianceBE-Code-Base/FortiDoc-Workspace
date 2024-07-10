@@ -17,7 +17,7 @@ interface StaffDirectoryProps {
   graphClient: MSGraphClientV3;
     pinned: boolean;
     onPinClick: () => void;
-    onRemove: () => void; // specify the type as () => void
+  onRemoveClick: () => void; // Correct prop name
 }
 
 
@@ -41,7 +41,7 @@ interface UserDetails extends User {
   linkedinProfile?: any;
 }
 
-const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onPinClick, onRemove }) => {
+const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onPinClick, onRemoveClick }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
@@ -167,7 +167,7 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onP
           <p>Staff Directory</p>
           <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} /> 
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
           </div>
         </div>}
 

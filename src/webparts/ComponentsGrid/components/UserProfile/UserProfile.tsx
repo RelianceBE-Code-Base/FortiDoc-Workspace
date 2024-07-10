@@ -11,9 +11,9 @@ import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 const UserProfileIcon = require('./assets/UserProfile.png');
 
 const UserProfile: React.FC<IUserProfileProps> = (props) => {
-  const [profilePhoto, setProfilePhoto] = useState<string>('');
-  const [userName, setUserName] = useState<string>('Toba Gbeleyi');
-  const [userJobTitle, setUserJobTitle] = useState<string>('Developer');
+  const [profilePhoto, setProfilePhoto] = React.useState<string>('');
+  const [userName, setUserName] = React.useState<string>('Toba Gbeleyi');
+  const [userJobTitle, setUserJobTitle] = React.useState<string>('Developer');
 
   const getProfilePhoto = async () => {
     try {
@@ -40,12 +40,12 @@ const UserProfile: React.FC<IUserProfileProps> = (props) => {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     getProfilePhoto();
     getUserDetails();
   }, []);
 
-  const { pinned, onPinClick, onRemove } = props;
+  const { pinned, onPinClick, onRemoveClick } = props;
 
   return (
     <div className={styles.card}>
@@ -55,7 +55,7 @@ const UserProfile: React.FC<IUserProfileProps> = (props) => {
         <div style={{ display: 'flex' }}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
           <FontAwesomeIcon 
-            onClick={onRemove} 
+            onClick={onRemoveClick} 
             icon={faWindowClose} 
             size='sm' 
             color="red" 

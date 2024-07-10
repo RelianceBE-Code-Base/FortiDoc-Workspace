@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import { Web } from '@pnp/sp';
 
-
 interface BusinessAppsProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemove: () => void; // specify the type as () => void
+  onRemoveClick: () => void; // Correct prop name
+  tenantUrl: string; // Add tenantUrl as a prop
 }
 
 interface IBusinessAppsState {
@@ -33,7 +33,7 @@ export default class BusinessApps extends React.Component<BusinessAppsProps, IBu
   fetchApplications = async () => {
     try {
       const listName = 'LOB Apps';
-      const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Replace with your tenant-specific URL
+      const { tenantUrl } = this.props; // Use the tenantUrl prop
       const web = new Web(tenantUrl);
       const list = await web.lists.getByTitle(listName);
       if (!list) {
@@ -53,7 +53,7 @@ export default class BusinessApps extends React.Component<BusinessAppsProps, IBu
   }
 
   render(): React.ReactNode {
-    const { pinned, onPinClick, onRemove } = this.props;
+    const { pinned,onPinClick, onRemoveClick } = this.props;
 
     return (
       <div className={styles.card}>
@@ -61,8 +61,8 @@ export default class BusinessApps extends React.Component<BusinessAppsProps, IBu
           <img src={BusinessAppsIcon} style={{ display: 'flex' }} alt="Business Apps Icon" />
           <p style={{ display: 'flex', justifySelf: 'center' }}>Business Apps</p>
           <div style={{ display: 'flex' }}>
-          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+            <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+            <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
           </div>
         </div>
         <div className={styles['card-body']}>

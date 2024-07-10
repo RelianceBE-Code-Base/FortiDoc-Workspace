@@ -13,20 +13,19 @@ import styles from './GallerySlider.module.scss';
 interface IGallerySliderProps extends Pick<IDigitalWorkspaceProps, 'isDarkTheme'> {
   pinned: boolean;
   onPinClick: () => void;
-  onRemove: () => void;
-  // Define any additional props needed for GallerySlider
+  onRemoveClick: () => void; // Correct prop name
+  tenantUrl: string; // Add tenantUrl as a prop
 }
 
  const MicrosoftAppsIcon = require('./assets/MicrosoftAppsIcon.png')
 
-const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRemove, isDarkTheme }) => {
+const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl, isDarkTheme }) => {
   const [images, setImages] = React.useState<string[]>([]);
   const [error, setError] = React.useState<string>('');
 
   React.useEffect(() => {
     const fetchImages = async (): Promise<void> => {
       try {
-        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Replace with your tenant-specific URL
         const web = new Web(tenantUrl);
         const documentLibrary = web.lists.getByTitle('Gallery Slide');
         try {
@@ -68,7 +67,7 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRe
         Gallery Slider
         <div>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <button className="btn btn-sm btn-light" onClick={onRemove} style={{ marginLeft: '0px', backgroundColor: '#e6f6fd' }}>
+          <button className="btn btn-sm btn-light" onClick={onRemoveClick} style={{ marginLeft: '0px', backgroundColor: '#e6f6fd' }}>
             <FontAwesomeIcon icon={faWindowClose} size="lg" color="red"/>
           </button>
         </div>

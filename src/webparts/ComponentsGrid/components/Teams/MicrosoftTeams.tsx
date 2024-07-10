@@ -15,7 +15,7 @@ interface MicrosoftTeamsProps {
   graphClient: MSGraphClient;
   pinned: boolean;
   onPinClick: () => void;
-  onRemove: () => void; 
+  onRemoveClick: () => void; // Correct prop name
 }
 
 // interface Chat {
@@ -304,7 +304,7 @@ return(
           
           {/* <PinIcon pinned={pinned} onPinClick={onPinClick} />
           
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/> */}
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/> */}
            
           </div>
       </div>

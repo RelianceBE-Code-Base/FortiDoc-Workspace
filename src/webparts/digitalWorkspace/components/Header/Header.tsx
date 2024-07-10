@@ -3,24 +3,41 @@ import { useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Dropdown } from 'react-bootstrap';
 import styles from './Header.module.scss';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 import metaAiIcon from '../../assets/metaAiIcon.png';
 import { Link } from 'react-router-dom';
+
+const componentOptions = [
+  { name: 'UserProfile', icon: require('./assets/UserProfile.png') },
+  { name: 'Inbox', icon: require('./assets/InboxIcon.png') },
+  { name: 'MicrosoftTeams', icon: require('./assets/TeamsIcon.png') },
+  { name: 'Task', icon: require('./assets/TaskIcon.png') },
+  { name: 'Calendar', icon: require('./assets/CalendarIcon.png') },
+  { name: 'CompanyEvents', icon: require('./assets/Events.png') },
+  { name: 'MicrosoftApps', icon: require('./assets/MicrosoftAppsIcon.png') },
+  { name: 'BusinessApps', icon: require('./assets/BusinessAppsIcon.png') },
+  { name: 'StaffDirectory', icon: require('./assets/StaffDirectoryIcon.png') },
+  { name: 'GallerySlider', icon: require('./assets/MicrosoftAppsIcon.png') },
+  { name: 'Anniversary', icon: require('./assets/Anniversary.png') },
+  { name: 'Birthday', icon: require('./assets/Birthday.png') },
+  { name: 'Announcement', icon: require('./assets/Announcement.png') }
+];
 
 interface HeaderProps {
   onHomeClick: () => void;
   graphClient: MSGraphClientV3;
   onDismissSearchResults: () => void;
   onOptionsClick: () => void;
-  onComponentAdd: (componentName: string) => void; // Add this line
+  onComponentAdd: (componentName: string) => void;
+  existingComponents: string[];
 }
 
-const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSearchResults, onOptionsClick, onComponentAdd }) => {
+const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSearchResults, onOptionsClick, onComponentAdd, existingComponents }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const searchResultsRef = useRef<HTMLDivElement>(null);
-  const [optionsVisible, setOptionsVisible] = useState(false);
 
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -63,27 +80,6 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
     };
   }, [onDismissSearchResults]);
 
-  const handleOptionsClick = () => {
-    setOptionsVisible(!optionsVisible);
-    onOptionsClick();
-  };
-
-  const componentsList = [
-    { name: 'GallerySlider', icon: '📸' },
-    { name: 'UserProfile', icon: '👤' },
-    { name: 'Inbox', icon: '📥' },
-    { name: 'MicrosoftTeams', icon: '👥' },
-    { name: 'MicrosoftApps', icon: '📦' },
-    { name: 'BusinessApps', icon: '💼' },
-    { name: 'StaffDirectory', icon: '📇' },
-    { name: 'Task', icon: '📝' },
-    { name: 'Calendar', icon: '📅' },
-    { name: 'CompanyEvents', icon: '🎉' },
-    { name: 'Announcement', icon: '📢' },
-    { name: 'Birthday', icon: '🎂' },
-    { name: 'Anniversary', icon: '🎉' },
-  ];
-
   return (
     <header className={`navbar navbar-expand-lg navbar-light bg-light ${styles.header}`}>
       <div className="container-fluid">
@@ -107,8 +103,23 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
             <li className="nav-item">
               <a className="nav-link" href="#department">Department</a>
             </li>
-            <li className="nav-item">
-              <button className="nav-link btn" onClick={handleOptionsClick}>Options</button>
+            <li className="nav-item dropdown">
+              <Dropdown>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  Options
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {componentOptions.map((option) => (
+                    <Dropdown.Item 
+                      key={option.name} 
+                      onClick={() => onComponentAdd(option.name)}
+                    >
+      <img src={option.icon} className={styles.optionIcon} alt={`${option.name} icon`} /> {option.name}
+    </Dropdown.Item>
+  ))}
+</Dropdown.Menu>
+
+              </Dropdown>
             </li>
           </ul>
           
@@ -141,22 +152,6 @@ const Header: React.FC<HeaderProps> = ({ onHomeClick, graphClient, onDismissSear
               </li>
             ))}
           </ul>
-        </div>
-      )}
-      {optionsVisible && (
-        <div className={`dropdown-menu ${styles.optionsDropdown}`} style={{ display: 'block' }}>
-          <div className="row">
-            {componentsList.map((component, index) => (
-              <div className="col-6" key={index}>
-                <button
-                  className="btn btn-light"
-                  onClick={() => onComponentAdd(component.name)}
-                >
-                  {component.icon} {component.name}
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
       )}
     </header>

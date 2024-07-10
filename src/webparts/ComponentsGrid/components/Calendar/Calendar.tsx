@@ -13,7 +13,7 @@ interface CalendarProps {
   graphClient: MSGraphClientV3;
     pinned: boolean;
     onPinClick: () => void;
-    onRemove: () => void; 
+  onRemoveClick: () => void; // Correct prop name 
 }
 
 interface Event {
@@ -24,7 +24,7 @@ interface Event {
   location: { displayName: string };
 }
 
-const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, onRemove }) => {
+const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, onRemoveClick }) => {
   const [events, setEvents] = useState<Event[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,7 +54,7 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, on
         <p style={{ display: 'flex', justifySelf: 'center' }}>Calendar</p>
         <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
           </div>
         </div>
         <div className={styles['Calendar-content']}>

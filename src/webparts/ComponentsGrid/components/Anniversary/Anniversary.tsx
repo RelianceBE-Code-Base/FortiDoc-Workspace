@@ -11,7 +11,8 @@ const AnniversaryIcon = require('./assets/Anniversary.png');
 interface MicrosoftAnniversaryProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemove: () => void;
+  onRemoveClick: () => void; // Correct prop name
+  tenantUrl: string; // Add tenantUrl as a prop
 }
 
 interface IAnniversary {
@@ -22,7 +23,7 @@ interface IAnniversary {
   Designation: string;
 }
 
-const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, onRemove }) => {
+const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, onRemoveClick,tenantUrl }) => {
   const [anniversaries, setAnniversaries] = React.useState<IAnniversary[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -30,7 +31,6 @@ const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, 
     const fetchAnniversaries = async (): Promise<void> => {
       try {
         const listName = 'Staff Details';
-        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Replace with your tenant-specific URL
         const web = new Web(tenantUrl);
         const list = await web.lists.getByTitle(listName);
         if (!list) {
@@ -78,7 +78,7 @@ const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, 
         <p style={{ display: 'flex', justifySelf: 'center' }}>Anniversaries</p>
         <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
           </div>
       </div>
       <div className={styles['Anniversary-content']}>

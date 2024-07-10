@@ -11,7 +11,7 @@ const InboxIcon = require('./assets/InboxIcon.png')
 interface InboxProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemove: () => void;
+  onRemoveClick: () => void; // Correct prop name
   graphClient: MSGraphClientV3;
 }
 
@@ -118,7 +118,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
   };
 
   render() {
-    const { pinned, onPinClick, onRemove } = this.props;
+    const { pinned, onPinClick, onRemoveClick } = this.props;
     const { selectedMessage, showModal } = this.state;
 
     return (
@@ -136,7 +136,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
           
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''}/>
           
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
            
           </div>
       </div>

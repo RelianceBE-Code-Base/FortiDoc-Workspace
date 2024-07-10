@@ -18,10 +18,11 @@ import CompanyEvents from './components/CompanyEvents/CompanyEvents';
 import Announcement from './components/Announcement/Announcement';
 import Birthday from './components/Birthday/Birthday';
 import Anniversary from './components/Anniversary/Anniversary';
+import { MSGraphClientV3 } from '@microsoft/sp-http';
 
-export interface ComponentConfig {
+interface ComponentConfig {
   name: string;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<any> | null;
   width: string;
   pinned: boolean;
   msGraphClient?: any;
@@ -30,16 +31,19 @@ export interface ComponentConfig {
 }
 
 interface ComponentsGridProps {
-  graphClient: any;
+  graphClient: MSGraphClientV3;
   tenantUrl: string;
+  context: any; // Replace 'any' with the correct type for your context if possible
   listName: string;
-  context: any;
 }
 
 interface ComponentsGridState {
   components: ComponentConfig[];
   userEmail: string | null;
+  newComponent?: ComponentConfig; // Add newComponent to state definition
+  // other state fields...
 }
+
 
 export default class ComponentsGrid extends React.Component<ComponentsGridProps, ComponentsGridState> {
   constructor(props: ComponentsGridProps) {
@@ -66,17 +70,18 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
 
   componentDidMount() {
     const { tenantUrl } = this.props;
-
     const web = new Web(tenantUrl);
 
     web.currentUser.get().then((user: { Email: string }) => {
       this.setState({ userEmail: user.Email }, () => {
         this.loadComponents();
       });
+    }).catch(error => {
+      console.error('Error getting current user:', error);
     });
   }
 
-  loadComponents = async () => {
+ loadComponents = async () => {
     try {
       const web = new Web(this.props.tenantUrl);
       const list = await web.lists.getByTitle('PinnedComponents');
@@ -107,26 +112,33 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
       const web = new Web(this.props.tenantUrl);
       const list = web.lists.getByTitle('PinnedComponents');
       const items = await list.items.filter(`Title eq '${name}' and UserEmail eq '${this.state.userEmail}'`).get();
-    
+  
       if (items.length > 0) {
+        console.log(`Updating existing component ${name} in SharePoint with`, updates);
         await list.items.getById(items[0].Id).update({
           Pinned: updates.pinned,
           IsRemoved: updates.isRemoved,
-          Order0: updates.order // Ensure that you are updating the correct column name
+          Order0: updates.order,
         });
+        console.log(`Component ${name} updated successfully with `, updates); // Debug log
       } else {
+        console.log(`Adding new component ${name} to SharePoint with`, updates);
         await list.items.add({
           Title: name,
           UserEmail: this.state.userEmail,
           Pinned: updates.pinned,
           IsRemoved: updates.isRemoved,
-          Order0: updates.order // Ensure that you are adding the correct column name
+          Order0: updates.order,
         });
+        console.log(`Component ${name} added successfully with `, updates); // Debug log
       }
     } catch (error) {
       console.error('Error saving component:', error);
     }
-  }
+  };
+  
+  
+  
   
   handlePinComponent = (name: string): void => {
     this.setState((prevState) => {
@@ -141,31 +153,113 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
       return { components: updatedComponents };
     });
   }
-
   handleRemoveComponent = (name: string): void => {
     this.setState((prevState) => {
       const updatedComponents = prevState.components.map((component) => {
         if (component.name === name) {
-           this.saveComponent(component.name, { isRemoved: true });
+          this.saveComponent(component.name, { isRemoved: true });
           return { ...component, isRemoved: true };
         }
         return component;
-      }).filter(component => !component.isRemoved);
-      return { components: updatedComponents };
+      });
+
+      const componentsAfterRemoval = updatedComponents.filter(component => !component.isRemoved);
+
+      return { components: componentsAfterRemoval };
     });
   }
 
-  handleComponentAdd = (componentName: string) => {
-    const updatedComponents = this.state.components.map(component => {
-      if (component.name === componentName) {
-        return { ...component, isRemoved: false };
+  checkComponentStatus = async (componentName: string) => {
+    try {
+      const web = new Web(this.props.tenantUrl);
+      const list = web.lists.getByTitle('PinnedComponents');
+      const items = await list.items.filter(`Title eq '${componentName}' and UserEmail eq '${this.state.userEmail}'`).get();
+  
+      if (items.length > 0) {
+        console.log(`Component ${componentName} current status:`, items[0].IsRemoved); // Debug log
+        return items[0].IsRemoved;
       }
-      return component;
-    });
-
-    this.setState({ components: updatedComponents });
+      return true;
+    } catch (error) {
+      console.error('Error checking component status:', error);
+      return true;
+    }
   };
-
+  
+  handleComponentAdd = async (componentName: string) => {
+    try {
+      const isRemoved = await this.checkComponentStatus(componentName);
+      console.log(`Component ${componentName} current status:`, isRemoved); // Debug log
+  
+      if (isRemoved) {
+        const newComponent: ComponentConfig = {
+          name: componentName,
+          component: this.getComponentByName(componentName),
+          width: 'col-md-4',
+          pinned: false,
+          order: this.state.components.length,
+          isRemoved: false
+        };
+  
+        this.setState((prevState) => {
+          const updatedComponents = [...prevState.components, newComponent];
+          return {
+            ...prevState,
+            components: updatedComponents.sort((a, b) => a.order - b.order)
+          };
+        }, async () => {
+          try {
+            await this.saveComponent(componentName, { isRemoved: false, order: newComponent.order });
+            console.log(`Component ${componentName} added successfully`); // Debug log
+            toast.success(`${componentName} has been added successfully.`);
+          } catch (error) {
+            console.error('Error saving component:', error);
+            toast.error('There was an error adding the component.');
+          }
+        });
+      } else {
+        toast.info(`${componentName} already exists and cannot be added again.`);
+      }
+    } catch (error) {
+      console.error('Error in handleComponentAdd:', error); // Debug log
+      toast.error('There was an error adding the component.');
+    }
+  };
+  
+  getComponentByName = (name: string): React.ComponentType<any> => {
+    switch (name) {
+      case 'MicrosoftApps':
+        return MicrosoftApps;
+      case 'BusinessApps':
+        return BusinessApps;
+      case 'GallerySlider':
+        return GallerySlider;
+      case 'UserProfile':
+        return UserProfile;
+      case 'Inbox':
+        return Inbox;
+      case 'MicrosoftTeams':
+        return MicrosoftTeams;
+      case 'CompanyEvents':
+        return CompanyEvents;
+      case 'Calendar':
+        return Calendar;
+      case 'Task':
+        return Task;
+      case 'Announcement':
+        return Announcement;
+      case 'Birthday':
+        return Birthday;
+      case 'Anniversary':
+        return Anniversary;
+      case 'StaffDirectory':
+        return StaffDirectory;
+      
+      default:
+        return () => <div>Unknown component</div>; // Return a default component
+    }
+  };
+  
   onDragEnd = (result: DropResult): void => {
     const { destination, source } = result;
 
@@ -199,8 +293,8 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
         <Droppable droppableId="components">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps} className="row">
-              {this.state.components.map((component, index) => {
-                const Component = component.component; // Use a capital letter for the component tag
+              {this.state.components.filter(component =>!component.isRemoved).map((component, index) => {
+                let Component = component.component;
                 let columnWidth = component.width;
                 return (
                   <Draggable key={component.name} draggableId={component.name} index={index}>
@@ -208,15 +302,17 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
-                        {...(component.pinned ? {} : provided.dragHandleProps)}
-                        className={`mb-3 ${columnWidth}`}
+                        {...provided.dragHandleProps}
+                        className={`my-2 ${columnWidth}`}
                       >
-                        <Component
+                        {Component && <Component // Render an instance of the component
+                          key={component.name}
                           pinned={component.pinned}
                           graphClient={this.props.graphClient}
                           onPinClick={() => this.handlePinComponent(component.name)}
                           onRemoveClick={() => this.handleRemoveComponent(component.name)}
-                        />
+                          tenantUrl={this.props.tenantUrl}
+                        />}
                       </div>
                     )}
                   </Draggable>
@@ -230,19 +326,10 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
     );
   }
 
-  // handleAddComponent = (component: ComponentConfig): void => {
-  //   this.setState((prevState) => {
-  //     const newComponent = { ...component, order: prevState.components.length };
-  //     this.saveComponent(component.name, newComponent);
-  //     return {
-  //       components: [...prevState.components, newComponent]
-  //     };
-  //   });
-  // }
-
   render() {
+    console.log('Rendering components:', this.state.components);
     return (
-      <div className={`row mx-0`}>
+      <div className="row mx-0">
         <ToastContainer />
         {this.renderComponents()}
       </div>

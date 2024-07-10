@@ -11,7 +11,8 @@ const BirthdayIcon = require('./assets/Birthday.png');
 interface MicrosoftBirthdayProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemove: () => void;
+  onRemoveClick: () => void; // Correct prop name
+  tenantUrl: string; // Add tenantUrl as a prop
 }
 
 interface IBirthday {
@@ -22,7 +23,7 @@ interface IBirthday {
   Designation: string;
 }
 
-const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemove }) => {
+const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl }) => {
   const [birthdays, setBirthdays] = React.useState<IBirthday[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -30,7 +31,6 @@ const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemo
     const fetchBirthdays = async (): Promise<void> => {
       try {
         const listName = 'Staff Details';
-        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2'; // Replace with your tenant-specific URL
         const web = new Web(tenantUrl);
         const list = await web.lists.getByTitle(listName);
         if (!list) {
@@ -72,7 +72,7 @@ const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemo
         <p style={{ display: 'flex', justifySelf: 'center' }}>Birthdays</p>
         <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemove} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
           </div>
       </div>
       <div className={styles['Birthday-content']}>
