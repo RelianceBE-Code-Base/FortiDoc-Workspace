@@ -7,6 +7,7 @@ import { ResponseType } from '@microsoft/microsoft-graph-client';
 import PinIcon from '../PinIcon/PinIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import { useState, useEffect } from 'react';
 
 const UserProfileIcon = require('./assets/UserProfile.png');
 

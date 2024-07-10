@@ -102,7 +102,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
       <div className={styles.container}>
         <div className="card" style={{ width: '100%', height: '100vh', overflowY: 'scroll', padding: '5px', backgroundColor: '#f4f4f4', overflowX: 'hidden' }} ref={containerRef}>
           <div className="card-body p-0">
-            {messages.length === 0 &&
+            {messages.length === 0 && 
               <div className={styles.banner}>
                 <img src={metaIcon} style={{ height: '40px', width: '40px', margin: '10px' }} alt="meta icon" />
                 <h1>Reliance AI</h1>
@@ -124,7 +124,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
           {messages.length === 0 &&
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <CardGrid handleClick={handleCardGridClick}/>
-              <div className={styles['button-card']}>
+              <div className={`${styles['button-card']} ${styles.card}`} style={{height: 'max-content'}}>
                 <div className={styles['btn-group']}>
                   <button type="button"
                     className={styles.temperatureButton}
