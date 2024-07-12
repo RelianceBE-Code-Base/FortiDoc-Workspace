@@ -9,20 +9,85 @@
   border-radius: 5px;
   background-color: white;
   color: #007bff;
+  margin-left: 10px;
+  width: 100px;
 }
 
 .navbar-nav .nav-link {
   color: #333 !important;
+  margin-left: 5px;
 }
 
 .navbar-nav .nav-link:hover {
   color: #007bff !important;
 }
 
-.searchForm {
+.optionDropdown {
+  background-color: transparent;
+  color: #007bff;
+  border: none;
+  &:hover {
+    background-color: transparent;
+    color: #0056b3;
+  }
+}
+
+.optionMenu {
+  padding: 0.5rem;
+  border: none;
+  box-shadow: none;
+}
+
+.gridLayout {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* Adjust as needed */
+  gap: 10px;
+}
+
+.gridItem {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  width: 33%;
+  cursor: pointer;
+}
+
+.optionIcon {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 5px;
+}
+
+.optionText {
+  font-size: 12px;
+  text-align: center;
+}
+
+.searchResults {
+  position: absolute;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  top: 100%;
+  left: 0;
+}
+
+.searchResults ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.searchResults li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.searchResults li a {
+  color: #007bff;
+  text-decoration: none;
 }
 
 .metaIcon {
@@ -32,11 +97,19 @@
   border-radius: 20%;
 }
 
+/* Additional styles as needed */
+
+
 .searchBox {
   position: relative;
   width: 100%;
   display: flex;
   align-items: center;
+}
+.searchForm {
+  display: flex;
+  align-items: center;
+  width: 33%;
 }
 
 .searchInput {
@@ -55,6 +128,7 @@
   cursor: pointer;
 }
 
+
 .searchResults {
   position: absolute;
   background: white;
@@ -65,6 +139,21 @@
   z-index: 1000;
   top: 100%;
   left: 0;
+}
+
+.departmentButton {
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.3rem;
+}
+
+.departmentButton:hover {
+  background-color: #e0e0e0;
+  color: #333;
 }
 
 .searchResults ul {

@@ -30,6 +30,7 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
 
   public render(): React.ReactElement<IDigitalWorkspaceProps> {
     console.log('Tenant URL in DigitalWorkspace:', this.props.tenantUrl); // Debug log
+
     return (
       <Router>
         <section className={styles.digitalWorkspace}>
@@ -40,6 +41,8 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
             onOptionsClick={this.handleOptionsClick}
             onComponentAdd={this.handleComponentAdd}
             existingComponents={this.componentsGridRef.current ? this.componentsGridRef.current.state.components.map(c => c.name) : []}
+            spHttpClient={this.props.context.spHttpClient}
+            siteUrl={this.props.tenantUrl}
           />
 
           <div className="d-flex">
@@ -48,19 +51,23 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
                 <Route 
                   exact 
                   path="/" 
-                  render={(props) => <ComponentsGrid 
-                    ref={this.componentsGridRef}
-                    graphClient={this.props.graphClient}
-                    tenantUrl={this.props.tenantUrl}
-                    context={this.props.pageContext}
-                    listName={''}
-                  />} 
+                  render={(props) => (
+                    <ComponentsGrid 
+                      ref={this.componentsGridRef}
+                      graphClient={this.props.graphClient}
+                      tenantUrl={this.props.tenantUrl}
+                      context={this.props.pageContext}
+                      listName={''}
+                    />
+                  )} 
                 />
                 <Route 
                   path="/chatbot" 
-                  render={(props) => <Chatbot 
-                    pageContext={this.props.pageContext} 
-                  />} 
+                  render={(props) => (
+                    <Chatbot 
+                      pageContext={this.props.pageContext} 
+                    />
+                  )} 
                 />
               </Switch>
             </div>

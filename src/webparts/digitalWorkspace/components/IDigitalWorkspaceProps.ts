@@ -1,4 +1,4 @@
-import { MSGraphClientV3 } from '@microsoft/sp-http';
+import { MSGraphClientV3, SPHttpClient } from '@microsoft/sp-http';
 import {PageContext} from '@microsoft/sp-page-context'
 
 
@@ -11,4 +11,7 @@ export interface IDigitalWorkspaceProps {
   graphClient: MSGraphClientV3; 
   pageContext: PageContext;
   tenantUrl: string;
+  context: {
+    spHttpClient: SPHttpClient;
+  };
 }

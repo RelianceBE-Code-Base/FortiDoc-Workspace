@@ -40,6 +40,9 @@ export default class DigitalWorkspaceWebPart extends BaseClientSideWebPart<IDigi
             pageContext: this.context.pageContext,
             graphClient: client,// Pass the graphClient to the DigitalWorkspace component
             tenantUrl: tenantUrl, // Pass the tenantUrl to the DigitalWorkspace component
+            context: {
+              spHttpClient: this.context.spHttpClient
+            }
        
           }
         );
