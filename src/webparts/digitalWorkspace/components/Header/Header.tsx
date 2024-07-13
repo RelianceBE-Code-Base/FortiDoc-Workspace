@@ -76,44 +76,42 @@ const Header: React.FC<HeaderProps> = ({
     }
   
     const entityTypes = [
-      'Microsoft.Graph.DriveItem',
-      'Microsoft.Graph.Message',
-      'Microsoft.Graph.Event',
-      'Microsoft.Graph.Person',
-      'Microsoft.Graph.List',
-      'Microsoft.Graph.Site'
+      'driveItem',
+      'message',
+      'event',
+      'person',
+      'list',
+      'site'
     ];
   
     const searchResults: any[] = [];
   
     for (const entityType of entityTypes) {
       try {
-        console.log(`Searching for ${entityType}...`);
         const response = await graphClient.api('/search/query').version('v1.0').post({
           requests: [
             {
+              entityTypes: [entityType],
               query: {
-                queryString: searchQuery.trim(), // Ensure the searchQuery is trimmed
-                entityTypes: [entityType],
-              },
-            },
-          ],
+                queryString: searchQuery.trim()
+              }
+            }
+          ]
         });
   
-        if (!response.ok) {
-          console.error('Failed to fetch search results:', await response.json());
-          continue;
+        if (!response || !response.value) {
+          throw new Error('Unexpected response. Please check the network request.');
         }
   
-        const responseData = await response.json();
+        const responseData = response.value;
   
-        if (responseData.value) {
-          const formattedResults = responseData.value.map((result: any) => ({
+        if (responseData) {
+          const formattedResults = responseData.map((result: any) => ({
             id: result.id,
-            title: result.title,
-            summary: result.summary,
-            webUrl: result.webUrl,
-            entityType: result["@odata.type"].split('.').pop(),
+            title: result.title || result.name || result.subject || 'No title',
+            summary: result.summary || result.bodyPreview || result.description || 'No summary available',
+            webUrl: result.webUrl || result.url,
+            entityType: entityType,
             description: result.description,
             fileType: result.fileType,
             fileSize: result.size,
@@ -122,12 +120,14 @@ const Header: React.FC<HeaderProps> = ({
             end: result.end,
             location: result.location,
             body: result.body,
-            url: result.webUrl
+            url: result.webUrl || result.url
           }));
+  
           searchResults.push(...formattedResults);
         }
       } catch (error) {
         console.error('Error searching with Microsoft Graph API', error);
+        // Handle network errors (e.g., display an error message to the user)
       }
     }
   
@@ -157,7 +157,7 @@ const Header: React.FC<HeaderProps> = ({
             <br />
             {result.description ? result.description : 'No description available'}
             <br />
-            <a href={`https://graph.microsoft.com/v1.0/users/${result.id}`} target="_blank" rel="noopener noreferrer">
+            <a href={`https://delve.office.com/?u=${result.id}`} target="_blank" rel="noopener noreferrer">
               View Profile
             </a>
           </div>
@@ -203,7 +203,7 @@ const Header: React.FC<HeaderProps> = ({
             <br />
             {result.body ? result.body.content.replace(/<[^>]+>/g, '') : 'No content available'}
             <br />
-            <a href={`https://graph.microsoft.com/v1.0/me/messages/${result.id}`} target="_blank" rel="noopener noreferrer">
+            <a href={`https://outlook.office.com/mail/inbox/id/${result.id}`} target="_blank" rel="noopener noreferrer">
               View Email
             </a>
           </div>

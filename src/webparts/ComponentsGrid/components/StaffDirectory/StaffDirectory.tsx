@@ -165,10 +165,7 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onP
         <div >
           
           <p>Staff Directory</p>
-          <div style={{display: 'flex'}}>
-          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} /> 
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
-          </div>
+        
         </div>}
 
         {showSearchBox &&
@@ -182,9 +179,14 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onP
           />
 
         </div>
+        
         }
-
+        
         <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} onClick={handleSearchIconClick}/>
+        <div style={{display: 'flex'}}>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} /> 
+          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          </div>
 
         
       </div>

@@ -1,10 +1,7 @@
 @import '~@fluentui/react/dist/sass/References.scss';
-
 @import '../../../../styles/cards.scss';
 
-
-
-.details{
+.details {
   width: 100%;
   display: flex;
   align-items: center;
@@ -12,22 +9,61 @@
   flex-direction: column;
 }
 
+.title-Header {
+  color: #ed1b24;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 0px;
+  align-self: center;
+  justify-self: center;
+}
 
-.title{
-  color: black;
-  // font-size: 24px;
+.title-Header-Recent {
+  color: #485bd5;
   font-size: 16px;
   font-weight: 500;
   margin-left: 5px;
   margin-right: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 0px;
   align-self: center;
   justify-self: center;
-
+  display: flex;
 }
 
-.subtitle{
-  // font-size: 20px;
+.title-Header-Recent img {
+  height: 30px; /* Set the height of the image */
+  width: 30px; /* Set the width of the image */
+  margin-right: 10px; /* Space between image and text */
+}
+
+.title {
+  color: #002144;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 0px;
+  align-self: center;
+  justify-self: center;
+}
+
+.title-Header p a {
+  display: inline-block;
+  font-size: 11px;
+  line-height: 1;
+  background-color: #ed1b24;
+  color: hsla(0, 0%, 100%, .905);
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.subtitle {
   font-size: 11px;
   color: grey;
   margin-left: 5px;
@@ -39,24 +75,15 @@
   justify-self: center;
 }
 
-.user-profile .search-box {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
 .profile-image {
   border-radius: 50%;
   height: 75px;
   margin-bottom: 10px;
-  margin-top: 20px;
-  width: 80px;
- 
+  margin-top: 10px;
+  width: 75px;
 }
 
-.profile-image-frame{
+.profile-image-frame {
   display: flex;
   align-self: center;
   justify-self: center;
@@ -71,20 +98,44 @@
   display: inline-block;
 }
 
-.user-profile .recent-contacts {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
+.recent-contacts {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 5px;
+  width: 80%;
 }
 
-.user-profile .contact-image {
-  width: 50px;
-  height: 50px;
+.contact-item {
+  position: relative;
+}
+
+.contact-image {
+  width: 30px;  // Increased size for better visibility
+  height: 30px;
   border-radius: 50%;
-  border: 2px solid #0078d7;
+  border: 2px solid #485bd5;
+  cursor: pointer;
 }
 
+.contact-image:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
 
-
+.UP-content {
+  max-height: 350px; 
+  overflow: auto; 
+  height: 290px;
+  margin: 0px 10px 5px 10px;
+  width: 96%;
+  scrollbar-width: thin;
+}

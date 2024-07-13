@@ -1,4 +1,4 @@
-$card-height: 320px;
+$card-height: 350px;
 $card-width: 100%;
 $card-border-radius: 10px;
 
@@ -55,6 +55,22 @@ $card-body-background-color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-direction: column;
+    width: $card-body-width;
+    height: $card-body-height;
+    box-sizing: border-box;  
+    background-color: $card-body-background-color;
+    position: relative;
+    z-index: 2;
+    transform-style: preserve-3d;
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+  }
+
+  .card-body-UP{
+    display: flex;
+    align-items: center;
+    justify-content: normal;
     flex-direction: column;
     width: $card-body-width;
     height: $card-body-height;
