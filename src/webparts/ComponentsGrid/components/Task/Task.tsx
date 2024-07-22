@@ -5,22 +5,24 @@ import styles from './Task.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import moment from 'moment';
 
 const TaskIcon = require('./assets/TaskIcon.png');
 
 interface TaskProps {
   graphClient: MSGraphClientV3;
-    pinned: boolean;
-    onPinClick: () => void;
-    onRemoveClick: () => void; // Correct prop name
+  pinned: boolean;
+  onPinClick: () => void;
+  onRemoveClick: () => void;
 }
 
 interface Task {
   id: string;
   title: string;
+  startDateTime: { dateTime: string; timeZone: string } | null;
   dueDateTime: { dateTime: string; timeZone: string } | null;
   percentComplete: number;
-  status?: string; // Make status optional
+  status?: string;
 }
 
 const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemoveClick }) => {
@@ -42,14 +44,17 @@ const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemoveCl
     }
   };
 
-  const getStatusClass = (status?: string) => {
-    if (!status) {
-      return '';
+  const getStatusClass = (status?: string, percentComplete?: number) => {
+    if (!status && percentComplete !== undefined) {
+      if (percentComplete === 0) status = 'Not started';
+      else if (percentComplete > 0 && percentComplete < 100) status = 'In progress';
+      else if (percentComplete === 100) status = 'Completed';
     }
-    switch (status.toLowerCase()) {
-      case 'notstarted':
+    
+    switch (status?.toLowerCase()) {
+      case 'not started':
         return styles.notStarted;
-      case 'inprogress':
+      case 'in progress':
         return styles.inProgress;
       case 'completed':
         return styles.completed;
@@ -79,49 +84,47 @@ const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemoveCl
     </div>
   );
 
+  const formatDate = (dateTime: string) => {
+    return moment(dateTime).format('YYYY-MM-DD HH:mm');
+  };
+
   if (error) {
     return <div className={styles.error}>{error}</div>;
   }
 
   return (
-    <div className={styles.card}>
-      <div className={styles['card-header']}>
-        <img src={TaskIcon} style={{ display: 'flex' }} />
-        <p style={{ display: 'flex', justifySelf: 'center' }}>Tasks</p>
-        <div style={{display: 'flex'}}>
+    <div className={styles.card} >
+  <div className={styles['card-header']} >
+  <img src={TaskIcon} alt="Task Icon" className={styles.taskIcon} />
+    <p style={{display: 'flex', justifySelf: 'center'}}>Task</p>
+    <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
           <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
           </div>
-      </div>
-      <div className={styles['Task-content']}>
-        <div className={styles['card-body']}>
-        {/* {tasks.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No pending tasks</p>} */}
+  </div>
+       
+     
+      <div className={styles['task-content']}>
+      <div className={styles['card-body']}>
 
-          {tasks.map((task, index) => (
-            <div
-              key={task.id}
-              className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 4 + 1}`]} ${getStatusClass(task.status)}`}
-            >
-              <div className={styles.date}>
-                <span className={styles.day}>
-                  {task.dueDateTime ? new Date(task.dueDateTime.dateTime).toLocaleDateString('en-US', {
-                    day: 'numeric',
-                  }) : ''}
-                </span>
-                <span className={styles.month}>
-                  {task.dueDateTime ? new Date(task.dueDateTime.dateTime).toLocaleDateString('en-US', {
-                    month: 'short',
-                  }) : ''}
-                </span>
+        {tasks.length === 0 && <p className={styles.noTasks}>No pending tasks</p>}
+        {tasks.map((task) => (
+          <div key={task.id} className={`${styles.taskCard} ${getStatusClass(task.status, task.percentComplete)}`} onClick={() => window.open(`https://tasks.office.com/taskid=${task.id}`, '_blank')}>
+            <div className={styles.taskDetails}>
+              <div>
+                <p className={styles.taskTitle}>{task.title}</p>
+                {/* <p className={styles.taskDate}><strong>Start Date:</strong> {task.startDateTime ? formatDate(task.startDateTime.dateTime) : 'No start date'}</p> */}
+                <p className={styles.taskDate}><strong>Due Date:</strong> {task.dueDateTime ? formatDate(task.dueDateTime.dateTime) : 'No due date'}</p>
               </div>
-              <div className={styles.details}>
-                <p className={styles.title}>{task.title}</p>
+              <div className={styles.taskStatus}>
+                <p>Status: {task.status ?? getStatusClass(task.status, task.percentComplete).replace(styles.notStarted, 'Not started').replace(styles.inProgress, 'In progress').replace(styles.completed, 'Completed')}</p>
                 <ProgressCircle percentComplete={task.percentComplete} />
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
+    </div>
     </div>
   );
 };
