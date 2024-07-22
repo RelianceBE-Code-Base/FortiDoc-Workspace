@@ -10,21 +10,39 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+
 .eventColor1 {
-  background-color: #e6f7ff; /* Light blue */
+  background-color: #FFFFFD; 
 }
 
 .eventColor2 {
-  background-color: #fde6ff; /* Light purple */
+  background-color: #FFFFFD
+  ;
 }
 
 .eventColor3 {
-  background-color: #e6fff7; /* Light green */
+  background-color: #FFFFFD;
 }
 
 .eventColor4 {
-  background-color: #fffde6; /* Light yellow */
+  background-color: #FFFFFD;
 }
+
+// .eventColor1 {
+//   background-color: #e6f7ff; /* Light blue */
+// }
+
+// .eventColor2 {
+//   background-color: #fde6ff; /* Light purple */
+// }
+
+// .eventColor3 {
+//   background-color: #e6fff7; /* Light green */
+// }
+
+// .eventColor4 {
+//   background-color: #fffde6; /* Light yellow */
+// }
 
 .Task-content {
   max-height: 350px;
@@ -41,7 +59,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #0078d4;
+  background-color: #6C6D6F;
   color: white;
   padding: 10px;
   border-radius: 5px;
@@ -99,7 +117,7 @@
 .circle {
   fill: none;
   stroke-width: 2.8;
-  stroke: #00acc1;
+  stroke: #B6B4B5;
   stroke-linecap: round;
   animation: progress 1s ease-out forwards;
 }

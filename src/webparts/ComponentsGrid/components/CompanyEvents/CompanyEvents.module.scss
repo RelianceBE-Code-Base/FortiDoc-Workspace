@@ -32,29 +32,47 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
-  .eventColor1 {
-    background-color: #f9f9f9;
-  }
   
-  .eventColor2 {
-    background-color: #e6f6fd;
-  }
+.eventColor1 {
+  background-color: #FFFFFD; 
+}
+
+.eventColor2 {
+  background-color: #B6B4B5;
+}
+
+.eventColor3 {
+  background-color: #FFFFFD;
+}
+
+.eventColor4 {
+  background-color: #B6B4B5;
+}
+
+  // .eventColor1 {
+  //   background-color: #f9f9f9;
+  // }
   
-  .eventColor3 {
-    background-color: #e0ffe0;
-  }
+  // .eventColor2 {
+  //   background-color: #e6f6fd;
+  // }
   
-  .eventColor4 {
-    background-color: #fff4e6;
-  }
+  // .eventColor3 {
+  //   background-color: #e0ffe0;
+  // }
+  
+  // .eventColor4 {
+  //   background-color: #fff4e6;
+  // }
   
   
   .eventEven {
-    background-color: #f9f9f9;
+    background-color: #FFFFFD;
   }
   
   .eventOdd {
-    background-color: #e6f6fd;
+    background-color: #B6B4B5
+    ;
   }
   
 .Events-content {
@@ -74,7 +92,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #0078d4;
+    background-color: #6C6D6F;
     color: white;
     padding: 10px;
     border-radius: 5px;

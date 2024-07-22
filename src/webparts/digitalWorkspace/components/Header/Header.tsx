@@ -133,7 +133,7 @@ const Header: React.FC<HeaderProps> = ({
   
     setSearchResults(searchResults);
   };
-  
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchResultsRef.current && !searchResultsRef.current.contains(event.target as Node)) {
@@ -248,7 +248,7 @@ const Header: React.FC<HeaderProps> = ({
       <div className="container-fluid">
         <Link to="/">
           <button
-            className={`btn btn-outline-primary ${styles.homeButton}`}
+            className={`btn ${styles.homeButton}`}
             type="button"
             onClick={onHomeClick}
           >

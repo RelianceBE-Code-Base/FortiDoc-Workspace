@@ -11,21 +11,23 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+
 .eventColor1 {
-  background-color: #e6f7ff; /* Light blue */
+  background-color: #FFFFFD; 
 }
 
 .eventColor2 {
-  background-color: #fde6ff; /* Light purple */
+  background-color: #B6B4B5;
 }
 
 .eventColor3 {
-  background-color: #e6fff7; /* Light green */
+  background-color: #FFFFFD;
 }
 
 .eventColor4 {
-  background-color: #fffde6; /* Light yellow */
+  background-color: #B6B4B5;
 }
+
   
 .Birthday-content {
   max-height: '500px'; 
@@ -44,7 +46,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #0078d4;
+  background-color: #6C6D6F;
   color: white;
   padding: 10px;
   border-radius: 5px;
@@ -91,10 +93,10 @@
 
 @keyframes birthdayAnimation {
   0% {
-    background-color: #ffe066;
+    background-color: #D9CB8C;
   }
   50% {
-    background-color: #ffcc00;
+    background-color: #ECE5C5;
   }
   100% {
     background-color: #ffe066;
