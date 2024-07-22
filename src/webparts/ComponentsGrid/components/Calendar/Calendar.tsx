@@ -61,7 +61,7 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, on
       <div className={styles['card-body']}>
         {events.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No upcoming events</p>}
         {events.map((event, index) => (
-           <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
+           <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 3 + 1}`]}`}>
             <div className={styles.date}>
               <span className={styles.day}>{new Date(event.start.dateTime).getDate()}</span>
               <span className={styles.month}>{new Date(event.start.dateTime).toLocaleString('default', { month: 'short' })}</span>
