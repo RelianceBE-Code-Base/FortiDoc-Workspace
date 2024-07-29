@@ -11,7 +11,7 @@
 }
 
 .eventColor1 {
-  background-color: #FFFFFD; 
+  background-color: #ECE5C5; 
 }
 
 .eventColor2 {
@@ -21,6 +21,10 @@
 
 .eventColor3 {
   background-color: #ECE5C5
+  ;
+}
+.eventColor4 {
+  background-color: #DDEFEB
   ;
 }
 
@@ -40,13 +44,33 @@
   align-items: center;
   justify-content: center;
   background-color: #6C6D6F;
-  color: white;
+  color: #353D54;
   padding: 10px;
   border-radius: 5px;
   width: 50px;
   height: 50px;
   margin-right: 10px;
 }
+
+
+.dateColor1 {
+  background-color: #D9CB8C; 
+}
+
+.dateColor2 {
+  background-color: #BBDFD9
+  ;
+}
+
+.dateColor3 {
+  background-color: #D9CB8C
+  ;
+}
+.dateColor4 {
+  background-color: #BBDFD9
+  ;
+}
+
 
 .day {
   font-size: 18px;

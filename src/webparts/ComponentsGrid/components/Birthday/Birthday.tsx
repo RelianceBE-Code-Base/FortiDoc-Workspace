@@ -84,9 +84,9 @@ const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemo
             return (
               <div
                 key={birthday.ID}
-                className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 3 + 1}`]} ${isToday ? styles.today : ''}`}
+                className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 4 + 1}`]} ${isToday ? styles.today : ''}`}
               >
-                <div className={styles.date}>
+                <div className={`${styles.date} ${(styles as { [key: string]: string })[`dateColor${index % 4 + 1}`]}`}>
                   <span className={styles.day}>{new Date(birthday.DateOfBirth).getDate()}</span>
                   <span className={styles.month}>{new Date(birthday.DateOfBirth).toLocaleString('default', { month: 'short' })}</span>
                 </div>

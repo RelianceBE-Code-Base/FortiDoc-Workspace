@@ -92,9 +92,9 @@ const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, 
             return (
               <div
                 key={anniversary.ID}
-                className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 3 + 1}`]} ${isToday ? styles.today : ''}`}
+                className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 4 + 1}`]}`}
               >
-                <div className={styles.date}>
+                <div className={`${styles.date} ${(styles as { [key: string]: string })[`dateColor${index % 4 + 1}`]} ${isToday ? styles.today : ''}`}>
                   <span className={styles.day}>{new Date(anniversary.ResumptionDate).getDate()}</span>
                   <span className={styles.month}>{new Date(anniversary.ResumptionDate).toLocaleString('default', { month: 'short' })}</span>
                 </div>

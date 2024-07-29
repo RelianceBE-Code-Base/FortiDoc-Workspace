@@ -1,7 +1,7 @@
 @import '../../../../styles/cards.scss';
 
 
-$button-color: #04a4ec;
+$button-color: #353d54;
 
 
 .inboxCard {
@@ -31,7 +31,7 @@ $button-color: #04a4ec;
       }
   
       .card-header {
-        background-color: #e6f6fd;
+        background-color: #dfdddd;
         padding: 0.5rem;
       }
   
@@ -79,7 +79,7 @@ $button-color: #04a4ec;
   // padding: 10px;
   // overflow-y: auto;
   margin: 5px;
-  width: auto;
+  width: 96%;
   margin-right: 10px;
   scrollbar-width: thin;
 }
