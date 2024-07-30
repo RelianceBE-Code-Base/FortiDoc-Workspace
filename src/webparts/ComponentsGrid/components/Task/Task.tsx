@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 import styles from './Task.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+
 import moment from 'moment';
 
 const TaskIcon = require('./assets/TaskIcon.png');
+const CloseIcon = require('./assets/close-square.png')
 
 interface TaskProps {
   graphClient: MSGraphClientV3;
@@ -99,7 +99,9 @@ const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemoveCl
     <p style={{display: 'flex', justifySelf: 'center'}}>Task</p>
     <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
+          </button>
           </div>
   </div>
        

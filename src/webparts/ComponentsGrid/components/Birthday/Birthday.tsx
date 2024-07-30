@@ -3,10 +3,10 @@ import { Web} from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Birthday.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+
 
 const BirthdayIcon = require('./assets/Birthday.png');
+const CloseIcon = require('./assets/close-square.png')
 
 interface MicrosoftBirthdayProps {
   pinned: boolean;
@@ -72,7 +72,9 @@ const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemo
         <p style={{ display: 'flex', justifySelf: 'center' }}>Birthdays</p>
         <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
+          </button>
           </div>
       </div>
       <div className={styles['Birthday-content']}>

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 import { ListGroup, ListGroupItem, FormControl, Modal, Button, Tabs, Tab } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import styles from './StaffDirectory.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
 import './StaffDirectory.module.scss'
@@ -11,6 +11,7 @@ import './StaffDirectory.module.scss'
 
 
 const StaffDirectoryIcon = require('./assets/StaffDirectoryIcon.png')
+const CloseIcon = require('./assets/close-square.png')
 
 
 interface StaffDirectoryProps {
@@ -185,7 +186,9 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onP
         <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} onClick={handleSearchIconClick}/>
         <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} /> 
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
+          </button>
           </div>
 
         
