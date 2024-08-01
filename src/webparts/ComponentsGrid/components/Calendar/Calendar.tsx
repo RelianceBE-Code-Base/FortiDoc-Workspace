@@ -4,10 +4,10 @@ import { MSGraphClientV3 } from '@microsoft/sp-http';
 import styles from './Calendar.module.scss';
 import './Calendar.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowClose} from '@fortawesome/free-solid-svg-icons';
+
 
 const CalendarIcon = require('./assets/CalendarIcon.png');
+const CloseIcon = require('./assets/close-square.png')
 
 interface CalendarProps {
   graphClient: MSGraphClientV3;
@@ -54,7 +54,9 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, on
         <p style={{ display: 'flex', justifySelf: 'center' }}>Calendar</p>
         <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
+          </button>
           </div>
         </div>
         <div className={styles['Calendar-content']}>
@@ -62,7 +64,7 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, on
         {events.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No upcoming events</p>}
         {events.map((event, index) => (
            <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
-            <div className={styles.date}>
+            <div className={`${styles.date} ${(styles as { [key: string]: string })[`dateColor${index % 4 + 1}`]}`}>
               <span className={styles.day}>{new Date(event.start.dateTime).getDate()}</span>
               <span className={styles.month}>{new Date(event.start.dateTime).toLocaleString('default', { month: 'short' })}</span>
             </div>

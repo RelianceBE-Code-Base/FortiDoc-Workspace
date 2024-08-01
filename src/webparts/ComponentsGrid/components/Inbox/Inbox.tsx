@@ -4,9 +4,10 @@ import { Card, Button, Modal } from 'react-bootstrap';
 import styles from './Inbox.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowClose, faEnvelopeOpen, faReply, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelopeOpen, faReply, faClock } from '@fortawesome/free-solid-svg-icons';
 
 const InboxIcon = require('./assets/InboxIcon.png')
+const CloseIcon = require('./assets/close-square.png')
 
 interface InboxProps {
   pinned: boolean;
@@ -136,8 +137,9 @@ class Inbox extends React.Component<InboxProps, InboxState> {
           
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''}/>
           
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
-           
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
+          </button>
           </div>
       </div>
         

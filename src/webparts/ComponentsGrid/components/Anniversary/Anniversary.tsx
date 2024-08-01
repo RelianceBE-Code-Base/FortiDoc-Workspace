@@ -3,10 +3,10 @@ import { Web} from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Anniversary.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
 const AnniversaryIcon = require('./assets/Anniversary.png');
+const CloseIcon = require('./assets/close-square.png')
+
 
 interface MicrosoftAnniversaryProps {
   pinned: boolean;
@@ -78,7 +78,9 @@ const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, 
         <p style={{ display: 'flex', justifySelf: 'center' }}>Anniversaries</p>
         <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
+          </button>
           </div>
       </div>
       <div className={styles['Anniversary-content']}>
@@ -92,9 +94,9 @@ const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, 
             return (
               <div
                 key={anniversary.ID}
-                className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 4 + 1}`]} ${isToday ? styles.today : ''}`}
+                className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 4 + 1}`]}`}
               >
-                <div className={styles.date}>
+                <div className={`${styles.date} ${(styles as { [key: string]: string })[`dateColor${index % 4 + 1}`]} ${isToday ? styles.today : ''}`}>
                   <span className={styles.day}>{new Date(anniversary.ResumptionDate).getDate()}</span>
                   <span className={styles.month}>{new Date(anniversary.ResumptionDate).toLocaleString('default', { month: 'short' })}</span>
                 </div>

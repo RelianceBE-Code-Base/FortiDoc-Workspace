@@ -32,29 +32,50 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
+ 
   .eventColor1 {
-    background-color: #f9f9f9;
+    background-color: #ECE5C5; 
   }
   
   .eventColor2 {
-    background-color: #e6f6fd;
+    background-color: #DDEFEB
+    ;
   }
   
   .eventColor3 {
-    background-color: #e0ffe0;
+    background-color: #ECE5C5
+    ;
+  }
+  .eventColor4 {
+    background-color: #DDEFEB
+    ;
   }
   
-  .eventColor4 {
-    background-color: #fff4e6;
-  }
+
+  // .eventColor1 {
+  //   background-color: #f9f9f9;
+  // }
+  
+  // .eventColor2 {
+  //   background-color: #e6f6fd;
+  // }
+  
+  // .eventColor3 {
+  //   background-color: #e0ffe0;
+  // }
+  
+  // .eventColor4 {
+  //   background-color: #fff4e6;
+  // }
   
   
   .eventEven {
-    background-color: #f9f9f9;
+    background-color: #FFFFFD;
   }
   
   .eventOdd {
-    background-color: #e6f6fd;
+    background-color: #B6B4B5
+    ;
   }
   
 .Events-content {
@@ -74,14 +95,34 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #0078d4;
-    color: white;
+    background-color: #6C6D6F;
+    color: #353D54;
     padding: 10px;
     border-radius: 5px;
     width: 50px;
     height: 50px;
     margin-right: 10px;
   }
+
+
+.dateColor1 {
+  background-color: #D9CB8C; 
+}
+
+.dateColor2 {
+  background-color: #BBDFD9
+  ;
+}
+
+.dateColor3 {
+  background-color: #D9CB8C
+  ;
+}
+.dateColor4 {
+  background-color: #BBDFD9
+  ;
+}
+
   
   .day {
     font-size: 18px;

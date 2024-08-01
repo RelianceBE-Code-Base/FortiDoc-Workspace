@@ -3,11 +3,11 @@ import styles from './UserProfile.module.scss';
 import { IUserProfileProps } from './IUserProfileProps';
 import { ResponseType } from '@microsoft/microsoft-graph-client';
 import PinIcon from '../PinIcon/PinIcon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+
 
 const UserProfileIcon = require('./assets/UserProfile.png');
 const TeamsIcon = require('./assets/TeamsIcon.png');
+const CloseIcon = require('./assets/close-square.png')
 
 const UserProfile: React.FC<IUserProfileProps> = (props) => {
   const [profilePhoto, setProfilePhoto] = React.useState<string>('');
@@ -92,13 +92,9 @@ const UserProfile: React.FC<IUserProfileProps> = (props) => {
         <p style={{ display: 'flex' }}>My Profile</p>
         <div style={{ display: 'flex' }}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon 
-            onClick={onRemoveClick} 
-            icon={faWindowClose} 
-            size='sm' 
-            color="red" 
-            style={{ margin: '5px', cursor: 'pointer' }}
-          />
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
+          </button>
         </div>
       </div>
       <div className={styles['UP-content']}>

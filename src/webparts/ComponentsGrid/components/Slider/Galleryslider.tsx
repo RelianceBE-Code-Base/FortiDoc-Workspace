@@ -6,8 +6,6 @@ import Carousel from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import PinIcon from '../PinIcon/PinIcon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import styles from './GallerySlider.module.scss';
 
 interface IGallerySliderProps extends Pick<IDigitalWorkspaceProps, 'isDarkTheme'> {
@@ -18,6 +16,7 @@ interface IGallerySliderProps extends Pick<IDigitalWorkspaceProps, 'isDarkTheme'
 }
 
  const MicrosoftAppsIcon = require('./assets/MicrosoftAppsIcon.png')
+ const CloseIcon = require('./assets/close-square.png')
 
 const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl, isDarkTheme }) => {
   const [images, setImages] = React.useState<string[]>([]);
@@ -67,8 +66,8 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRe
         Gallery Slider
         <div>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <button className="btn btn-sm btn-light" onClick={onRemoveClick} style={{ marginLeft: '0px', backgroundColor: '#e6f6fd' }}>
-            <FontAwesomeIcon icon={faWindowClose} size="lg" color="red"/>
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
           </button>
         </div>
       </div>

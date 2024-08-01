@@ -1,66 +1,90 @@
 .header {
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
-}
-
-.homeButton {
-  border: 2px solid #007bff;
-  border-radius: 5px;
-  background-color: white;
-  color: #007bff;
-  margin-left: 10px;
-  width: 100px;
-}
-
-.navbar-nav .nav-link {
-  color: #333 !important;
-  margin-left: 5px;
-}
-
-.navbar-nav .nav-link:hover {
-  color: #007bff !important;
-}
-
-.optionDropdown {
-  background-color: transparent;
-  color: #007bff;
-  border: none;
-  &:hover {
-    background-color: transparent;
-    color: #0056b3;
+  .homeButton,
+  .actionButton {
+    &:hover {
+      cursor: pointer;
+    }
   }
+  
+  .actionButton {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .searchResults {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  .searchResultsList {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .searchResultItem {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .searchResultItem:last-child {
+    border-bottom: none;
+  }
+
+  .searchForm {
+    position: relative;
+  }
+
+  .optionDropdown {
+    background-color: transparent;
+    color: #04a4ec;
+    border: none;
+    &:hover {
+      background-color: transparent;
+      color: #04a4ec;
+    }
+  }
+  
+  .optionMenu {
+    padding: 0.5rem;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .gridLayout {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* Adjust as needed */
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .gridItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+  
+  
+  .optionIcon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+  }
+  
+  .optionText {
+    font-size: 12px;
+    text-align: center;
+  }
+  
 }
 
-.optionMenu {
-  padding: 0.5rem;
-  border: none;
-  box-shadow: none;
-}
-
-.gridLayout {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr); /* Adjust as needed */
-  gap: 10px;
-}
-
-.gridItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-}
-
-.optionIcon {
-  width: 30px;
-  height: 30px;
-  margin-bottom: 5px;
-}
-
-.optionText {
-  font-size: 12px;
-  text-align: center;
-}
 
 .searchResults {
   position: absolute;
@@ -86,7 +110,7 @@
 }
 
 .searchResults li a {
-  color: #007bff;
+  color: #04a4ec;
   text-decoration: none;
 }
 
@@ -168,7 +192,7 @@
 }
 
 .searchResults li a {
-  color: #007bff;
+  color: #04a4ec;
   text-decoration: none;
 }
 

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import styles from './MicrosoftApps.module.scss'; 
 import PinIcon from '../PinIcon/PinIcon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+
 
 interface MicrosoftAppProps {
   pinned: boolean;
@@ -11,6 +10,7 @@ interface MicrosoftAppProps {
 }
 
 const MicrosoftAppsIcon = require('./assets/MicrosoftAppsIcon.png')
+const CloseIcon = require('./assets/close-square.png')
 
 const MicrosoftApps: React.FC<MicrosoftAppProps> = ({ pinned, onPinClick, onRemoveClick }) => {
 
@@ -23,7 +23,9 @@ const MicrosoftApps: React.FC<MicrosoftAppProps> = ({ pinned, onPinClick, onRemo
     <p style={{display: 'flex', justifySelf: 'center'}}>Microsoft Apps</p>
     <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/>
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
+          </button>
           </div>
   </div>
   <div className='card-body' style={{ marginBottom: '10px' }}>

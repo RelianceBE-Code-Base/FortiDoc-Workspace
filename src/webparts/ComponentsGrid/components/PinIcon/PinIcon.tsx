@@ -1,4 +1,6 @@
 import * as React from 'react';
+import pinnedIcon from './assets/PinIcon.png';
+import unpinnedIcon from './assets/UnPinIcon.png';
 
 interface PinIconProps {
   componentName: string;
@@ -13,7 +15,7 @@ const PinIcon: React.FC<PinIconProps> = ({ componentName, onPinClick, pinned }) 
 
   return (
     <span onClick={togglePin} style={{ cursor: 'pointer' }}>
-      {pinned? '📌' : '📍'}
+      <img src={pinned ? pinnedIcon : unpinnedIcon} alt={pinned ? 'Pinned' : 'Unpinned'} />
     </span>
   );
 };

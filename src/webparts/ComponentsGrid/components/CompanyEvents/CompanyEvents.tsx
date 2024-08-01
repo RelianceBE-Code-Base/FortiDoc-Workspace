@@ -3,9 +3,8 @@ import { Web } from '@pnp/sp';
 import '@pnp/odata';
 import styles from './CompanyEvents.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
+const CloseIcon = require('./assets/close-square.png')
 const EventsImg = require('./assets/Events.png');
 
 interface MicrosoftEventProps {
@@ -59,14 +58,16 @@ const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRe
         <p style={{ display: 'flex', justifySelf: 'center' }}>Company Events</p>
         <div style={{ display: 'flex' }}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{ margin: '5px', cursor: 'pointer' }} />
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
+          <img src={CloseIcon} style={{display: 'flex'}}/>
+          </button>
         </div>
       </div>
       <div className={styles['Events-content']}>
         <div className={styles['card-body']}>
           {events.map((event, index) => (
             <div key={index} className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 4 + 1}`]}`}>
-              <div className={styles.date}>
+              <div className={`${styles.date} ${(styles as { [key: string]: string })[`dateColor${index % 4 + 1}`]}`}>
                 <span className={styles.day}>{new Date(event.EventDate).getDate()}</span>
                 <span className={styles.month}>{new Date(event.EventDate).toLocaleString('default', { month: 'short' })}</span>
               </div>

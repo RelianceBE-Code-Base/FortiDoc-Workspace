@@ -30,22 +30,41 @@
     margin-bottom: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
-  
+
   .eventColor1 {
-    background-color: #e6f7ff; /* Light blue */
+    background-color: #ECE5C5; 
   }
   
   .eventColor2 {
-    background-color: #fde6ff; /* Light purple */
+    background-color: #DDEFEB
+    ;
   }
   
   .eventColor3 {
-    background-color: #e6fff7; /* Light green */
+    background-color: #ECE5C5
+    ;
+  }
+  .eventColor4 {
+    background-color: #DDEFEB
+    ;
   }
   
-  .eventColor4 {
-    background-color: #fffde6; /* Light yellow */
-  }
+
+  // .eventColor1 {
+  //   background-color: #e6f7ff; /* Light blue */
+  // }
+  
+  // .eventColor2 {
+  //   background-color: #fde6ff; /* Light purple */
+  // }
+  
+  // .eventColor3 {
+  //   background-color: #e6fff7; /* Light green */
+  // }
+  
+  // .eventColor4 {
+  //   background-color: #fffde6; /* Light yellow */
+  // }
   
 .Calendar-content {
     max-height: '500px'; 
@@ -64,14 +83,33 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #0078d4;
-    color: white;
+    background-color: #6C6D6F;
+    color: #353D54;
     padding: 10px;
     border-radius: 5px;
     width: 50px;
     height: 50px;
     margin-right: 10px;
   }
+  
+.dateColor1 {
+  background-color: #D9CB8C; 
+}
+
+.dateColor2 {
+  background-color: #BBDFD9
+  ;
+}
+
+.dateColor3 {
+  background-color: #D9CB8C
+  ;
+}
+.dateColor4 {
+  background-color: #BBDFD9
+  ;
+}
+
   
   .day {
     font-size: 18px;

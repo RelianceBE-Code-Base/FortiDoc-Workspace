@@ -1,86 +1,88 @@
 @import '../../../../styles/cards.scss';
 
-.event {
+
+
+.taskIcon {
+  width: 30px;
+  height: 30px;
+}
+
+.iconContainer {
   display: flex;
   align-items: center;
-  padding: 10px;
-  width: 100%;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.eventColor1 {
-  background-color: #e6f7ff; /* Light blue */
-}
 
-.eventColor2 {
-  background-color: #fde6ff; /* Light purple */
-}
-
-.eventColor3 {
-  background-color: #e6fff7; /* Light green */
-}
-
-.eventColor4 {
-  background-color: #fffde6; /* Light yellow */
-}
-
-.Task-content {
-  max-height: 350px;
-  overflow: auto;
-  height: 290px;
+  
+.task-content {
+  max-height: '500px'; 
+  overflow: 'auto'; 
+  height: '245px';
+  // padding: 10px;
+  // overflow-y: auto;
   margin: 0px 10px 5px 10px;
   width: 96%;
- //margin-right: 10px;
+  //margin-right: 10px;
   scrollbar-width: thin;
 }
 
-.date {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #0078d4;
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
-}
-
-.day {
-  font-size: 18px;
+.noTasks {
+  text-align: center;
   font-weight: bold;
 }
 
-.month {
-  font-size: 14px;
-}
-
-.details {
+.taskCard {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  width: 96%;
+  // transition: background 0.3s;
+  cursor: pointer;
 }
 
-.title {
+.taskCard:hover {
+  background: #FFFFFD;
+}
+
+.notStarted {
+  background: #DDEFEB
+  ;
+}
+
+.inProgress {
+  background: #ECE5C5;
+}
+
+.completed {
+  background: #C0F5E5;
+}
+
+.taskDetails {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.taskTitle {
   font-size: 16px;
   font-weight: bold;
 }
 
-.time {
+.taskDate {
   font-size: 14px;
   color: gray;
 }
 
-.progress {
-  margin-left: auto;
+.taskStatus {
+  text-align: right;
 }
 
 .progressCircle {
-  width: 36px;
-  height: 36px;
+  width: 100px;
+  height: 75px;
 }
 
 .circularChart {
@@ -99,7 +101,7 @@
 .circle {
   fill: none;
   stroke-width: 2.8;
-  stroke: #00acc1;
+  stroke: #4caf50; // Change to desired color
   stroke-linecap: round;
   animation: progress 1s ease-out forwards;
 }
@@ -116,44 +118,6 @@
   text-anchor: middle;
 }
 
-.notStarted {
-  background-color: #ffcccc;
-}
-
-.inProgress {
-  background-color: #fff5cc;
-}
-
-.completed {
-  background-color: #ccffcc;
-}
-
 .error {
   color: red;
-}
-
-.task-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.task-title {
-  font-weight: bold;
-}
-
-.task-details {
-  display: flex;
-  align-items: center;
-}
-
-.task-date {
-  margin-right: 10px;
-}
-
-.status {
-  margin-left: 10px;
-  font-size: 12px;
 }
