@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // import './Carousel.css';
 import styles from './Carousel.module.scss';
-import invokePrompt from '../../services/ChatService';
+import {invokePrompt} from '../../services/ChatService';
 
 interface CarouselProps {
   items: CarouselItem[];

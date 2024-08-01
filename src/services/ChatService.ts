@@ -35,5 +35,34 @@ async function invokePrompt(messages: {role:string, content:string}[], temp: num
     
 }
 
-export default invokePrompt
+import axios from 'axios';
+
+
+async function invokePromptWithBing(query: string): Promise<any> {
+    const apiUrl = 'https://digitalworkspaceaibackendapi.azurewebsites.net/api/WebSearch';
+
+    try {
+        const response = await axios.post(apiUrl, { query }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = response.data['result'];
+        const cleanedResult = result.slice(2, -2);
+
+        console.log(cleanedResult)
+
+        return cleanedResult;
+
+    } catch (error) {
+        console.error('Error calling Bing API:', error);
+        throw error;
+    }
+}
+
+export { invokePrompt,invokePromptWithBing };
+
+
+// export default invokePrompt
 

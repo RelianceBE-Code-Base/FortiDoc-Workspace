@@ -69,8 +69,15 @@ const Header: React.FC<HeaderProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchHit[]>([]);
   const searchResultsRef = useRef<HTMLDivElement>(null);
+
+
+
+
+
   const handleSearch = async (event: React.FormEvent) => {
+
     event.preventDefault();
+
     if (searchQuery.trim() === '') {
       return;
     }
@@ -130,6 +137,7 @@ const Header: React.FC<HeaderProps> = ({
         // Handle network errors (e.g., display an error message to the user)
       }
     }
+    console.log(searchResults);
   
     setSearchResults(searchResults);
   };

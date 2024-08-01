@@ -14,9 +14,11 @@ import { Icon } from '@fluentui/react/lib/Icon';
 import metaIcon from './assets/metaAiIcon.png';
 import userIcon from './assets/user.png';
 
-import invokePrompt from '../../services/ChatService';
+// import invokePrompt from '../../services/ChatService';
+import {  invokePromptWithBing } from '../../services/ChatService';
 import Spinner from 'react-bootstrap/Spinner';
 import CardGrid from './CardGrid';
+
 
 type Message = {
   role: string;
@@ -29,9 +31,10 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [temperature, setTemperature] = useState(0);
+  // const [temperature, setTemperature] = useState(0);
   const [themeColor, setThemeColor] = useState('#04a4ec');
   const [selectedButton, setSelectedButton] = useState('Balanced');
+
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -51,7 +54,8 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      const botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
+      // const botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
+      const botResponse = await invokePromptWithBing(query)
       setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse.toString() }]);
     } catch (error) {
       console.error('Error invoking prompt:', error);
@@ -65,11 +69,13 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
 
   const handleTemperatureButtonClick = (temperature: number, color: string) => {
     setThemeColor(color);
-    setTemperature(temperature);
+    // setTemperature(temperature);
     setSelectedButton(temperature === 1 ? 'Creative' : temperature === 0 ? 'Precise' : 'Balanced');
   };
 
   const handleClick = async () => {
+
+
     if (query.trim() === "") {
       return;
     }
@@ -79,7 +85,9 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      const botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
+      // const botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
+      const botResponse = await invokePromptWithBing(query)
+
       setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse.toString() }]);
     } catch (error) {
       console.error('Error invoking prompt:', error);
