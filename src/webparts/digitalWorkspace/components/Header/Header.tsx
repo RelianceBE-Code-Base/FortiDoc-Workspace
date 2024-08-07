@@ -52,13 +52,6 @@ const Header: React.FC<HeaderProps> = ({
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const searchResultsRef = useRef<HTMLDivElement>(null);
 
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> b13e69d39f79d47a8ecdb16b20dca5e47879beb9
   const handleSearch = async (event: React.FormEvent) => {
 
     event.preventDefault();
@@ -121,12 +114,6 @@ const Header: React.FC<HeaderProps> = ({
         console.error('Error searching with Microsoft Graph API', error);
       }
     }
-<<<<<<< HEAD
-    console.log(searchResults);
-  
-=======
-
->>>>>>> b13e69d39f79d47a8ecdb16b20dca5e47879beb9
     setSearchResults(searchResults);
   };
 
