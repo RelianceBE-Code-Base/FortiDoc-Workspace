@@ -151,16 +151,15 @@ const Header: React.FC<HeaderProps> = ({
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link to="https://microdev.sharepoint.com/sites/IntranetPortal2/Shared%20Documents/Forms/AllItems.aspx">
-                <button
-                  className={`btn ${styles.actionButton}`}
-                  onClick={() => setActiveAction('GeneralLibrary')}
-                  style={{ color: activeAction === 'GeneralLibrary' ? '#01A88C' : '#353d54' }}
-                >
-                  General Library
-                </button>
-              </Link>
+            <li> 
+            <a
+                href="https://microdev.sharepoint.com/sites/IntranetPortal2/Shared Documents/Forms/AllItems.aspx"
+                className={`btn ${styles.actionButton}`}
+                onClick={() => setActiveAction('GeneralLibrary')}
+                style={{ color: activeAction === 'GeneralLibrary' ? '#01A88C' : '#353d54' }}
+              >
+                General Library
+              </a>
             </li>
             <li className="nav-item dropdown">
               <button

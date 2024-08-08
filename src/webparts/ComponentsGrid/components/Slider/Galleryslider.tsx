@@ -66,8 +66,8 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRe
         Gallery Slider
         <div>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
-          <img src={CloseIcon} style={{display: 'flex'}}/>
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
+          <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
           </button>
         </div>
       </div>

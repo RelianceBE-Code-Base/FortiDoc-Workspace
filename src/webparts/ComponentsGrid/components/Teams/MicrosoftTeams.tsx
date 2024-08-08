@@ -8,14 +8,16 @@ import { Card } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelopeOpen, faReply, faClock } from '@fortawesome/free-solid-svg-icons';
+import PinIcon from '../PinIcon/PinIcon';
 
 const TeamsIcon = require('./assets/TeamsIcon.png');
+const CloseIcon = require('./assets/close-square.png')
 
 interface MicrosoftTeamsProps {
   graphClient: MSGraphClient;
   pinned: boolean;
   onPinClick: () => void;
-  onRemoveClick: () => void; // Correct prop name
+  onRemoveClick: () => void; 
 }
 
 // interface Chat {
@@ -72,7 +74,7 @@ interface ChatWithLastMessagePreview {
 
 
 
-const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient }) => {
+const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient, pinned, onPinClick, onRemoveClick}) => {
   // const [chats, setChats] = useState<Chat[]>([]);
   // const [showModal, setShowModal] = useState(false);
   // const [messages, setMessages] = useState<Message[]>([]);
@@ -302,9 +304,10 @@ return(
           <div style={{display: 'flex'}}>
 
           
-          {/* <PinIcon pinned={pinned} onPinClick={onPinClick} />
-          
-          <FontAwesomeIcon onClick={onRemoveClick} icon={faWindowClose} size='sm' color="red" style={{margin: '5px', cursor: 'pointer'}}/> */}
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} /> 
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
+          <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
+          </button>
            
           </div>
       </div>

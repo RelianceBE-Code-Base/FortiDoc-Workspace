@@ -11,7 +11,12 @@
       ]
     }
   },
-  "externals": {},
+  "externals": {
+    "@pnp/sp/webs": {
+      "path": "node_modules/@pnp/sp/webs/dist/index.js",
+      "globalName": "SP"
+    }
+  },
   "localizedResources": {
     "DigitalWorkspaceWebPartStrings": "lib/webparts/digitalWorkspace/loc/{locale}.js",
     "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"

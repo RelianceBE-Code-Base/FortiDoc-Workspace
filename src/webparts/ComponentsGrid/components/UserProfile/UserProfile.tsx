@@ -92,8 +92,8 @@ const UserProfile: React.FC<IUserProfileProps> = (props) => {
         <p style={{ display: 'flex' }}>My Profile</p>
         <div style={{ display: 'flex' }}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
-          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '0px' }}>
-          <img src={CloseIcon} style={{display: 'flex'}}/>
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
+          <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
           </button>
         </div>
       </div>
