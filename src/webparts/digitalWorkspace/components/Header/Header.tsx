@@ -53,7 +53,9 @@ const Header: React.FC<HeaderProps> = ({
   const searchResultsRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = async (event: React.FormEvent) => {
+
     event.preventDefault();
+
     if (searchQuery.trim() === '') {
       return;
     }
@@ -112,7 +114,6 @@ const Header: React.FC<HeaderProps> = ({
         console.error('Error searching with Microsoft Graph API', error);
       }
     }
-
     setSearchResults(searchResults);
   };
 
