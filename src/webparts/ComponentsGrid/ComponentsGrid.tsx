@@ -18,6 +18,7 @@ import CompanyEvents from './components/CompanyEvents/CompanyEvents';
 import Announcement from './components/Announcement/Announcement';
 import Birthday from './components/Birthday/Birthday';
 import Anniversary from './components/Anniversary/Anniversary';
+import checkAndCreateLists from './components/ListManager/ListManagerScript';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 
 interface ComponentConfig {
@@ -43,7 +44,6 @@ interface ComponentsGridState {
   newComponent?: ComponentConfig; // Add newComponent to state definition
   // other state fields...
 }
-
 
 export default class ComponentsGrid extends React.Component<ComponentsGridProps, ComponentsGridState> {
   constructor(props: ComponentsGridProps) {
@@ -75,13 +75,14 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
     web.currentUser.get().then((user: { Email: string }) => {
       this.setState({ userEmail: user.Email }, () => {
         this.loadComponents();
+        checkAndCreateLists(tenantUrl, this.context.spHttpClient);
       });
     }).catch(error => {
       console.error('Error getting current user:', error);
     });
   }
 
- loadComponents = async () => {
+  loadComponents = async () => {
     try {
       const web = new Web(this.props.tenantUrl);
       const list = await web.lists.getByTitle('PinnedComponents');
@@ -101,9 +102,36 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
         return component;
       }).filter((component) => !component.isRemoved);
 
-      this.setState({ components: components.sort((a, b) => a.order - b.order) });
+      if (items.length === 0) {
+        // Save initial state to SharePoint list
+        this.saveInitialState();
+      } else {
+        this.setState({ components: components.sort((a, b) => a.order - b.order) });
+      }
     } catch (error) {
       console.error('Error loading components:', error);
+    }
+  }
+
+  saveInitialState = async () => {
+    try {
+      const { components, userEmail } = this.state;
+      const web = new Web(this.props.tenantUrl);
+      const list = web.lists.getByTitle('PinnedComponents');
+
+      for (const component of components) {
+        await list.items.add({
+          Title: component.name,
+          UserEmail: userEmail,
+          Pinned: component.pinned,
+          IsRemoved: component.isRemoved,
+          Order0: component.order,
+        });
+      }
+
+      console.log('Initial state saved successfully');
+    } catch (error) {
+      console.error('Error saving initial state:', error);
     }
   }
 
@@ -112,17 +140,14 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
       const web = new Web(this.props.tenantUrl);
       const list = web.lists.getByTitle('PinnedComponents');
       const items = await list.items.filter(`Title eq '${name}' and UserEmail eq '${this.state.userEmail}'`).get();
-  
+
       if (items.length > 0) {
-        console.log(`Updating existing component ${name} in SharePoint with`, updates);
         await list.items.getById(items[0].Id).update({
           Pinned: updates.pinned,
           IsRemoved: updates.isRemoved,
           Order0: updates.order,
         });
-        console.log(`Component ${name} updated successfully with `, updates); // Debug log
       } else {
-        console.log(`Adding new component ${name} to SharePoint with`, updates);
         await list.items.add({
           Title: name,
           UserEmail: this.state.userEmail,
@@ -130,16 +155,12 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
           IsRemoved: updates.isRemoved,
           Order0: updates.order,
         });
-        console.log(`Component ${name} added successfully with `, updates); // Debug log
       }
     } catch (error) {
       console.error('Error saving component:', error);
     }
   };
-  
-  
-  
-  
+
   handlePinComponent = (name: string): void => {
     this.setState((prevState) => {
       const updatedComponents = prevState.components.map((component) => {
@@ -153,6 +174,7 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
       return { components: updatedComponents };
     });
   }
+
   handleRemoveComponent = (name: string): void => {
     this.setState((prevState) => {
       const updatedComponents = prevState.components.map((component) => {
@@ -174,9 +196,8 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
       const web = new Web(this.props.tenantUrl);
       const list = web.lists.getByTitle('PinnedComponents');
       const items = await list.items.filter(`Title eq '${componentName}' and UserEmail eq '${this.state.userEmail}'`).get();
-  
+
       if (items.length > 0) {
-        console.log(`Component ${componentName} current status:`, items[0].IsRemoved); // Debug log
         return items[0].IsRemoved;
       }
       return true;
@@ -185,12 +206,11 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
       return true;
     }
   };
-  
+
   handleComponentAdd = async (componentName: string) => {
     try {
       const isRemoved = await this.checkComponentStatus(componentName);
-      console.log(`Component ${componentName} current status:`, isRemoved); // Debug log
-  
+
       if (isRemoved) {
         const newComponent: ComponentConfig = {
           name: componentName,
@@ -198,9 +218,9 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
           width: 'col-md-4',
           pinned: false,
           order: this.state.components.length,
-          isRemoved: false
+          isRemoved: false,
         };
-  
+
         this.setState((prevState) => {
           const updatedComponents = [...prevState.components, newComponent];
           return {
@@ -329,7 +349,7 @@ export default class ComponentsGrid extends React.Component<ComponentsGridProps,
   render() {
     console.log('Rendering components:', this.state.components);
     return (
-      <div className="row mx-0">
+      <div className="row mx-0" style={{ paddingLeft: '45px' }}>
         <ToastContainer />
         {this.renderComponents()}
       </div>

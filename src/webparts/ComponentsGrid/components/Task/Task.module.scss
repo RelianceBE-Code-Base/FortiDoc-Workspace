@@ -43,21 +43,23 @@
   cursor: pointer;
 }
 
+
+
 .taskCard:hover {
-  background: #FFFFFD;
+  background: #f1ecd5;
 }
 
 .notStarted {
-  background: #DDEFEB
+  background: #d8d7f0
   ;
 }
 
 .inProgress {
-  background: #ECE5C5;
+  background: #f4f4f4;
 }
 
 .completed {
-  background: #C0F5E5;
+  background: #f0eefc;
 }
 
 .taskDetails {
@@ -101,7 +103,7 @@
 .circle {
   fill: none;
   stroke-width: 2.8;
-  stroke: #4caf50; // Change to desired color
+  stroke: #01a88c; // Change to desired color
   stroke-linecap: round;
   animation: progress 1s ease-out forwards;
 }

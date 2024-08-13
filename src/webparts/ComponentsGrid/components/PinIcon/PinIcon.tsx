@@ -15,7 +15,7 @@ const PinIcon: React.FC<PinIconProps> = ({ componentName, onPinClick, pinned }) 
 
   return (
     <span onClick={togglePin} style={{ cursor: 'pointer' }}>
-      <img src={pinned ? pinnedIcon : unpinnedIcon} alt={pinned ? 'Pinned' : 'Unpinned'} />
+      <img src={pinned ? pinnedIcon : unpinnedIcon} alt={pinned ? 'Pinned' : 'Unpinned'} style={{height: '25px', width: '24px'}}/>
     </span>
   );
 };

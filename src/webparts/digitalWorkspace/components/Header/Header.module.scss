@@ -1,4 +1,6 @@
 .header {
+  padding-left: 45px;
+  padding-right: 25px;
   .homeButton,
   .actionButton {
     &:hover {
@@ -150,6 +152,7 @@
   border: none;
   padding: 0 10px;
   cursor: pointer;
+  margin: 10px;
 }
 
 
