@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+// import ReactMarkdown from 'react-markdown';
+// import remarkGfm from 'remark-gfm';
 import styles from './Chatbot.module.scss';
 import type { IChatbotProps } from './IChatbotProps';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -18,6 +18,10 @@ import userIcon from './assets/user.png';
 import {  invokePromptWithBing } from '../../services/ChatService';
 import Spinner from 'react-bootstrap/Spinner';
 import CardGrid from './CardGrid';
+
+import TypewriterMessage from './TypewriterMessage';
+// import { useEffect } from 'react';
+
 
 
 type Message = {
@@ -105,6 +109,25 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setMessages([]);
   };
 
+
+  // const useTypewriterEffect = (content: string) => {
+  //   const [text, setText] = useState('');
+  
+  //   useEffect(() => {
+  //     const timerId = setInterval(() => {
+  //       if (text.length < content.length) {
+  //         setText(text + content.charAt(content.length - text.length - 1));
+  //       } else {
+  //         clearInterval(timerId);
+  //       }
+  //     }, 100); // Adjust the delay as needed
+  
+  //     return () => clearInterval(timerId);
+  //   }, [content]);
+  
+  //   return text;
+  // };
+
   return (
     <section className={styles.chatbot}>
       <div className={styles.container}>
@@ -123,7 +146,9 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
                     <img src={message.role === 'user' ? userIcon : metaIcon} className={styles.metaIcon} alt={message.role} />
                     <div className={`font-weight-bold text-${message.role === 'user' ? 'primary' : 'secondary'}`}>{message.role === 'user' ? user_name : 'Chatbot'}</div>
                   </div>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+                  {/* <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown> */}
+                  {message.role === 'user' ? message.content : <TypewriterMessage content={message.content} />}
+
                 </div>
               </div>
             ))}
