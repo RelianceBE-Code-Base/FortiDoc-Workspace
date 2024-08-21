@@ -31,9 +31,9 @@ export default class DigitalWorkspaceWebPart extends BaseClientSideWebPart<IDigi
     this.context.msGraphClientFactory
       .getClient('3') // Specify the version argument
       .then((client: MSGraphClientV3): void => {
-        //const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2';
+        const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2';
         //const tenantUrl = 'https://cityeyehospital.sharepoint.com/sites/DigitalWorkspace'
-        const tenantUrl = 'https://relianceinfo.sharepoint.com/sites/Portal1'
+        //const tenantUrl = 'https://relianceinfo.sharepoint.com/sites/Portal1'
         console.log('Tenant URL in WebPart:', tenantUrl); // Debug log
         const element: React.ReactElement<IDigitalWorkspaceProps> = React.createElement(
           DigitalWorkspace, 
