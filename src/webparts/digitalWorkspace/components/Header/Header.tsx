@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown } from 'react-bootstrap';
 import styles from './Header.module.scss';
-import { SPHttpClient } from '@microsoft/sp-http';
+import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 import metaAiIcon from '../../assets/metaAiIcon.png';
 import { Link } from 'react-router-dom';
@@ -50,10 +50,12 @@ const Header: React.FC<HeaderProps> = ({
   const [activeAction, setActiveAction] = useState<string>('Home');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [generalLibraryLink, setGeneralLibraryLink] = useState<string>('');
+  const [departments, setDepartments] = useState<{ title: string, url: string }[]>([]);
+  const [submenuLinks, setSubmenuLinks] = useState<{ title: string, url: string, department: string }[]>([]);
   const searchResultsRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = async (event: React.FormEvent) => {
-
     event.preventDefault();
 
     if (searchQuery.trim() === '') {
@@ -131,6 +133,56 @@ const Header: React.FC<HeaderProps> = ({
     };
   }, [onDismissSearchResults]);
 
+  // Fetch General Library URL and Departments from SharePoint
+  useEffect(() => {
+    //  'GeneralLibrarySettings' is the actual list name
+    const generalLibraryListName = 'GeneralLibrarySettings';
+    const departmentsListName = 'Departments';
+    const submenuLinksListName = 'SubmenuLinks';
+
+    // Fetch General Library URL
+    spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${generalLibraryListName}')/items?$select=Title,LibraryUrl`,
+      SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => response.json())
+      .then((data) => {
+        if (data && data.value && data.value.length > 0) {
+          setGeneralLibraryLink(data.value[0].LibraryUrl);
+        }
+      })
+      .catch(error => console.error('Error fetching General Library URL:', error));
+
+    // Fetch Departments
+    spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${departmentsListName}')/items?$select=Title,DepartmentUrl`,
+      SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => response.json())
+      .then((data) => {
+        if (data && data.value) {
+          const departmentLinks = data.value.map((item: any) => ({
+            title: item.Title,
+            url: item.DepartmentUrl
+          }));
+          setDepartments(departmentLinks);
+        }
+      })
+      .catch(error => console.error('Error fetching Departments:', error));
+
+    // Fetch Submenu Links
+    spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${submenuLinksListName}')/items?$select=Title,Url,Department/Title&$expand=Department`,
+      SPHttpClient.configurations.v1)
+      .then((response: SPHttpClientResponse) => response.json())
+      .then((data) => {
+        if (data && data.value) {
+          const submenuLinks = data.value.map((item: any) => ({
+            title: item.Title,
+            url: item.Url,
+            department: item.Department.Title
+          }));
+          setSubmenuLinks(submenuLinks);
+        }
+      })
+      .catch(error => console.error('Error fetching Submenu Links:', error));
+  }, [siteUrl, spHttpClient]);
+
   return (
     <header className={`navbar navbar-expand-lg navbar-light bg-light ${styles.header}`}>
       <div className="container-fluid">
@@ -152,9 +204,9 @@ const Header: React.FC<HeaderProps> = ({
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li> 
-            <a
-                href="https://microdev.sharepoint.com/sites/IntranetPortal2/Shared Documents/Forms/AllItems.aspx"
+            <li>
+              <a
+                href={generalLibraryLink}
                 className={`btn ${styles.actionButton}`}
                 onClick={() => setActiveAction('GeneralLibrary')}
                 style={{ color: activeAction === 'GeneralLibrary' ? '#01A88C' : '#353d54' }}
@@ -167,24 +219,34 @@ const Header: React.FC<HeaderProps> = ({
                 className={`btn ${styles.actionButton} dropdown-toggle`}
                 onClick={() => setActiveAction('Departments')}
                 style={{ color: activeAction === 'Departments' ? '#01A88C' : '#353d54' }}
-                id="navbarDropdown"
+                id="departmentsDropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
                 Departments
               </button>
-              <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a className="dropdown-item" href="https://microdev.sharepoint.com/sites/Accounting">Accounting</a></li>
-                <li><a className="dropdown-item" href="https://microdev.sharepoint.com/sites/Finance">Finance</a></li>
-                <li><a className="dropdown-item" href="https://microdev.sharepoint.com/sites/SalesDepartment">Sales</a></li>
-                <li><a className="dropdown-item" href="https://microdev.sharepoint.com/sites/InformationTechnology">InformationTechnology</a></li>
-                <li><a className="dropdown-item" href="https://microdev.sharepoint.com/sites/hr">Human Resources</a></li>
+              <ul className="dropdown-menu" aria-labelledby="departmentsDropdown">
+                {departments.map((department, index) => (
+                  <li key={index}>
+                    <a className="dropdown-item" href={department.url}>
+                      {department.title}
+                    </a>
+                    <ul className="submenu">
+                      {submenuLinks.filter((submenuLink) => submenuLink.department === department.title).map((submenuLink, submenuIndex) => (
+                        <li key={submenuIndex}>
+                          <a className="dropdown-item" href={submenuLink.url}>
+                            {submenuLink.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
               </ul>
             </li>
             <li className="nav-item dropdown">
-            <Dropdown onClick={ (onOptionsClick) => setActiveAction('Options')}>
-                <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" className={styles.optionDropdown} style={{ color: activeAction === 'Options' ? '#01A88C' : '#353d54' }}
-                >
+              <Dropdown onClick={() => setActiveAction('Options')}>
+                <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" className={styles.optionDropdown} style={{ color: activeAction === 'Options' ? '#01A88C' : '#353d54' }}>
                   Options
                 </Dropdown.Toggle>
                 <Dropdown.Menu className={styles.optionMenu}>
@@ -201,40 +263,30 @@ const Header: React.FC<HeaderProps> = ({
             </li>
           </ul>
           <form className={`d-flex ${styles.searchForm}`} onSubmit={handleSearch}>
-          <Link to="/chatbot"><img src={metaAiIcon} className={styles.metaIcon} alt="Meta AI Icon" /></Link>
+            <Link to="/chatbot"><img src={metaAiIcon} className={styles.metaIcon} alt="Meta AI Icon" /></Link>
             <input
-              className= "form-control me-2"
+              className="form-control me-2"
               type="search"
               placeholder="Search"
               aria-label="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-             <button className={styles.searchButton} type="submit">
-                <FontAwesomeIcon icon={faSearch} />
-              </button>
-                         
+            <button className={styles.searchButton} type="submit">
+              <FontAwesomeIcon icon={faSearch} />
+            </button>
           </form>
         </div>
       </div>
       <div ref={searchResultsRef} className={styles.searchResults}>
-        {searchResults.length > 0 && (
-          <div className={styles.searchResultsList}>
-            {searchResults.map(result => (
-              <div key={result.id} className={styles.searchResultItem}>
-                <div>
-                  <strong>{result.title}</strong>
-                  <br />
-                  {result.summary}
-                  <br />
-                  <a href={result.webUrl} target="_blank" rel="noopener noreferrer">
-                    View More
-                  </a>
-                </div>
-              </div>
-            ))}
+        {searchResults.map((result, index) => (
+          <div key={index} className={styles.searchResultItem}>
+            <a href={result.webUrl} target="_blank" rel="noopener noreferrer" className={styles.searchResults}>
+              <h5>{result.title}</h5>
+              <p>{result.summary}</p>
+            </a>
           </div>
-        )}
+        ))}
       </div>
     </header>
   );

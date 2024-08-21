@@ -180,3 +180,59 @@
     font-weight: 200;
     width: auto;
   }
+
+  .customModal {
+    max-width: 90%; /* Adjust the width to fit your design */
+    margin: auto;
+    background-color: #fff; /* Background color */
+    padding: 20px; /* Padding inside the modal */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  }
+  
+  .modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .modalTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .modalCloseButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .modalBody {
+    padding: 10px 0;
+  }
+  
+  .modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+  }
+  
+
+  .paginationContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  
+    button {
+      margin: 0 10px;
+    }
+  }
+  

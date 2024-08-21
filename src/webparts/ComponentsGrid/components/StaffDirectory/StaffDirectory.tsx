@@ -1,26 +1,21 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
-import { ListGroup, ListGroupItem, FormControl, Modal, Button, Tabs, Tab } from 'react-bootstrap';
+import { FormControl, Modal, Button, Pagination, Tab, Tabs } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import styles from './StaffDirectory.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
-import './StaffDirectory.module.scss'
-// import { TestImages } from '@fluentui/example-data';
 
-
-const StaffDirectoryIcon = require('./assets/StaffDirectoryIcon.png')
-const CloseIcon = require('./assets/close-square.png')
-
+const StaffDirectoryIcon = require('./assets/StaffDirectoryIcon.png');
+const CloseIcon = require('./assets/close-square.png');
 
 interface StaffDirectoryProps {
   graphClient: MSGraphClientV3;
-    pinned: boolean;
-    onPinClick: () => void;
-  onRemoveClick: () => void; // Correct prop name
+  pinned: boolean;
+  onPinClick: () => void;
+  onRemoveClick: () => void;
 }
-
 
 interface User {
   id: string;
@@ -42,47 +37,97 @@ interface UserDetails extends User {
   linkedinProfile?: any;
 }
 
-const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onPinClick, onRemoveClick }) => {
+const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient, pinned, onPinClick, onRemoveClick }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showSearchBox, setShowSearchBox] = useState<boolean>(false);
-  const [defaultProfileImage, setDefaultProfileImage] = useState("");
+  const [defaultProfileImage, setDefaultProfileImage] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [nextLink, setNextLink] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   useEffect(() => {
     fetchUsers();
-    setDefaultProfileImage("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png")
+    setDefaultProfileImage("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (nextPageLink: string | null = null, query: string = '') => {
     try {
-      const response = await graphClient.api('/users').get();
-      const usersData: User[] = await Promise.all(response.value.map(async (user: any) => {
-        let photoUrl = null;
-        try {
-          const photoResponse = await graphClient.api(`/users/${user.id}/photo/$value`).get();
-          photoUrl = URL.createObjectURL(photoResponse);
-        } catch (photoError) {
-          console.warn(`Failed to fetch photo for user ${user.id}`, photoError);
-        }
-        
-        return {
-          id: user.id,
-          displayName: user.displayName,
-          jobTitle: user.jobTitle,
-          mail: user.mail,
-          mobilePhone: user.mobilePhone,
-          officeLocation: user.officeLocation,
-          department: user.department,
-          businessPhones: user.businessPhones,
-          photoUrl: photoUrl,
-        };
-      }));
-      setUsers(usersData);
+      const filterQuery = query 
+        ? `accountEnabled eq true and startswith(displayName, '${query}')`
+        : `accountEnabled eq true`;
+
+      const response = nextPageLink
+        ? await graphClient.api(nextPageLink).get()
+        : await graphClient
+            .api('/users')
+            .filter(filterQuery)
+            .select('id,displayName,jobTitle,mail,mobilePhone,officeLocation,department,businessPhones,assignedLicenses')
+            .top(20)
+            .get();
+
+      const usersData: User[] = await Promise.all(
+        response.value
+          .filter((user: any) => user.assignedLicenses && user.assignedLicenses.length > 0)
+          .map(async (user: any) => {
+            let photoUrl = null;
+            try {
+              const photoResponse = await graphClient.api(`/users/${user.id}/photo/$value`).get();
+              photoUrl = URL.createObjectURL(photoResponse);
+            } catch (photoError) {
+              console.warn(`Failed to fetch photo for user ${user.id}`, photoError);
+            }
+
+            return {
+              id: user.id,
+              displayName: user.displayName,
+              jobTitle: user.jobTitle,
+              mail: user.mail,
+              mobilePhone: user.mobilePhone,
+              officeLocation: user.officeLocation,
+              department: user.department,
+              businessPhones: user.businessPhones,
+              photoUrl: photoUrl,
+            };
+          })
+      );
+
+      if (nextPageLink) {
+        setUsers(prevUsers => [...prevUsers, ...usersData]);
+      } else {
+        setUsers(usersData);
+      }
+
+      setNextLink(response['@odata.nextLink'] || null);
+
+      if (response['@odata.count'] !== undefined && response['@odata.count'] !== null) {
+        setTotalPages(Math.ceil(response['@odata.count'] / 20));
+      } else {
+        setTotalPages(1);
+      }
     } catch (error) {
       console.error('Error fetching users', error);
     }
+  };
+
+  const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+    setUsers([]);  // Clear current users
+    setPage(1);
+    fetchUsers(null, query);
+  };
+
+  const handleUserClick = (user: User) => {
+    fetchUserDetails(user.id);
+    setShowModal(true);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+    setSelectedUser(null);
   };
 
   const fetchUserDetails = async (userId: string) => {
@@ -93,25 +138,25 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onP
       try {
         managerResponse = await graphClient.api(`/users/${userId}/manager`).get();
       } catch (error) {
-        managerResponse = null; // Handle if the user has no manager
+        managerResponse = null;
       }
 
       try {
         reportsResponse = await graphClient.api(`/users/${userId}/directReports`).get();
       } catch (error) {
-        reportsResponse = { value: [] }; // Handle if the user has no direct reports
+        reportsResponse = { value: [] };
       }
 
       try {
         filesResponse = await graphClient.api(`/users/${userId}/drive/root/children`).get();
       } catch (error) {
-        filesResponse = { value: [] }; // Handle if the user has no files
+        filesResponse = { value: [] };
       }
 
       try {
         messagesResponse = await graphClient.api(`/users/${userId}/messages`).get();
       } catch (error) {
-        messagesResponse = { value: [] }; // Handle if the user has no messages
+        messagesResponse = { value: [] };
       }
 
       linkedinResponse = {}; // Mock LinkedIn data as it would require LinkedIn API
@@ -125,179 +170,144 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient,pinned, onP
         linkedinProfile: linkedinResponse,
       };
 
-      console.log('User Details:', userDetails);
       setSelectedUser(userDetails);
     } catch (error) {
       console.error('Error fetching user details', error);
     }
   };
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const filteredUsers = users.filter(user =>
-    Object.values(user).some(value =>
-      value && value.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  );
-
-  const handleUserClick = (user: User) => {
-    console.log('User clicked:', user);
-    fetchUserDetails(user.id);
-    setShowModal(true);
-  };
-
-  const handleClose = () => {
-    setShowModal(false);
-    setSelectedUser(null);
+  const handlePageChange = (newPage: number) => {
+    console.log(`handlePageChange called with newPage: ${newPage}`);
+    if (newPage !== page) {
+      setPage(newPage);
+      if (newPage > 1 && nextLink) {
+        console.log(`Fetching next page of users from ${nextLink}`);
+        fetchUsers(nextLink, searchQuery);
+      } else if (newPage === 1) {
+        console.log(`Resetting users and fetching first page`);
+        setUsers([]);  // Reset users for the first page
+        fetchUsers(null, searchQuery);
+      }
+    }
   };
 
   const handleSearchIconClick = () => setShowSearchBox(!showSearchBox);
 
   return (
-    <div className={styles.card} >
-      <div className={styles['card-header']} style={{display: 'flex', flexDirection: 'row'}}>
-        
-      {/* <FontAwesomeIcon icon={faUserCircle} className={styles.headerIcon} /> */}
-      <img src={StaffDirectoryIcon} style={{display: 'flex'}}/>
-
+    <div className={styles.card}>
+      <div className={styles['card-header']} style={{ display: 'flex', flexDirection: 'row' }}>
+        <img src={StaffDirectoryIcon} style={{ display: 'flex' }} />
         {!showSearchBox &&
-        <div >
-          
-          <p>Staff Directory</p>
-        
-        </div>}
-
+          <div>
+            <p>Staff Directory</p>
+          </div>}
         {showSearchBox &&
-        <div className={styles.searchContainer}>
-          <FormControl
-            type="text"
-            placeholder="Search here"
-            value={searchQuery}
-            onChange={handleSearch}
-            className={styles.searchInput}
-          />
-
-        </div>
-        
-        }
-        
-        <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} onClick={handleSearchIconClick}/>
-        <div style={{display: 'flex'}}>
-          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} /> 
-          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
-          <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
-          </button>
+          <div className={styles.searchContainer}>
+            <FormControl
+              type="text"
+              placeholder="Search here"
+              value={searchQuery}
+              onChange={handleSearch}
+              className={styles.searchInput}
+            />
           </div>
-
-        
+        }
+        <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} onClick={handleSearchIconClick} />
+        <div style={{ display: 'flex' }}>
+          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
+          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
+            <img src={CloseIcon} style={{ display: 'flex', height: '24px', width: '24px' }} />
+          </button>
+        </div>
       </div>
 
-      <div className={`${styles.cardBody} `}>
-        
-
-
-
-      {filteredUsers.map(user => (
-       
-
-              <div className={styles.userCard} onClick={() => handleUserClick(user)}>
-                  <img className= {styles.profileImage}  src={user.photoUrl || defaultProfileImage} />
-                  <div className={styles.details}>
-                  <h2 className={styles.title}>{user.displayName}</h2>
-                  <p className={styles.subtitle}>{user.jobTitle}</p>
-                </div>
-              </div>
-      ))}
-
-
-
-
-      </div>
-
-      {selectedUser && (
-        <Modal show={showModal} onHide={handleClose} size="lg">
-          <Modal.Header closeButton>
-            <Modal.Title>{selectedUser.displayName}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="d-flex align-items-center mb-3">
-              <img
-                src={`https://graph.microsoft.com/v1.0/users/${selectedUser.id}/photo/$value`}
-                alt={`${selectedUser.displayName}'s profile`}
-                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                  e.currentTarget.src = 'https://via.placeholder.com/60'; // Placeholder image URL
-                }}
-                className={styles.profileImage}
-              />
-              <div className="ml-3">
-                <h5>{selectedUser.displayName}</h5>
-                <p className="text-muted">{selectedUser.department}</p>
-              </div>
+      <div className={`${styles.cardBody}`}>
+        {users.map(user => (
+          <div className={styles.userCard} key={user.id} onClick={() => handleUserClick(user)}>
+            <img className={styles.profileImage} src={user.photoUrl || defaultProfileImage} />
+            <div className={styles.details}>
+              <h2 className={styles.title}>{user.displayName}</h2>
+              <p className={styles.subtitle}>{user.jobTitle}</p>
             </div>
-            <Tabs defaultActiveKey="overview" id="user-details-tabs">
-              <Tab eventKey="overview" title="Overview">
-                <ListGroup>
-                  <ListGroupItem><strong>Job Title:</strong> {selectedUser.jobTitle}</ListGroupItem>
-                  <ListGroupItem><strong>Email:</strong> {selectedUser.mail}</ListGroupItem>
-                  <ListGroupItem><strong>Phone:</strong> {selectedUser.mobilePhone || selectedUser.businessPhones.join(', ')}</ListGroupItem>
-                  <ListGroupItem><strong>Office Location:</strong> {selectedUser.officeLocation}</ListGroupItem>
-                </ListGroup>
-              </Tab>
-              <Tab eventKey="contact" title="Contact">
-                <ListGroup>
-                  <ListGroupItem><strong>Email:</strong> {selectedUser.mail}</ListGroupItem>
-                  <ListGroupItem><strong>Chat:</strong> {selectedUser.mail}</ListGroupItem>
-                  <ListGroupItem><strong>Phone:</strong> {selectedUser.mobilePhone || selectedUser.businessPhones.join(', ')}</ListGroupItem>
-                </ListGroup>
-              </Tab>
-              <Tab eventKey="organization" title="Organization">
-                <h6>Manager</h6>
-                {selectedUser.manager ? (
-                  <ListGroup>
-                    <ListGroupItem>{selectedUser.manager.displayName}</ListGroupItem>
-                  </ListGroup>
-                ) : (
-                  <p>No manager found.</p>
-                )}
-                <h6>Direct Reports</h6>
-                {selectedUser.reports && selectedUser.reports.length > 0 ? (
-                  <ListGroup>
-                    {selectedUser.reports.map(report => (
-                      <ListGroupItem key={report.id}>{report.displayName}</ListGroupItem>
-                    ))}
-                  </ListGroup>
-                ) : (
-                  <p>No direct reports found.</p>
-                )}
-              </Tab>
-              <Tab eventKey="files" title="Files">
-                {selectedUser.files && selectedUser.files.map(file => (
-                  <ListGroup key={file.id}>
-                    <ListGroupItem>{file.name}</ListGroupItem>
-                  </ListGroup>
-                ))}
-              </Tab>
-              <Tab eventKey="messages" title="Messages">
-                {selectedUser.messages && selectedUser.messages.map(message => (
-                  <ListGroup key={message.id}>
-                    <ListGroupItem>{message.subject}</ListGroupItem>
-                  </ListGroup>
-                ))}
-              </Tab>
-              <Tab eventKey="linkedin" title="LinkedIn">
-                <ListGroup>
-                  <ListGroupItem>LinkedIn profile data here</ListGroupItem>
-                </ListGroup>
-              </Tab>
-            </Tabs>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>Close</Button>
-          </Modal.Footer>
-        </Modal>
+          </div>
+        ))}
+      </div>
+
+      {users.length > 0 && totalPages > 0 && (
+        <div className={styles.paginationContainer}>
+          <Pagination>
+            <Pagination.First onClick={() => handlePageChange(1)} disabled={page === 1} />
+            <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 1} />
+            {[...Array(totalPages)].map((_, index) => (
+              <Pagination.Item key={index + 1} active={index + 1 === page} onClick={() => handlePageChange(index + 1)}>
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages} />
+            <Pagination.Last onClick={() => handlePageChange(totalPages)} disabled={page === totalPages} />
+          </Pagination>
+        </div>
       )}
+
+<Modal show={showModal} onHide={handleClose} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>{selectedUser?.displayName}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Tabs defaultActiveKey="details" id="uncontrolled-tab-example" className="mb-3">
+            <Tab eventKey="details" title="Details">
+              <h4>Details:</h4>
+              <p>Name: {selectedUser?.displayName}</p>
+              <p>Job Title: {selectedUser?.jobTitle}</p>
+              <p>Email: {selectedUser?.mail}</p>
+              <p>Mobile Phone: {selectedUser?.mobilePhone}</p>
+              <p>Office Location: {selectedUser?.officeLocation}</p>
+              <p>Department: {selectedUser?.department}</p>
+              {selectedUser?.manager && (
+                <>
+                  <h5>Manager:</h5>
+                  <p>{selectedUser.manager.displayName} - {selectedUser.manager.jobTitle}</p>
+                </>
+              )}
+              {selectedUser?.reports && selectedUser.reports.length > 0 && (
+                <>
+                  <h5>Direct Reports:</h5>
+                  <ul>
+                    {selectedUser.reports.map((report, idx) => (
+                      <li key={idx}>{report.displayName} - {report.jobTitle}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </Tab>
+            <Tab eventKey="files" title="Files">
+              <h4>Files:</h4>
+              <ul>
+                {selectedUser?.files && selectedUser.files.map((file, idx) => (
+                  <li key={idx}>{file.name}</li>
+                ))}
+              </ul>
+            </Tab>
+            <Tab eventKey="messages" title="Messages">
+              <h4>Messages:</h4>
+              <ul>
+                {selectedUser?.messages && selectedUser.messages.map((message, idx) => (
+                  <li key={idx}>{message.subject}</li>
+                ))}
+              </ul>
+            </Tab>
+            <Tab eventKey="linkedin" title="LinkedIn">
+              <h4>LinkedIn Profile:</h4>
+              <p>LinkedIn profile information here</p>
+            </Tab>
+          </Tabs>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -23,7 +23,7 @@ const lists = [
         ]
     },
     {
-        title: 'StaffDetailsInfo',
+        title: 'Staff Details',
         columns: [
             { title: 'FirstName', type: 'Text' },
             { title: 'LastName', type: 'Text' },
@@ -51,12 +51,52 @@ const lists = [
         ]
     },
     {
+        title: 'GeneralLibrarySettings',
+        columns: [
+            { title: 'LibraryUrl', type: 'Text' },
+        ],
+        testData: [
+            { Title: 'General Library', LibraryUrl: 'https://reliance.systems/process-automation/' },
+        ]
+    },
+    {
+        title: 'Departments',
+        columns: [
+            { title: 'DepartmentUrl', type: 'Text' },
+        ],
+        testData: [
+            { Title: 'Finance', DepartmentUrl: 'https://reliance.systems/process-automation/' },
+        ]
+    },
+    {
+        title: 'SubmenuLinks',
+        columns: [
+            { title: 'Department', type: 'Lookup', lookupFieldName: ['Finance'] },
+            { title: 'Url', type: 'Text' },
+        ],
+        testData: [
+            { Title: 'Leave', Url: 'https://reliance.systems/process-automation/', Department: 'IT', },
+            
+        ]
+    },
+    {
         title: 'LOB Apps',
         columns: [
             { title: 'ApplicationLink', type: 'Text' },
         ],
         testData: [
             { Title: 'Leave', ApplicationLink: 'https://reliance.systems/process-automation/' },
+        ]
+    },
+    {
+        title: 'Announcement',
+        columns: [
+            {title: 'Description', type: 'Note' },
+            { title: 'ImageUrl', type: 'Text' },
+            { title: 'LinkUrl', type: 'Text' },
+        ],
+        testData: [
+            { Title: 'Digital Workspace Launch', ImageUrl: 'https://reliance.systems/process-automation/', LinkUrl: 'https://reliance.systems/process-automation/' },
         ]
     },
     {
@@ -138,6 +178,9 @@ const createColumns = async (web: Web, listInfo: any, listId: string) => {
                 switch (column.type) {
                     case 'Choice':
                         fieldResult = await list.fields.addChoice(column.title, column.choices);
+                        break;
+                    case 'Lookup':
+                        fieldResult = await list.fields.addLookup(column.title, column.lookupListId, column.lookupFieldName);
                         break;
                     case 'DateTime':
                         fieldResult = await list.fields.addDateTime(column.title);
@@ -234,44 +277,5 @@ const addTestData = async (web: Web, listInfo: any, listId: string, spHttpClient
     }
 };
 
-// const addTestData = async (web: Web, listInfo: any, listId: string, spHttpClient: SPHttpClient) => {
-//     try {
-//         const currentUser = await sp.web.currentUser.get();
-//         const list = web.lists.getById(listId);
-
-//         const existingItems = await list.items.get();
-//         console.log(`Existing items in list ${listInfo.title}:`, existingItems);
-
-//         if (existingItems.length === 0) {
-//             for (const data of listInfo.testData) {
-//                 if (data.EmployeeNameId === null) {
-//                     data.EmployeeNameId = currentUser.Id;
-//                 }
-//                 const addedItem = await list.items.add(data);
-//                 console.log(`Added test data to list ${listInfo.title}:`, addedItem);
-//             }
-//         }
-
-//         if (listInfo.isDocumentLibrary) {
-//             const folder = web.getFolderByServerRelativeUrl(`/sites/IntranetPortal2/${listInfo.title}`);
-//             for (const imageFile of imageFiles) {
-//                 const uploadResult = await folder.files.addUsingPath(imageFile.name, imageFile.path, { Overwrite: true });
-//                 console.log(`Uploaded file ${imageFile.name} to document library ${listInfo.title}`);
-
-//                 // Add a brief delay before trying to get the list item
-//                 await new Promise(resolve => setTimeout(resolve, 1000));
-
-//                 const fileItem = await uploadResult.file.getItem();
-//                 const metadata = listInfo.testData.find((item: any) => item.Title === imageFile.name.split('.')[0]);
-//                 if (metadata) {
-//                     await fileItem.update(metadata);
-//                     console.log(`Updated metadata for file ${imageFile.name} in document library ${listInfo.title}`);
-//                 }
-//             }
-//         }
-//     } catch (error) {
-//         console.error(`Error adding test data to list ${listInfo.title}:`, error);
-//     }
-// };
 
 export default checkAndCreateLists;
