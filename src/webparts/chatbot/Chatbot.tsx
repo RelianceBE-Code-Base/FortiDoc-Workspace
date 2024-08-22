@@ -20,7 +20,6 @@ import Spinner from 'react-bootstrap/Spinner';
 import CardGrid from './CardGrid';
 
 import TypewriterMessage from './TypewriterMessage';
-// import { useEffect } from 'react';
 
 
 
@@ -110,23 +109,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
   };
 
 
-  // const useTypewriterEffect = (content: string) => {
-  //   const [text, setText] = useState('');
-  
-  //   useEffect(() => {
-  //     const timerId = setInterval(() => {
-  //       if (text.length < content.length) {
-  //         setText(text + content.charAt(content.length - text.length - 1));
-  //       } else {
-  //         clearInterval(timerId);
-  //       }
-  //     }, 100); // Adjust the delay as needed
-  
-  //     return () => clearInterval(timerId);
-  //   }, [content]);
-  
-  //   return text;
-  // };
+ 
 
   return (
     <section className={styles.chatbot}>

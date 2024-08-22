@@ -22,6 +22,8 @@ async function invokePrompt(messages: {role:string, content:string}[], temp: num
 
     let response: string =  events.choices[0].message?.content!
 
+    response = response.replace(/","/g, '\n\n');
+
     return response
 
     
