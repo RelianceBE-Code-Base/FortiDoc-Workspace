@@ -71,12 +71,11 @@ const lists = [
     {
         title: 'SubmenuLinks',
         columns: [
-            { title: 'Department', type: 'Lookup', lookupFieldName: ['Finance'] },
+            { title: 'Department', type: 'Lookup', lookupListId: 'Departments', lookupFieldName: 'Title' },
             { title: 'Url', type: 'Text' },
         ],
         testData: [
-            { Title: 'Leave', Url: 'https://reliance.systems/process-automation/', Department: 'IT', },
-            
+            { Title: 'Finance Sub', Url: 'https://reliance.systems/process-automation/', Department: 'IT' },
         ]
     },
     {
