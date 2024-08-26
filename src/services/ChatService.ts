@@ -27,6 +27,9 @@ async function invokePrompt(messages: {role:string, content:string}[], temp: num
 
     let response: string =  events.choices[0].message?.content!
 
+    response = response.replace(/","/g, '\n\n');
+
+
     return response
 
     
@@ -49,9 +52,12 @@ async function invokePromptWithBing(query: string): Promise<any> {
         });
 
         const result = response.data['result'];
-        const cleanedResult = result.slice(2, -2);
+        let cleanedResult = result.slice(2, -2);
 
         console.log(cleanedResult)
+
+        cleanedResult = cleanedResult.replace(/","/g, '\n\n');
+
 
         return cleanedResult;
 
