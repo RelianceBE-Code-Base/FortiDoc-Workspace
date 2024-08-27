@@ -141,7 +141,7 @@ const Header: React.FC<HeaderProps> = ({
     const submenuLinksListName = 'SubmenuLinks';
 
     // Fetch General Library URL
-    spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${generalLibraryListName}')/items?$select=Title,LibraryUrl`,
+    spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${generalLibraryListName}')/items?$select=Title,LibraryUrl`, 
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => response.json())
       .then((data) => {
@@ -152,7 +152,7 @@ const Header: React.FC<HeaderProps> = ({
       .catch(error => console.error('Error fetching General Library URL:', error));
 
     // Fetch Departments
-    spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${departmentsListName}')/items?$select=Title,DepartmentUrl`,
+    spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${departmentsListName}')/items?$select=Title,DepartmentUrl`, 
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => response.json())
       .then((data) => {
@@ -167,7 +167,7 @@ const Header: React.FC<HeaderProps> = ({
       .catch(error => console.error('Error fetching Departments:', error));
 
     // Fetch Submenu Links
-    spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${submenuLinksListName}')/items?$select=Title,Url,Department/Title&$expand=Department`,
+    spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${submenuLinksListName}')/items?$select=Title,Url,Department/Title&$expand=Department`, 
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => response.json())
       .then((data) => {
@@ -180,7 +180,7 @@ const Header: React.FC<HeaderProps> = ({
           setSubmenuLinks(submenuLinks);
         }
       })
-      .catch(error => console.error('Error fetching Submenu Links:', error));
+            .catch(error => console.error('Error fetching Submenu Links:', error));
   }, [siteUrl, spHttpClient]);
 
   return (
@@ -204,7 +204,7 @@ const Header: React.FC<HeaderProps> = ({
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li>
+            <li> 
               <a
                 href={generalLibraryLink}
                 className={`btn ${styles.actionButton}`}
@@ -219,21 +219,21 @@ const Header: React.FC<HeaderProps> = ({
                 className={`btn ${styles.actionButton} dropdown-toggle`}
                 onClick={() => setActiveAction('Departments')}
                 style={{ color: activeAction === 'Departments' ? '#01A88C' : '#353d54' }}
-                id="departmentsDropdown"
+                id="navbarDropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
                 Departments
               </button>
-              <ul className="dropdown-menu" aria-labelledby="departmentsDropdown">
+              <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                 {departments.map((department, index) => (
                   <li key={index}>
                     <a className="dropdown-item" href={department.url}>
                       {department.title}
                     </a>
-                    <ul className="submenu">
-                      {submenuLinks.filter((submenuLink) => submenuLink.department === department.title).map((submenuLink, submenuIndex) => (
-                        <li key={submenuIndex}>
+                    <ul>
+                      {submenuLinks.filter(submenuLink => submenuLink.department === department.title).map((submenuLink, index) => (
+                        <li key={index}>
                           <a className="dropdown-item" href={submenuLink.url}>
                             {submenuLink.title}
                           </a>
