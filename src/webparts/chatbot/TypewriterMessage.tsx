@@ -7,7 +7,7 @@ interface TypewriterMessageProps {
   speed?: number;
 }
 
-const TypewriterMessage: React.FC<TypewriterMessageProps> = ({ content, speed = 20 }) => {
+const TypewriterMessage: React.FC<TypewriterMessageProps> = ({ content, speed = 10 }) => {
   const [displayedContent, setDisplayedContent] = useState('');
   const index = useRef(0);
 
