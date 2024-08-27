@@ -10,12 +10,11 @@ import type { IChatbotProps } from './IChatbotProps';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import { SendIcon } from '@fluentui/react-icons-mdl2';
 import { Icon } from '@fluentui/react/lib/Icon';
-
+import { Toggle } from '@fluentui/react/lib/Toggle';
 import metaIcon from './assets/metaAiIcon.png';
 import userIcon from './assets/user.png';
-
 // import invokePrompt from '../../services/ChatService';
-import {  invokePromptWithBing } from '../../services/ChatService';
+import { invokePrompt, invokePromptWithBing } from '../../services/ChatService';
 import Spinner from 'react-bootstrap/Spinner';
 import CardGrid from './CardGrid';
 
@@ -34,10 +33,10 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // const [temperature, setTemperature] = useState(0);
+  const [temperature, setTemperature] = useState(0.5); // Add this line
   const [themeColor, setThemeColor] = useState('#04a4ec');
   const [selectedButton, setSelectedButton] = useState('Balanced');
-
+  const [useBing, setUseBing] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -57,8 +56,12 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      // const botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
-      const botResponse = await invokePromptWithBing(query)
+      let botResponse;
+      if (useBing) {
+        botResponse = await invokePromptWithBing(query);
+      } else {
+        botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
+      }
       setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse.toString() }]);
     } catch (error) {
       console.error('Error invoking prompt:', error);
@@ -70,15 +73,13 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     }
   }
 
-  const handleTemperatureButtonClick = (temperature: number, color: string) => {
+  const handleTemperatureButtonClick = (temp: number, color: string) => {
     setThemeColor(color);
-    // setTemperature(temperature);
-    setSelectedButton(temperature === 1 ? 'Creative' : temperature === 0 ? 'Precise' : 'Balanced');
+    setTemperature(temp); // Uncomment this line
+    setSelectedButton(temp === 1 ? 'Creative' : temp === 0 ? 'Precise' : 'Balanced');
   };
 
   const handleClick = async () => {
-
-
     if (query.trim() === "") {
       return;
     }
@@ -88,9 +89,12 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      // const botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
-      const botResponse = await invokePromptWithBing(query)
-
+      let botResponse;
+      if (useBing) {
+        botResponse = await invokePromptWithBing(query);
+      } else {
+        botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
+      }
       setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse.toString() }]);
     } catch (error) {
       console.error('Error invoking prompt:', error);
@@ -100,6 +104,10 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
         containerRef.current.scrollTop = containerRef.current.scrollHeight;
       }
     }
+  };
+
+  const handleToggleChange = (ev: React.MouseEvent<HTMLElement>, checked?: boolean) => {
+    setUseBing(checked || false);
   };
 
   const clearHistory = () => {
@@ -162,6 +170,12 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
           }
 
           <div style={{ display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
+            <Toggle
+              label="Use Bing"
+              checked={useBing}
+              onChange={handleToggleChange}
+              styles={{ root: { marginRight: '10px' } }}
+            />
             <button title='New Chat' className={styles.clearChat} style={{ backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory}>
               <Icon iconName='SkypeMessage' style={{ width: '24px', height: '24px', display: 'block' }} />
             </button>
@@ -182,3 +196,4 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
 };
 
 export default Chatbot;
+
