@@ -56,13 +56,13 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      let botResponse;
+      let botResponse: string;
       if (useBing) {
         botResponse = await invokePromptWithBing(query);
       } else {
         botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
       }
-      setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse.toString() }]);
+      setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse }]);
     } catch (error) {
       console.error('Error invoking prompt:', error);
     } finally {
@@ -89,13 +89,13 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      let botResponse;
+      let botResponse: string;
       if (useBing) {
         botResponse = await invokePromptWithBing(query);
       } else {
         botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
       }
-      setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse.toString() }]);
+      setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse }]);
     } catch (error) {
       console.error('Error invoking prompt:', error);
     } finally {
