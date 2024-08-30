@@ -13,11 +13,12 @@ async function invokePrompt(messages: {role:string, content:string}[], temp: num
 
     //Enoch's credentials
 
-    const deployment_id = "gpt-4o-2"
+    const deployment_id = "digital-workspace-gpt4o"
 
     const azure_openai_key = "35a0ba341c7b4de08ec6ca0933dfd587"
 
-    const endpoint = "https://ai-ways-instance.openai.azure.com/"
+    // const endpoint = "https://ai-ways-instance.openai.azure.com/"
+    const endpoint = "https://AI-WAYS-INSTANCE.openai.azure.com/"
 
 
 
