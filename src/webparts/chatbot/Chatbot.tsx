@@ -211,7 +211,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
               label="Web"
               checked={useBing}
               onChange={handleToggleChange}
-              styles={{ root: { marginRight: '10px' ,display: 'none'} }}
+              styles={{ root: { marginRight: '10px' } }}
             />
             <button title='New Chat' className={styles.clearChat} style={{ backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory}>
               <Icon iconName='SkypeMessage' style={{ width: '24px', height: '24px', display: 'block' }} />
