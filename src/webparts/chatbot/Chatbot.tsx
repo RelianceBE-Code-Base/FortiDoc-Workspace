@@ -140,6 +140,18 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     }
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleClick();
+  };
+
+  // const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (event.key === 'Enter') {
+  //     event.preventDefault();
+  //     handleClick();
+  //   }
+  // };
+
   return (
     <section className={styles.chatbot}>
       <div className={styles.container}>
@@ -211,17 +223,33 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
               label="Web"
               checked={useBing}
               onChange={handleToggleChange}
-              styles={{ root: { marginRight: '10px' } }}
+              styles={{
+                root: { marginRight: '10px', fill: themeColor },
+                
+                text: { color: themeColor }
+              }}
             />
             <button title='New Chat' className={styles.clearChat} style={{ backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory}>
               <Icon iconName='SkypeMessage' style={{ width: '24px', height: '24px', display: 'block' }} />
             </button>
 
             <div className={`card ${styles['input-card']}`} style={{ borderBottomColor: themeColor }}>
-              <form className="" style={{ display: 'flex', flexDirection: 'column' }}>
-                <input id="messageInput" className={styles.input} disabled={isLoading} placeholder="Ask me anything..." onChange={handleInputChange} value={query} />
+              <form onSubmit={handleSubmit} className="" style={{ display: 'flex', flexDirection: 'column' }}>
+                <input
+                  id="messageInput"
+                  className={styles.input}
+                  disabled={isLoading}
+                  placeholder="Ask me anything..."
+                  onChange={handleInputChange}
+                  
+                  value={query}
+                />
                 {isLoading && <Spinner animation="border" className={styles.spinner} />}
-                {!isLoading && <button type="button" onClick={handleClick} className={styles.sendButton} style={{ color: themeColor }}><Icon iconName='Send' /></button>}
+                {!isLoading && (
+                  <button type="button" onClick={handleClick} className={styles.sendButton} style={{ color: themeColor }}>
+                    <Icon iconName='Send' />
+                  </button>
+                )}
                 {SendIcon}
               </form>
             </div>
