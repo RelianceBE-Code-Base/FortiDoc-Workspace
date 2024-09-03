@@ -2,5 +2,6 @@
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/spfx-serve.schema.json",
   "port": 4321,
   "https": true,
-  "initialPage": "https://microdev.sharepoint.com/sites/IntranetPortal2/_layouts/workbench.aspx"
+ 
+  "initialPage": "https://relianceqat.sharepoint.com/sites/DigitalWorkspaceAI/_layouts/workbench.aspx"
 }

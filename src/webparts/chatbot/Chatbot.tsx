@@ -11,6 +11,7 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import { SendIcon } from '@fluentui/react-icons-mdl2';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { Toggle } from '@fluentui/react/lib/Toggle';
+import { Link } from '@fluentui/react/lib/Link';
 import metaIcon from './assets/metaAiIcon.png';
 import userIcon from './assets/user.png';
 // import invokePrompt from '../../services/ChatService';
@@ -20,11 +21,18 @@ import CardGrid from './CardGrid';
 
 import TypewriterMessage from './TypewriterMessage';
 
+import { searchTavily } from '../../services/TavilyService';
 
+// Define the Result type
+type Result = {
+  url: string;
+};
 
+// Update the Message type
 type Message = {
   role: string;
   content: string;
+  links?: string[];
 };
 
 const Chatbot: React.FC<IChatbotProps> = (props) => {
@@ -89,15 +97,22 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      let botResponse: string;
-      if (useBing) {
-        botResponse = await invokePromptWithBing(query);
-      } else {
-        botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
-      }
-      setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse }]);
+      const searchResult = await searchTavily({
+        query: query,
+        search_depth: 'advanced',
+        include_answer: true,
+        topic: useBing ? 'news' : 'general'
+      });
+
+      const botResponse = searchResult.answer;
+      const links = searchResult.results.map((result: Result) => result.url);
+
+      setMessages(prevMessages => [
+        ...prevMessages, 
+        { role: "assistant", content: botResponse, links: links }
+      ]);
     } catch (error) {
-      console.error('Error invoking prompt:', error);
+      console.error('Error:', error);
     } finally {
       setIsLoading(false);
       if (containerRef.current) {
@@ -116,8 +131,14 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setMessages([]);
   };
 
-
- 
+  // Helper function to extract domain from URL
+  const getDomain = (url: string) => {
+    try {
+      return new URL(url).hostname.replace('www.', '');
+    } catch {
+      return url;
+    }
+  };
 
   return (
     <section className={styles.chatbot}>
@@ -137,9 +158,25 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
                     <img src={message.role === 'user' ? userIcon : metaIcon} className={styles.metaIcon} alt={message.role} />
                     <div className={`font-weight-bold text-${message.role === 'user' ? 'primary' : 'secondary'}`}>{message.role === 'user' ? user_name : 'Chatbot'}</div>
                   </div>
-                  {/* <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown> */}
                   {message.role === 'user' ? message.content : <TypewriterMessage content={message.content} />}
-
+                  {message.role === 'assistant' && message.links && message.links.length > 0 && (
+                    <div className={styles.references}>
+                      <h6 className={styles.referencesHeader}>References</h6>
+                      <div className={styles.linkBubbles}>
+                        {message.links.map((link, linkIndex) => (
+                          <Link 
+                            key={linkIndex} 
+                            href={link} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className={styles.linkBubble}
+                          >
+                            {getDomain(link)}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -171,10 +208,10 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
 
           <div style={{ display: 'flex', alignSelf: 'center', width: '100%', justifyContent: 'center' }}>
             <Toggle
-              label="Use Bing"
+              label="Web"
               checked={useBing}
               onChange={handleToggleChange}
-              styles={{ root: { marginRight: '10px' } }}
+              styles={{ root: { marginRight: '10px' ,display: 'none'} }}
             />
             <button title='New Chat' className={styles.clearChat} style={{ backgroundColor: themeColor, borderColor: themeColor }} onClick={clearHistory}>
               <Icon iconName='SkypeMessage' style={{ width: '24px', height: '24px', display: 'block' }} />
