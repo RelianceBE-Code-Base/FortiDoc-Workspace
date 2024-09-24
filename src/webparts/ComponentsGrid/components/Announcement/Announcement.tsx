@@ -83,8 +83,9 @@ const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick
                     <img src={announcement.ImageUrl} alt={announcement.Title} className={styles.image} />
                   </a>
                 )}
-              </div>
-              <p className={styles.Description}> ==================[ END ]==================</p>
+              </div>              <hr className={styles.separator} />
+
+              {/* <p className={styles.Description}> ==================[ END ]==================</p> */}
             </div>
           ))}
         </div>
