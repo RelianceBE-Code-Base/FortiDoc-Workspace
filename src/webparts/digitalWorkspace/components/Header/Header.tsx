@@ -9,6 +9,12 @@ import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
 import metaAiIcon from '../../assets/metaAiIcon.png';
 import { Link } from 'react-router-dom';
+import wordIcon from './assets/word-icon.png';
+import excelIcon from './assets/excel-icon.png';
+import powerpointIcon from './assets/powerpoint-icon.png';
+import sharepointIcon from './assets/sharepoint-icon.png';
+import defaultIcon from './assets/default-icon.png';
+import pdfIcon from './assets/pdf-icon.png';
 
 interface HeaderProps {
   onHomeClick: () => void;
@@ -37,6 +43,26 @@ const componentOptions = [
   { name: 'Announcement', icon: require('./assets/Announcement.png') }
 ];
 
+const getFileIcon = (fileType: string) => {
+  switch (fileType.toLowerCase()) {
+    case 'docx':
+    case 'doc':
+      return wordIcon;
+    case 'xlsx':
+    case 'xls':
+      return excelIcon;
+    case 'pptx':
+    case 'ppt':
+      return powerpointIcon;
+    case 'pdf':
+      return pdfIcon;
+    case 'aspx':
+      return sharepointIcon;
+    default:
+      return defaultIcon;
+  }
+};
+
 const Header: React.FC<HeaderProps> = ({
   onHomeClick,
   onDismissSearchResults,
@@ -62,61 +88,35 @@ const Header: React.FC<HeaderProps> = ({
       return;
     }
 
-    const entityTypes = [
-      'driveItem',
-      'message',
-      'event',
-      'person',
-      'list',
-      'site'
-    ];
+    try {
+      const response = await spHttpClient.get(
+        `${siteUrl}/_api/search/query?querytext='${encodeURIComponent(searchQuery)}*'&rowlimit=10&selectproperties='Title,Path,FileType,Author,AuthorEmail,ServerRedirectedEmbedURL'`,
+        SPHttpClient.configurations.v1
+      );
 
-    const searchResults: any[] = [];
+      const data = await response.json();
 
-    for (const entityType of entityTypes) {
-      try {
-        const response = await graphClient.api('/search/query').version('v1.0').post({
-          requests: [
-            {
-              entityTypes: [entityType],
-              query: {
-                queryString: searchQuery.trim()
-              }
-            }
-          ]
+      if (data && data.PrimaryQueryResult && data.PrimaryQueryResult.RelevantResults) {
+        const results = data.PrimaryQueryResult.RelevantResults.Table.Rows.map((row: any) => {
+          const cells = row.Cells;
+          return {
+            title: cells.find((c: any) => c.Key === 'Title')?.Value || 'Untitled',
+            url: cells.find((c: any) => c.Key === 'Path')?.Value || '#',
+            fileType: cells.find((c: any) => c.Key === 'FileType')?.Value || 'Unknown',
+            author: cells.find((c: any) => c.Key === 'Author')?.Value || 'Unknown',
+            authorEmail: cells.find((c: any) => c.Key === 'AuthorEmail')?.Value || '',
+            webUrl: cells.find((c: any) => c.Key === 'ServerRedirectedEmbedURL')?.Value || ''
+          };
         });
 
-        if (!response || !response.value) {
-          throw new Error('Unexpected response. Please check the network request.');
-        }
-
-        const responseData = response.value;
-
-        if (responseData) {
-          const formattedResults = responseData.map((result: any) => ({
-            id: result.id,
-            title: result.title || result.name || result.subject || 'No title',
-            summary: result.summary || result.bodyPreview || result.description || 'No summary available',
-            webUrl: result.webUrl || result.url,
-            entityType: entityType,
-            description: result.description,
-            fileType: result.fileType,
-            fileSize: result.size,
-            lastModifiedDateTime: result.lastModifiedDateTime,
-            start: result.start,
-            end: result.end,
-            location: result.location,
-            body: result.body,
-            url: result.webUrl || result.url
-          }));
-
-          searchResults.push(...formattedResults);
-        }
-      } catch (error) {
-        console.error('Error searching with Microsoft Graph API', error);
+        setSearchResults(results);
+      }
+    } catch (error) {
+      console.error('Error searching with SharePoint Search API', error);
+      if (error.response) {
+        console.error('Error response:', await error.response.text());
       }
     }
-    setSearchResults(searchResults);
   };
 
   useEffect(() => {
@@ -133,14 +133,11 @@ const Header: React.FC<HeaderProps> = ({
     };
   }, [onDismissSearchResults]);
 
-  // Fetch General Library URL and Departments from SharePoint
   useEffect(() => {
-    //  'GeneralLibrarySettings' is the actual list name
     const generalLibraryListName = 'GeneralLibrarySettings';
     const departmentsListName = 'Departments';
     const submenuLinksListName = 'SubmenuLinks';
 
-    // Fetch General Library URL
     spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${generalLibraryListName}')/items?$select=Title,LibraryUrl`, 
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => response.json())
@@ -151,7 +148,6 @@ const Header: React.FC<HeaderProps> = ({
       })
       .catch(error => console.error('Error fetching General Library URL:', error));
 
-    // Fetch Departments
     spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${departmentsListName}')/items?$select=Title,DepartmentUrl`, 
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => response.json())
@@ -166,7 +162,6 @@ const Header: React.FC<HeaderProps> = ({
       })
       .catch(error => console.error('Error fetching Departments:', error));
 
-    // Fetch Submenu Links
     spHttpClient.get(`${siteUrl}/_api/web/lists/getbytitle('${submenuLinksListName}')/items?$select=Title,Url,Department/Title&$expand=Department`, 
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => response.json())
@@ -180,7 +175,7 @@ const Header: React.FC<HeaderProps> = ({
           setSubmenuLinks(submenuLinks);
         }
       })
-            .catch(error => console.error('Error fetching Submenu Links:', error));
+      .catch(error => console.error('Error fetching Submenu Links:', error));
   }, [siteUrl, spHttpClient]);
 
   return (
@@ -281,10 +276,27 @@ const Header: React.FC<HeaderProps> = ({
       <div ref={searchResultsRef} className={styles.searchResults}>
         {searchResults.map((result, index) => (
           <div key={index} className={styles.searchResultItem}>
-            <a href={result.webUrl} target="_blank" rel="noopener noreferrer" className={styles.searchResults}>
-              <h5>{result.title}</h5>
-              <p>{result.summary}</p>
-            </a>
+            <div className={styles.resultHeader}>
+              <img src={getFileIcon(result.fileType)} alt={result.fileType} className={styles.fileIcon} />
+              <h5>{result.title || 'Untitled'}</h5>
+            </div>
+            <p>{result.fileType || 'Unknown file type'}</p>
+            <p>Author: {result.author || 'Unknown'} {result.authorEmail ? `(${result.authorEmail})` : ''}</p>
+            <div className={styles.resultActions}>
+              <a href={result.url} target="_blank" rel="noopener noreferrer" className={styles.actionLink}>
+                Open in SharePoint
+              </a>
+              {result.webUrl && (
+                <a href={result.webUrl} target="_blank" rel="noopener noreferrer" className={styles.actionLink}>
+                  Open in Web App
+                </a>
+              )}
+              {result.fileType && result.fileType.toLowerCase() === 'docx' && (
+                <a href={`ms-word:ofe|u|${result.url}`} className={styles.actionLink}>
+                  Open in Desktop App
+                </a>
+              )}
+            </div>
           </div>
         ))}
       </div>

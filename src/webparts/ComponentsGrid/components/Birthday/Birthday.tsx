@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Web} from '@pnp/sp';
+import { Web } from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Birthday.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
-
 
 const BirthdayIcon = require('./assets/Birthday.png');
 const CloseIcon = require('./assets/close-square.png')
@@ -11,8 +10,8 @@ const CloseIcon = require('./assets/close-square.png')
 interface MicrosoftBirthdayProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemoveClick: () => void; // Correct prop name
-  tenantUrl: string; // Add tenantUrl as a prop
+  onRemoveClick: () => void;
+  tenantUrl: string;
 }
 
 interface IBirthday {
@@ -27,6 +26,23 @@ const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemo
   const [birthdays, setBirthdays] = React.useState<IBirthday[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
+  const sortAndFilterBirthdays = (birthdays: IBirthday[]): IBirthday[] => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return birthdays
+      .map(birthday => ({
+        ...birthday,
+        sortDate: new Date(new Date(birthday.DateOfBirth).setFullYear(today.getFullYear()))
+      }))
+      .sort((a, b) => {
+        if (a.sortDate < today) a.sortDate.setFullYear(today.getFullYear() + 1);
+        if (b.sortDate < today) b.sortDate.setFullYear(today.getFullYear() + 1);
+        return a.sortDate.getTime() - b.sortDate.getTime();
+      })
+      .slice(0, 20);
+  };
+
   React.useEffect(() => {
     const fetchBirthdays = async (): Promise<void> => {
       try {
@@ -37,8 +53,9 @@ const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemo
           console.error(`List '${listName}' does not exist`);
           return;
         }
-        const items = await list.items.select('ID', 'FirstName', 'LastName', 'DateOfBirth', 'Designation').get();
-        setBirthdays(items);
+        const items = await list.items.select('ID', 'FirstName', 'LastName', 'DateOfBirth', 'Designation').getAll();
+        const sortedAndFilteredBirthdays = sortAndFilterBirthdays(items);
+        setBirthdays(sortedAndFilteredBirthdays);
       } catch (error) {
         console.error('Error fetching birthdays:', error);
         setError('Failed to load birthdays.');
@@ -75,14 +92,14 @@ const Birthday: React.FC<MicrosoftBirthdayProps> = ({ pinned, onPinClick, onRemo
           <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
           <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
           </button>
-          </div>
+        </div>
       </div>
       <div className={styles['Birthday-content']}>
         <div className={styles['card-body']}>
           {birthdays.map((birthday, index) => {
             const birthdayStatus = determineBirthdayStatus(birthday.DateOfBirth);
             const isToday = birthdayStatus === 'today';
-            const isNext = birthdayStatus === 'next';
+            const isNext = birthdayStatus === 'next'; 
             return (
               <div
                 key={birthday.ID}
