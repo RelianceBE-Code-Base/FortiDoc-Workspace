@@ -15,7 +15,7 @@ import { Link } from '@fluentui/react/lib/Link';
 import metaIcon from './assets/metaAiIcon.png';
 import userIcon from './assets/user.png';
 // import invokePrompt from '../../services/ChatService';
-import { invokePrompt, invokePromptWithBing } from '../../services/ChatService';
+// import { invokePrompt, invokePromptWithBing } from '../../services/ChatService';
 import Spinner from 'react-bootstrap/Spinner';
 import CardGrid from './CardGrid';
 
@@ -41,7 +41,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [temperature, setTemperature] = useState(0.5); // Add this line
+  // const [temperature, setTemperature] = useState(0.5); // Add this line
   const [themeColor, setThemeColor] = useState('#04a4ec');
   const [selectedButton, setSelectedButton] = useState('Balanced');
   const [useBing, setUseBing] = useState(false);
@@ -64,15 +64,22 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      let botResponse: string;
-      if (useBing) {
-        botResponse = await invokePromptWithBing(query);
-      } else {
-        botResponse = await invokePrompt([...messages, { role: "user", content: query }], temperature);
-      }
-      setMessages(prevMessages => [...prevMessages, { role: "assistant", content: botResponse }]);
+      const searchResult = await searchTavily({
+        query: query,
+        search_depth: 'advanced',
+        include_answer: true,
+        topic: useBing ? 'news' : 'general'
+      });
+
+      const botResponse = searchResult.answer;
+      const links = searchResult.results.map((result: Result) => result.url);
+
+      setMessages(prevMessages => [
+        ...prevMessages, 
+        { role: "assistant", content: botResponse, links: links }
+      ]);
     } catch (error) {
-      console.error('Error invoking prompt:', error);
+      console.error('Error:', error);
     } finally {
       setIsLoading(false);
       if (containerRef.current) {
@@ -83,7 +90,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
 
   const handleTemperatureButtonClick = (temp: number, color: string) => {
     setThemeColor(color);
-    setTemperature(temp); // Uncomment this line
+    // setTemperature(temp); // Uncomment this line
     setSelectedButton(temp === 1 ? 'Creative' : temp === 0 ? 'Precise' : 'Balanced');
   };
 
@@ -145,12 +152,7 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     handleClick();
   };
 
-  // const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (event.key === 'Enter') {
-  //     event.preventDefault();
-  //     handleClick();
-  //   }
-  // };
+  
 
   return (
     <section className={styles.chatbot}>
