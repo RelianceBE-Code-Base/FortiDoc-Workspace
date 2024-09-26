@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IDigitalWorkspaceProps } from '../IDigitalWorkspaceProps';
-import { Web} from '@pnp/sp';
+import { Web } from '@pnp/sp';
 import "@pnp/odata";
 import Carousel from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -11,15 +11,20 @@ import styles from './GallerySlider.module.scss';
 interface IGallerySliderProps extends Pick<IDigitalWorkspaceProps, 'isDarkTheme'> {
   pinned: boolean;
   onPinClick: () => void;
-  onRemoveClick: () => void; // Correct prop name
-  tenantUrl: string; // Add tenantUrl as a prop
+  onRemoveClick: () => void;
+  tenantUrl: string;
 }
 
- const MicrosoftAppsIcon = require('./assets/MicrosoftAppsIcon.png')
- const CloseIcon = require('./assets/close-square.png')
+interface ImageData {
+  imageUrl: string;
+  resourceLink: string;
+}
+
+const MicrosoftAppsIcon = require('./assets/MicrosoftAppsIcon.png');
+const CloseIcon = require('./assets/close-square.png');
 
 const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl, isDarkTheme }) => {
-  const [images, setImages] = React.useState<string[]>([]);
+  const [images, setImages] = React.useState<ImageData[]>([]);
   const [error, setError] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -36,18 +41,21 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRe
           }
           throw error;
         }
-        const items = await documentLibrary.items.select('FileRef').getAll();
-        const imageUrls = items.map(item => item.FileRef);
+        const items = await documentLibrary.items.select('FileRef', 'ResourceLink').getAll();
+        const imageUrls = items.map(item => ({
+          imageUrl: item.FileRef,
+          resourceLink: item.ResourceLink
+        }));
         setImages(imageUrls);
       } catch (error) {
         console.error('Error fetching images:', error);
         setError('Failed to load images.');
       }
     };
-  
-    fetchImages().catch(error => console.error('Error in fetchImages:', error)); // Handle any potential errors
-  }, []);
-  
+
+    fetchImages().catch(error => console.error('Error in fetchImages:', error));
+  }, [tenantUrl]);
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -62,12 +70,12 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRe
   return (
     <div className='card' style={{ boxShadow: 'rgba(14, 30, 37, 0) 0px 1px 2px 0px, rgba(14, 30, 37, 0.16) 0px 1px 8px 0px' }}>
       <div className={styles['card-header']}>
-      <img src={MicrosoftAppsIcon} style={{display: 'flex'}}/>
+        <img src={MicrosoftAppsIcon} style={{ display: 'flex' }} />
         Gallery Slider
         <div>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
           <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
-          <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
+            <img src={CloseIcon} style={{ display: 'flex', height: '24px', width: '24px' }} />
           </button>
         </div>
       </div>
@@ -76,29 +84,18 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRe
         {error ? (
           <div style={{ color: 'red' }}>{error}</div>
         ) : (
-          <Carousel {...sliderSettings} >
-            {images.map((imageUrl, index) => (
-              <div key={index}> {/* Adjust the height here */}
-                <img src={imageUrl} alt={`Slide ${index}`}  style={{ height: '33.3%', width: '100%', objectFit: 'cover' }}/>
+          <Carousel {...sliderSettings}>
+            {images.map((imageData, index) => (
+              <div key={index}>
+                <a href={imageData.resourceLink} target="_blank" rel="noopener noreferrer">
+                  <img src={imageData.imageUrl} alt={`Slide ${index}`} style={{ height: '33.3%', width: '100%', objectFit: 'cover' }} />
+                </a>
               </div>
             ))}
           </Carousel>
         )}
       </div>
     </div>
-    // <div>
-    //    {error ? (
-    //       <div style={{ color: 'red' }}>{error}</div>
-    //     ) : (
-    //       <Carousel {...sliderSettings} >
-    //         {images.map((imageUrl, index) => (
-    //           <div key={index}> {/* Adjust the height here */}
-    //             <img src={imageUrl} alt={`Slide ${index}`}  style={{ height: '33.3%', width: '100%', objectFit: 'cover' }}/>
-    //           </div>
-    //         ))}
-    //       </Carousel>
-    //     )}
-    // </div>
   );
 };
 
