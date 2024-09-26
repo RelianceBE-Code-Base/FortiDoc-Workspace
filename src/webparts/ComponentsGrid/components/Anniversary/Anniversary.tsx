@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Web} from '@pnp/sp';
+import { Web } from '@pnp/sp';
 import '@pnp/odata';
 import styles from './Anniversary.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
@@ -7,12 +7,11 @@ import PinIcon from '../PinIcon/PinIcon';
 const AnniversaryIcon = require('./assets/Anniversary.png');
 const CloseIcon = require('./assets/close-square.png')
 
-
 interface MicrosoftAnniversaryProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemoveClick: () => void; // Correct prop name
-  tenantUrl: string; // Add tenantUrl as a prop
+  onRemoveClick: () => void;
+  tenantUrl: string;
 }
 
 interface IAnniversary {
@@ -23,9 +22,26 @@ interface IAnniversary {
   Designation: string;
 }
 
-const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, onRemoveClick,tenantUrl }) => {
+const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl }) => {
   const [anniversaries, setAnniversaries] = React.useState<IAnniversary[]>([]);
   const [error, setError] = React.useState<string | null>(null);
+
+  const sortAndFilterAnniversaries = (anniversaries: IAnniversary[]): IAnniversary[] => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return anniversaries
+      .map(anniversary => ({
+        ...anniversary,
+        sortDate: new Date(new Date(anniversary.ResumptionDate).setFullYear(today.getFullYear()))
+      }))
+      .sort((a, b) => {
+        if (a.sortDate < today) a.sortDate.setFullYear(today.getFullYear() + 1);
+        if (b.sortDate < today) b.sortDate.setFullYear(today.getFullYear() + 1);
+        return a.sortDate.getTime() - b.sortDate.getTime();
+      })
+      .slice(0, 20);
+  };
 
   React.useEffect(() => {
     const fetchAnniversaries = async (): Promise<void> => {
@@ -37,8 +53,9 @@ const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, 
           console.error(`List '${listName}' does not exist`);
           return;
         }
-        const items = await list.items.select('ID', 'FirstName', 'LastName', 'ResumptionDate', 'Designation').get();
-        setAnniversaries(items);
+        const items = await list.items.select('ID', 'FirstName', 'LastName', 'ResumptionDate', 'Designation').getAll();
+        const sortedAndFilteredAnniversaries = sortAndFilterAnniversaries(items);
+        setAnniversaries(sortedAndFilteredAnniversaries);
       } catch (error) {
         console.error('Error fetching anniversaries:', error);
         setError('Failed to load anniversaries.');
@@ -55,10 +72,10 @@ const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, 
 
     if (thisYearAnniversary.toDateString() === today.toDateString()) {
       return 'today';
-    } else if (thisYearAnniversary.getTime() > today.getTime()) {
-      return 'next';
+    } else if (thisYearAnniversary > today) {
+      return 'upcoming';
     }
-    return '';
+    return 'past';
   };
 
   const calculateYears = (resumptionDate: string): number => {
@@ -81,14 +98,14 @@ const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, 
           <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
           <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
           </button>
-          </div>
+        </div>
       </div>
       <div className={styles['Anniversary-content']}>
         <div className={styles['card-body']}>
           {anniversaries.map((anniversary, index) => {
             const anniversaryStatus = determineAnniversaryStatus(anniversary.ResumptionDate);
             const isToday = anniversaryStatus === 'today';
-            const isNext = anniversaryStatus === 'next';
+            const isUpcoming = anniversaryStatus === 'upcoming';
             const years = calculateYears(anniversary.ResumptionDate);
 
             return (
@@ -103,10 +120,10 @@ const Anniversary: React.FC<MicrosoftAnniversaryProps> = ({ pinned, onPinClick, 
                 <div className={styles.details}>
                   <div className={styles.title}>{isToday ? `Happy ${years} years anniversary!` : `${anniversary.FirstName} ${anniversary.LastName}`}</div>
                   <div className={styles.venue}>
-                    {isToday ? `${anniversary.FirstName} ${anniversary.LastName}` : (isNext ? anniversary.Designation : anniversary.Designation)}
+                    {isToday ? `${anniversary.FirstName} ${anniversary.LastName}` : (isUpcoming ? anniversary.Designation : anniversary.Designation)}
                   </div>
                   <div className={styles.designation}>
-                    {isToday ? anniversary.Designation : (isNext ? 'Next Anniversary' : '')}
+                    {isToday ? anniversary.Designation : (isUpcoming ? 'Upcoming Anniversary' : '')}
                   </div>
                 </div>
               </div>

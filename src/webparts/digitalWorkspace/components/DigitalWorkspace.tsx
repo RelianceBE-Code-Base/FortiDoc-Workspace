@@ -46,7 +46,8 @@ export default class DigitalWorkspace extends React.Component<IDigitalWorkspaceP
           />
 
           <div className="d-flex">
-            <div className="container-fluid">
+            {/* <div className="container-fluid" style={{ position: 'relative', zIndex: 1 }} > */}
+            <div className="container-fluid" >
               <Switch>
                 <Route 
                   exact 

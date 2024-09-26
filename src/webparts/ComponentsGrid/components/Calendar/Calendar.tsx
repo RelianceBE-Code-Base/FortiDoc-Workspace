@@ -34,13 +34,27 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, on
 
   const fetchEvents = async () => {
     try {
-      const response = await graphClient.api('/me/events').top(5).get();
+      const response = await graphClient.api('/me/events')
+        .top(50)
+        .select('subject,start,end')
+        .orderby('start/dateTime')
+        .get();
       const eventsData: Event[] = response.value;
-      setEvents(eventsData);
+      const filteredEvents = filterEvents(eventsData);
+      setEvents(filteredEvents);
     } catch (error) {
       console.error('Error fetching events', error);
       setError('Failed to load events.');
     }
+  };
+
+  const filterEvents = (eventsData: Event[]): Event[] => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return eventsData
+      .filter(event => new Date(event.start.dateTime) >= today)
+      .slice(0, 10);
   };
 
   if (error) {
@@ -49,38 +63,34 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, on
 
   return (
     <div className={styles.card}>
-    <div className={styles['card-header']}>
+      <div className={styles['card-header']}>
         <img src={CalendarIcon} style={{ display: 'flex' }} />
         <p style={{ display: 'flex', justifySelf: 'center' }}>Calendar</p>
         <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
           <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
-          <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
+            <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
           </button>
-          </div>
         </div>
-        <div className={styles['Calendar-content']}>
-      <div className={styles['card-body']}>
-        {events.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No upcoming events</p>}
-        {events.map((event, index) => (
-           <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
-            <div className={`${styles.date} ${(styles as { [key: string]: string })[`dateColor${index % 4 + 1}`]}`}>
-              <span className={styles.day}>{new Date(event.start.dateTime).getDate()}</span>
-              <span className={styles.month}>{new Date(event.start.dateTime).toLocaleString('default', { month: 'short' })}</span>
-            </div>
-            <div className={styles.details}>
-              <div className={styles.title}>{event.subject}</div>
-              <div className={styles.venue}>Venue: {event.location.displayName}</div>
-              <div className={styles.time}>
-                {new Date(event.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(event.end.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      </div>
+      <div className={styles['Calendar-content']}>
+        <div className={styles['card-body']}>
+          {events.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No upcoming events</p>}
+          {events.map((event, index) => (
+            <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
+              <div className={`${styles.date} ${(styles as { [key: string]: string })[`dateColor${index % 4 + 1}`]}`}>
+                <span className={styles.day}>{new Date(event.start.dateTime).getDate()}</span>
+                <span className={styles.month}>{new Date(event.start.dateTime).toLocaleString('default', { month: 'short' })}</span>
+              </div>
+              <div className={styles.details}>
+                <h3>{event.subject}</h3>
+                <p>{new Date(event.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(event.end.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
-    </div>
-    
   );
 };
 

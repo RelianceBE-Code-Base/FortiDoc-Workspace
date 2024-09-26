@@ -12,7 +12,7 @@ const CloseIcon = require('./assets/close-square.png')
 interface InboxProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemoveClick: () => void; // Correct prop name
+  onRemoveClick: () => void;
   graphClient: MSGraphClientV3;
 }
 
@@ -20,6 +20,7 @@ interface InboxState {
   messages: Message[];
   selectedMessage: Message | null;
   showModal: boolean;
+  showReplyModal: boolean;
 }
 
 interface Message {
@@ -28,9 +29,64 @@ interface Message {
   from: string;
   date: string;
   body: string;
+  fullBody: string;
   isRead: boolean;
   receivedTime: string;
 }
+
+interface AutocompleteInputProps {
+  id: string;
+  label: string;
+  defaultValue?: string;
+  onSearch: (query: string) => Promise<any[]>;
+}
+
+const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ id, label, defaultValue, onSearch }) => {
+  const [value, setValue] = React.useState(defaultValue || '');
+  const [suggestions, setSuggestions] = React.useState<any[]>([]);
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    if (newValue.length > 2) {
+      const results = await onSearch(newValue);
+      setSuggestions(results);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSelect = (suggestion: any) => {
+    setValue(suggestion.mail);
+    setSuggestions([]);
+  };
+
+  return (
+    <div className="form-group">
+      <label htmlFor={id}>{label}</label>
+      <input
+        type="text"
+        className="form-control"
+        id={id}
+        value={value}
+        onChange={handleChange}
+      />
+      {suggestions.length > 0 && (
+        <ul className="list-group">
+          {suggestions.map((suggestion) => (
+            <li
+              key={suggestion.id}
+              className="list-group-item"
+              onClick={() => handleSelect(suggestion)}
+            >
+              {suggestion.displayName} ({suggestion.mail})
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
 
 class Inbox extends React.Component<InboxProps, InboxState> {
   constructor(props: InboxProps) {
@@ -39,6 +95,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
       messages: [],
       selectedMessage: null,
       showModal: false,
+      showReplyModal: false,
     };
   }
 
@@ -55,18 +112,19 @@ class Inbox extends React.Component<InboxProps, InboxState> {
     try {
       const response = await this.props.graphClient
         ?.api('/me/messages')
-        .select('id,subject,from,receivedDateTime,bodyPreview,isRead')
+        .select('id,subject,from,receivedDateTime,bodyPreview,body,isRead')
         .get();
   
       if (response) {
         const messages = response.value.map((msg: any) => ({
-        id: msg.id,
-        title: msg.subject,
-        from: msg.from.emailAddress.name,
-        date: new Date(msg.receivedDateTime).toLocaleDateString(),
-        body: msg.bodyPreview,
-        isRead: msg.isRead,
-        receivedTime: this.calculateReceivedTime(msg.receivedDateTime)
+          id: msg.id,
+          title: msg.subject,
+          from: msg.from.emailAddress.name,
+          date: new Date(msg.receivedDateTime).toLocaleDateString(),
+          body: msg.bodyPreview,
+          fullBody: msg.body.content,
+          isRead: msg.isRead,
+          receivedTime: this.calculateReceivedTime(msg.receivedDateTime)
         }));
   
         this.setState({ messages });
@@ -78,7 +136,6 @@ class Inbox extends React.Component<InboxProps, InboxState> {
     }
   };
   
-
   calculateReceivedTime = (receivedDateTime: string): string => {
     const now = new Date();
     const receivedDate = new Date(receivedDateTime);
@@ -114,36 +171,78 @@ class Inbox extends React.Component<InboxProps, InboxState> {
   replyToMessage = (id: string) => {
     const message = this.state.messages.find((msg) => msg.id === id);
     if (message) {
-      window.open(`https://outlook.office.com/mail/deeplink/compose?to=${message.from}&subject=Re:${message.title}`);
+      this.setState({
+        selectedMessage: message,
+        showReplyModal: true,
+      });
+    }
+  };
+
+  handleCloseReplyModal = () => {
+    this.setState({ showReplyModal: false });
+  };
+
+  sendReply = async () => {
+    const to = (document.getElementById('replyTo') as HTMLInputElement).value;
+    const cc = (document.getElementById('replyCC') as HTMLInputElement).value;
+    const bcc = (document.getElementById('replyBCC') as HTMLInputElement).value;
+    const subject = (document.getElementById('replySubject') as HTMLInputElement).value;
+    const body = (document.getElementById('replyBody') as HTMLTextAreaElement).value;
+
+    try {
+      await this.props.graphClient
+        .api('/me/sendMail')
+        .post({
+          message: {
+            subject: subject,
+            body: {
+              contentType: 'Text',
+              content: body
+            },
+            toRecipients: [{ emailAddress: { address: to } }],
+            ccRecipients: cc ? [{ emailAddress: { address: cc } }] : [],
+            bccRecipients: bcc ? [{ emailAddress: { address: bcc } }] : []
+          }
+        });
+
+      this.handleCloseReplyModal();
+      this.loadMessages();
+    } catch (error) {
+      console.error('Error sending reply:', error);
+    }
+  };
+
+  searchUsers = async (query: string): Promise<any[]> => {
+    try {
+      const response = await this.props.graphClient
+        .api('/users')
+        .filter(`startswith(displayName,'${query}') or startswith(mail,'${query}')`)
+        .select('displayName,mail')
+        .top(10)
+        .get();
+      return response.value;
+    } catch (error) {
+      console.error('Error searching users:', error);
+      return [];
     }
   };
 
   render() {
     const { pinned, onPinClick, onRemoveClick } = this.props;
-    const { selectedMessage, showModal } = this.state;
+    const { selectedMessage, showModal, showReplyModal } = this.state;
 
     return (
       <div className={styles.card} >
-        
-
-      <div className={`${styles['card-header']}`}>
-          
+        <div className={`${styles['card-header']}`}>
           <img src={InboxIcon} style={{display: 'flex'}}/>
-          
           <p style={{display: 'flex', justifySelf: 'center'}}>Inbox</p>
-          
           <div style={{display: 'flex'}}>
-
-          
-          <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''}/>
-          
-          <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
-          <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
-          </button>
+            <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''}/>
+            <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
+              <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
+            </button>
           </div>
-      </div>
-        
-          
+        </div>
         
         <div className={`${styles.card} ${styles['inbox-content']}` } >
           <div className={styles.inbox}>
@@ -156,16 +255,11 @@ class Inbox extends React.Component<InboxProps, InboxState> {
                   </div>
                 </Card.Header>
                 <div className={styles["card-body"]}>
-
                   <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
                     <Card.Title className={styles.messageFrom}>From: {msg.from}</Card.Title>
-                    {/* <p className={styles.messageFrom}>From: {msg.from}</p> */}
                     <p className={styles.messageDate}>{msg.date}</p>
                   </div>
-
                   <Card.Text className={styles.messageBody}>{msg.body.split(/\s+/).slice(0,15).join(' ') + ' ...'}</Card.Text>
-
-
                   <div className={styles['button-holder']}>
                     <button className={styles.readButton} onClick={() => this.markAsRead(msg.id)}>
                       <FontAwesomeIcon icon={faEnvelopeOpen} /> Read
@@ -180,17 +274,65 @@ class Inbox extends React.Component<InboxProps, InboxState> {
           </div>
         </div>
         {selectedMessage && (
-          <Modal show={showModal} onHide={this.handleCloseModal}>
+          <Modal show={showModal} onHide={this.handleCloseModal} size="lg">
             <Modal.Header closeButton>
               <Modal.Title>{selectedMessage.title}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-              <p><strong>From:</strong> {selectedMessage.from}</p>
-              <p>{selectedMessage.body}</p>
+            <Modal.Body className={styles.modalBody}>
+              <div className={styles.emailDetails}>
+                <p><strong>From:</strong> {selectedMessage.from}</p>
+                <p><strong>Date:</strong> {selectedMessage.date}</p>
+              </div>
+              <div className={styles.emailContent}>
+                <div dangerouslySetInnerHTML={{ __html: selectedMessage.fullBody }} />
+              </div>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={this.handleCloseModal}>
                 Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
+        {selectedMessage && (
+          <Modal show={showReplyModal} onHide={this.handleCloseReplyModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Reply to: {selectedMessage.title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form>
+                <AutocompleteInput
+                  id="replyTo"
+                  label="To:"
+                  defaultValue={selectedMessage.from}
+                  onSearch={this.searchUsers}
+                />
+                <AutocompleteInput
+                  id="replyCC"
+                  label="CC:"
+                  onSearch={this.searchUsers}
+                />
+                <AutocompleteInput
+                  id="replyBCC"
+                  label="BCC:"
+                  onSearch={this.searchUsers}
+                />
+                <div className="form-group">
+                  <label htmlFor="replySubject">Subject:</label>
+                  <input type="text" className="form-control" id="replySubject" defaultValue={`Re: ${selectedMessage.title}`} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="replyBody">Message:</label>
+                  <textarea className="form-control" id="replyBody" rows={5}></textarea>
+                </div>
+              </form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleCloseReplyModal}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={this.sendReply}>
+                Send
               </Button>
             </Modal.Footer>
           </Modal>

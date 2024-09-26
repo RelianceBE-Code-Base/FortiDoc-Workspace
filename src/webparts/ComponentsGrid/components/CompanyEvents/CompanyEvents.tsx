@@ -10,7 +10,7 @@ const EventsImg = require('./assets/Events.png');
 interface MicrosoftEventProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemoveClick: () => void; // Correct prop name
+  onRemoveClick: () => void;
   tenantUrl: string;
 }
 
@@ -22,7 +22,7 @@ interface ICompanyEvent {
   EndDate: string;
 }
 
-const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl }) => { // Correct prop name
+const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl }) => {
   const [events, setEvents] = React.useState<ICompanyEvent[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -36,8 +36,21 @@ const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRe
           console.error(`List '${listName}' does not exist`);
           return;
         }
-        const items = await list.items.select('ID', 'Title', 'Location', 'EventDate', 'EndDate').get();
-        setEvents(items);
+        const items = await list.items
+          .select('ID', 'Title', 'Location', 'EventDate', 'EndDate')
+          .orderBy('EventDate', true)
+          .top(50)
+          .get();
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const filteredAndSortedEvents = items
+          .filter(event => new Date(event.EventDate) >= today)
+          .sort((a, b) => new Date(a.EventDate).getTime() - new Date(b.EventDate).getTime())
+          .slice(0, 15);
+
+        setEvents(filteredAndSortedEvents);
       } catch (error) {
         console.error('Error fetching events:', error);
         setError('Failed to load events.');
@@ -65,6 +78,7 @@ const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRe
       </div>
       <div className={styles['Events-content']}>
         <div className={styles['card-body']}>
+        {events.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No upcoming events</p>}
           {events.map((event, index) => (
             <div key={index} className={`${styles.event} ${(styles as { [key: string]: string })[`eventColor${index % 4 + 1}`]}`}>
               <div className={`${styles.date} ${(styles as { [key: string]: string })[`dateColor${index % 4 + 1}`]}`}>
