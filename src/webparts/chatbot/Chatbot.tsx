@@ -23,6 +23,8 @@ import TypewriterMessage from './TypewriterMessage';
 
 import { searchTavily } from '../../services/TavilyService';
 
+import RAGService from '../../services/RAGService';
+
 // Define the Result type
 type Result = {
   url: string;
@@ -64,20 +66,30 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      const searchResult = await searchTavily({
-        query: query,
-        search_depth: 'advanced',
-        include_answer: true,
-        topic: useBing ? 'news' : 'general'
-      });
+      if (useBing) {
+        // Use searchTavily when toggle is ON
+        const searchResult = await searchTavily({
+          query: query,
+          search_depth: 'advanced',
+          include_answer: true,
+          topic: 'news'
+        });
 
-      const botResponse = searchResult.answer;
-      const links = searchResult.results.map((result: Result) => result.url);
+        const botResponse = searchResult.answer;
+        const links = searchResult.results.map((result: Result) => result.url);
 
-      setMessages(prevMessages => [
-        ...prevMessages, 
-        { role: "assistant", content: botResponse, links: links }
-      ]);
+        setMessages(prevMessages => [
+          ...prevMessages, 
+          { role: "assistant", content: botResponse, links: links }
+        ]);
+      } else {
+        // Use RAGService when toggle is OFF
+        const result = await RAGService.queryRAGSystem(query);
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { role: "assistant", content: result.text, links: result.references }
+        ]);
+      }
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -104,19 +116,10 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     setQuery("");
 
     try {
-      const searchResult = await searchTavily({
-        query: query,
-        search_depth: 'advanced',
-        include_answer: true,
-        topic: useBing ? 'news' : 'general'
-      });
-
-      const botResponse = searchResult.answer;
-      const links = searchResult.results.map((result: Result) => result.url);
-
+      const result = await RAGService.queryRAGSystem(query);
       setMessages(prevMessages => [
-        ...prevMessages, 
-        { role: "assistant", content: botResponse, links: links }
+        ...prevMessages,
+        { role: "assistant", content: result.answer, links: result.source }
       ]);
     } catch (error) {
       console.error('Error:', error);
