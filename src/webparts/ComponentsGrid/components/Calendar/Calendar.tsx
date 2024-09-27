@@ -11,9 +11,9 @@ const CloseIcon = require('./assets/close-square.png')
 
 interface CalendarProps {
   graphClient: MSGraphClientV3;
-    pinned: boolean;
-    onPinClick: () => void;
-  onRemoveClick: () => void; // Correct prop name 
+  pinned: boolean;
+  onPinClick: () => void;
+  onRemoveClick: () => void;
 }
 
 interface Event {
@@ -22,6 +22,7 @@ interface Event {
   start: { dateTime: string; timeZone: string };
   end: { dateTime: string; timeZone: string };
   location: { displayName: string };
+  organizer: { emailAddress: { name: string; address: string } };
 }
 
 const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, onRemoveClick }) => {
@@ -34,9 +35,9 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, on
 
   const fetchEvents = async () => {
     try {
-      const response = await graphClient.api('/me/events')
+      const response = await graphClient.api('/me/calendar/events')
         .top(50)
-        .select('subject,start,end')
+        .select('subject,start,end,organizer')
         .orderby('start/dateTime')
         .get();
       const eventsData: Event[] = response.value;
@@ -75,7 +76,7 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, on
       </div>
       <div className={styles['Calendar-content']}>
         <div className={styles['card-body']}>
-          {events.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No upcoming events</p>}
+          {events.length == 0 && <p style={{alignSelf: 'center', fontWeight: 'bold', justifySelf: 'center'}}>No upcoming Meetings</p>}
           {events.map((event, index) => (
             <div key={index} className={`${styles.event} ${(styles as {[key: string]: string})[`eventColor${index % 4 + 1}`]}`}>
               <div className={`${styles.date} ${(styles as { [key: string]: string })[`dateColor${index % 4 + 1}`]}`}>
@@ -83,8 +84,9 @@ const Calendar: React.FC<CalendarProps> = ({ graphClient, pinned, onPinClick, on
                 <span className={styles.month}>{new Date(event.start.dateTime).toLocaleString('default', { month: 'short' })}</span>
               </div>
               <div className={styles.details}>
-                <h3>{event.subject}</h3>
-                <p>{new Date(event.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(event.end.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+              <div className={styles.title}>{event.subject}</div>
+                <div className={styles.venue}>{new Date(event.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(event.end.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                <div className={styles.time}>Organizer: {event.organizer.emailAddress.name} </div>
               </div>
             </div>
           ))}

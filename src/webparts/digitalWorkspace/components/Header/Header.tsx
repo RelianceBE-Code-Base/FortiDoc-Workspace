@@ -206,7 +206,7 @@ const Header: React.FC<HeaderProps> = ({
                 onClick={() => setActiveAction('GeneralLibrary')}
                 style={{ color: activeAction === 'GeneralLibrary' ? '#01A88C' : '#353d54' }}
               >
-                General Library
+                Document Management
               </a>
             </li>
             <li className="nav-item dropdown">
