@@ -4,15 +4,14 @@ import '@pnp/odata';
 import styles from './Announcement.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
 
-
 const AnnouncementImg = require('./assets/Announcement.png');
-const CloseIcon = require('./assets/close-square.png')
+const CloseIcon = require('./assets/close-square.png');
 
 interface MicrosoftAnnouncementProps {
   pinned: boolean;
   onPinClick: () => void;
-  onRemoveClick: () => void; // Correct prop name
-  tenantUrl: string; // Add tenantUrl as a prop
+  onRemoveClick: () => void;
+  tenantUrl: string;
 }
 
 interface IAnnouncement {
@@ -20,12 +19,14 @@ interface IAnnouncement {
   Title: string;
   Description: string;
   LinkUrl: string;
-  ImageUrl: string; // This will hold the attachment URL
+  ImageUrl: string;
 }
 
 const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl }) => {
   const [announcements, setAnnouncements] = React.useState<IAnnouncement[]>([]);
   const [error, setError] = React.useState<string | null>(null);
+  const [viewMode, setViewMode] = React.useState<'list' | 'card'>('card'); // Default to 'list'
+  const [isDropdownVisible, setDropdownVisible] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const fetchAnnouncements = async (): Promise<void> => {
@@ -39,10 +40,9 @@ const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick
         }
         const items = await list.items.select('ID', 'Title', 'Description', 'LinkUrl').expand('AttachmentFiles').get();
 
-        // Fetch attachments for each item
         const itemsWithAttachments = items.map(item => ({
           ...item,
-          ImageUrl: item.AttachmentFiles.length > 0 ? item.AttachmentFiles[0].ServerRelativeUrl : '', // Use the first attachment as the image
+          ImageUrl: item.AttachmentFiles.length > 0 ? item.AttachmentFiles[0].ServerRelativeUrl : '',
         }));
 
         setAnnouncements(itemsWithAttachments);
@@ -55,6 +55,15 @@ const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick
     fetchAnnouncements().catch(error => console.error('Error in fetchAnnouncements:', error));
   }, [tenantUrl]);
 
+  const toggleDropdown = () => {
+    setDropdownVisible(!isDropdownVisible);
+  };
+
+  const handleViewModeChange = (mode: 'list' | 'card') => {
+    setViewMode(mode);
+    setDropdownVisible(false);
+  };
+
   if (error) {
     return <div className={styles.error}>{error}</div>;
   }
@@ -62,30 +71,35 @@ const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick
   return (
     <div className={styles.card}>
       <div className={styles['card-header']}>
-        <img src={AnnouncementImg} />
+        <img src={AnnouncementImg} onClick={toggleDropdown} style={{ cursor: 'pointer' }} />
         <p style={{ display: 'flex', justifySelf: 'center' }}> Announcement</p>
         <div style={{ display: 'flex' }}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
           <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
-          <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
+            <img src={CloseIcon} style={{ display: 'flex', height: '24px', width: '24px' }} />
           </button>
-          </div>
+          {isDropdownVisible && (
+            <div className={styles.dropdown}>
+              <button className={styles.dropdownItem} onClick={() => handleViewModeChange('list')}>List View</button>
+              <button className={styles.dropdownItem} onClick={() => handleViewModeChange('card')}>Card View</button>
+            </div>
+          )}
+        </div>
       </div>
       <div className={styles['Announcement-content']}>
         <div className={styles['card-body']}>
           {announcements.map((announcement, index) => (
-            <div key={index} className={styles.announcement}>
+            <div key={index} className={`${styles.announcement} ${viewMode === 'list' ? styles.listView : styles.cardView}`}>
               <div className={styles.productLaunch}>{announcement.Title}</div>
               <p className={styles.Description}>{announcement.Description}</p>
-              <div className={styles.medizee}>
-                {announcement.ImageUrl && (
+              {viewMode === 'card' && announcement.ImageUrl && (
+                <div className={styles.medizee}>
                   <a href={announcement.LinkUrl} target="_blank" rel="noopener noreferrer">
                     <img src={announcement.ImageUrl} alt={announcement.Title} className={styles.image} />
                   </a>
-                )}
-              </div>          <hr  className={styles.separator} />
-
-              {/* <p className={styles.Description}> ==================[ END ]==================</p> */}
+                </div>
+              )}
+              <hr className={styles.separator} />
             </div>
           ))}
         </div>

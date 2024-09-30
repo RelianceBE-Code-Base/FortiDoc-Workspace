@@ -113,6 +113,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
       const response = await this.props.graphClient
         ?.api('/me/messages')
         .select('id,subject,from,receivedDateTime,bodyPreview,body,isRead')
+        .top(50)
         .get();
   
       if (response) {

@@ -110,17 +110,35 @@ const Chatbot: React.FC<IChatbotProps> = (props) => {
     if (query.trim() === "") {
       return;
     }
-
+  
     setIsLoading(true);
     setMessages(prevMessages => [...prevMessages, { role: "user", content: query }]);
     setQuery("");
-
+  
     try {
-      const result = await RAGService.queryRAGSystem(query);
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { role: "assistant", content: result.answer, links: result.source }
-      ]);
+      if (useBing) {
+        // Use searchTavily when toggle is ON
+        const searchResult = await searchTavily({
+          query: query,
+          search_depth: 'advanced',
+          include_answer: true,
+          topic: 'news'
+        });
+  
+        const botResponse = searchResult.answer;
+        const links = searchResult.results.map((result: Result) => result.url);
+  
+        setMessages(prevMessages => [
+          ...prevMessages, 
+          { role: "assistant", content: botResponse, links: links }
+        ]);
+      } else {
+        const result = await RAGService.queryRAGSystem(query);
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { role: "assistant", content: result.answer, links: result.source }
+        ]);
+      }
     } catch (error) {
       console.error('Error:', error);
     } finally {

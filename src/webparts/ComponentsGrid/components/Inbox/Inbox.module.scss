@@ -74,7 +74,9 @@ $button-color: #01a88c;
   
 .inbox-content {
   max-height: '500px'; 
-  overflow: 'auto'; 
+  overflow: hidden;
+  overflow-y: auto; 
+  overflow-x: hidden;
   height: '245px';
   // padding: 10px;
   // overflow-y: auto;

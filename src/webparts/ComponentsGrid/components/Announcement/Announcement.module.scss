@@ -33,6 +33,7 @@
   font-weight: bold;
   color: #353d54;
   text-align: center;
+  z-index: 1;
 }
 
 .Description{
@@ -95,3 +96,52 @@
   background-image: linear-gradient(to right, #ccc, #333, #ccc);
   margin: 20px 0;
 }
+
+
+
+
+
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 9999; /* Increased z-index */
+}
+
+.dropdownItem {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.listView .image {
+  display: none;
+}
+
+.cardView .image {
+  display: block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

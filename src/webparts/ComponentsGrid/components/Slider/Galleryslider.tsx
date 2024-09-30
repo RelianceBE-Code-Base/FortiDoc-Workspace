@@ -71,7 +71,7 @@ const GallerySlider: React.FC<IGallerySliderProps> = ({ pinned, onPinClick, onRe
     <div className='card' style={{ boxShadow: 'rgba(14, 30, 37, 0) 0px 1px 2px 0px, rgba(14, 30, 37, 0.16) 0px 1px 8px 0px' }}>
       <div className={styles['card-header']}>
         <img src={MicrosoftAppsIcon} style={{ display: 'flex' }} />
-        Gallery Slider
+        {/* Gallery Slider */}
         <div>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
           <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
