@@ -22,7 +22,9 @@ interface Task {
   startDateTime: { dateTime: string; timeZone: string } | null;
   dueDateTime: { dateTime: string; timeZone: string } | null;
   percentComplete: number;
-  status?: string;
+  createdBy: { user: { id: string } };
+  assignments: { [key: string]: { assignedBy: { user: { id: string } } } };
+  createdDateTime: string;
 }
 
 const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemoveClick }) => {
@@ -32,35 +34,29 @@ const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemoveCl
   useEffect(() => {
     fetchTasks();
   }, []);
-
-  const fetchTasks = async () => {
-    try {
-      const response = await graphClient.api('/me/planner/tasks').top(5).get();
-      const tasksData: Task[] = response.value;
-      setTasks(tasksData.filter(task => task.dueDateTime !== null && task.dueDateTime.dateTime !== null));
-    } catch (error) {
-      console.error('Error fetching tasks', error);
-      setError('Failed to load tasks.');
-    }
-  };
-
-  const getStatusClass = (status?: string, percentComplete?: number) => {
-    if (!status && percentComplete !== undefined) {
-      if (percentComplete === 0) status = 'Not started';
-      else if (percentComplete > 0 && percentComplete < 100) status = 'In progress';
-      else if (percentComplete === 100) status = 'Completed';
-    }
-    
-    switch (status?.toLowerCase()) {
-      case 'not started':
-        return styles.notStarted;
-      case 'in progress':
-        return styles.inProgress;
-      case 'completed':
-        return styles.completed;
-      default:
-        return '';
-    }
+    const fetchTasks = async () => {
+      try {
+        const response = await graphClient.api('/me/planner/tasks')
+          .select('id,title,startDateTime,dueDateTime,percentComplete,createdBy,assignments,createdDateTime')
+          .get();
+        console.log('Raw API response:', response);
+        const tasksData: Task[] = response.value;
+        console.log('All tasks:', tasksData);
+      
+        const sortedTasks = tasksData
+          .sort((a, b) => new Date(b.createdDateTime).getTime() - new Date(a.createdDateTime).getTime())
+          .slice(0, 20); // Limit to 20 records
+      
+        setTasks(sortedTasks);
+      } catch (error) {
+        console.error('Error fetching tasks', error);
+        setError('Failed to load tasks.');
+      }
+  };  const getStatusClass = (percentComplete: number) => {
+    if (percentComplete === 0) return styles.notStarted;
+    if (percentComplete > 0 && percentComplete < 100) return styles.inProgress;
+    if (percentComplete === 100) return styles.completed;
+    return '';
   };
 
   const ProgressCircle = ({ percentComplete }: { percentComplete: number }) => (
@@ -94,39 +90,36 @@ const Task: React.FC<TaskProps> = ({ graphClient, pinned, onPinClick, onRemoveCl
 
   return (
     <div className={styles.card} >
-  <div className={styles['card-header']} >
-  <img src={TaskIcon} alt="Task Icon" className={styles.taskIcon} />
-    <p style={{display: 'flex', justifySelf: 'center'}}>Task</p>
-    <div style={{display: 'flex'}}>
+      <div className={styles['card-header']} >
+        <img src={TaskIcon} alt="Task Icon" className={styles.taskIcon} />
+        <p style={{display: 'flex', justifySelf: 'center'}}>Task</p>
+        <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
           <button className="btn btn-sm" onClick={onRemoveClick} style={{ marginLeft: '-10px' }}>
-          <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
+            <img src={CloseIcon} style={{display: 'flex', height: '24px', width: '24px'}}/>
           </button>
-          </div>
-  </div>
-       
+        </div>
+      </div>
      
       <div className={styles['task-content']}>
-      <div className={styles['card-body']}>
-
-        {tasks.length === 0 && <p className={styles.noTasks}>No pending tasks</p>}
-        {tasks.map((task) => (
-          <div key={task.id} className={`${styles.taskCard} ${getStatusClass(task.status, task.percentComplete)}`} onClick={() => window.open(`https://tasks.office.com/taskid=${task.id}`, '_blank')}>
-            <div className={styles.taskDetails}>
-              <div>
-                <p className={styles.taskTitle}>{task.title}</p>
-                {/* <p className={styles.taskDate}><strong>Start Date:</strong> {task.startDateTime ? formatDate(task.startDateTime.dateTime) : 'No start date'}</p> */}
-                <p className={styles.taskDate}><strong>Due Date:</strong> {task.dueDateTime ? formatDate(task.dueDateTime.dateTime) : 'No due date'}</p>
-              </div>
-              <div className={styles.taskStatus}>
-                <p>Status: {task.status ?? getStatusClass(task.status, task.percentComplete).replace(styles.notStarted, 'Not started').replace(styles.inProgress, 'In progress').replace(styles.completed, 'Completed')}</p>
-                <ProgressCircle percentComplete={task.percentComplete} />
+        <div className={styles['card-body']}>
+          {tasks.length === 0 && <p className={styles.noTasks}>No pending tasks</p>}
+          {tasks.map((task) => (
+            <div key={task.id} className={`${styles.taskCard} ${getStatusClass(task.percentComplete)}`} onClick={() => window.open(`https://tasks.office.com/taskid=${task.id}`, '_blank')}>
+              <div className={styles.taskDetails}>
+                <div>
+                  <p className={styles.taskTitle}>{task.title}</p>
+                  <p className={styles.taskDate}><strong>Due Date:</strong> {task.dueDateTime ? formatDate(task.dueDateTime.dateTime) : 'No due date'}</p>
+                </div>
+                <div className={styles.taskStatus}>
+                  <p>Status: {task.percentComplete === 0 ? 'Not started' : task.percentComplete === 100 ? 'Completed' : 'In progress'}</p>
+                  <ProgressCircle percentComplete={task.percentComplete} />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
     </div>
   );
 };
