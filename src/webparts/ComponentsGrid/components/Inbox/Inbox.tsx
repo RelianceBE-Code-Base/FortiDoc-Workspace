@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
-import { Card, Button, Modal } from 'react-bootstrap';
+import { Card, Button, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styles from './Inbox.module.scss';
 import PinIcon from '../PinIcon/PinIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelopeOpen, faReply, faClock } from '@fortawesome/free-solid-svg-icons';
+import { invokePrompt } from '../../../../services/ChatService';
+import Spinner from 'react-bootstrap/Spinner';
+
 
 const InboxIcon = require('./assets/InboxIcon.png')
 const CloseIcon = require('./assets/close-square.png')
+const MetaIcon = require('./assets/metaAiIcon.png')
 
 interface InboxProps {
   pinned: boolean;
@@ -21,6 +25,7 @@ interface InboxState {
   selectedMessage: Message | null;
   showModal: boolean;
   showReplyModal: boolean;
+  isGeneratingReply: boolean;
 }
 
 interface Message {
@@ -96,6 +101,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
       selectedMessage: null,
       showModal: false,
       showReplyModal: false,
+      isGeneratingReply: false, 
     };
   }
 
@@ -105,6 +111,7 @@ class Inbox extends React.Component<InboxProps, InboxState> {
       this.loadMessages();
     } else {
       console.error('graphClient is not initialized');
+
     }
   }
   
@@ -228,6 +235,38 @@ class Inbox extends React.Component<InboxProps, InboxState> {
     }
   };
 
+  generateReply = async () => {
+    const { selectedMessage } = this.state;
+  
+    if (!selectedMessage) {
+      return;
+    }
+
+    this.setState({ isGeneratingReply: true });
+
+
+  
+    try {
+      const prompt = `Generate a professional email reply based on the following email content: \n\n${selectedMessage.fullBody}
+                      Only reply with the body of the email. Do not add any other suggestions or recommendations. Also end at "Best regards"
+                      The name of the sender is not required at the end of the email`;
+      const generatedReply = await invokePrompt([{ role: 'user', content: prompt }], 0.5); // Adjust temperature as needed
+      
+      console.log(generatedReply)
+
+      // Populate the textarea in the reply modal
+      const replyBodyElement = document.getElementById('replyBody') as HTMLTextAreaElement;
+      
+      if (replyBodyElement) {
+        replyBodyElement.value = generatedReply;
+      }
+    } catch (error) {
+      console.error('Error generating reply:', error);
+    } finally {
+      this.setState({ isGeneratingReply: false });
+    }
+  };
+
   render() {
     const { pinned, onPinClick, onRemoveClick } = this.props;
     const { selectedMessage, showModal, showReplyModal } = this.state;
@@ -297,46 +336,63 @@ class Inbox extends React.Component<InboxProps, InboxState> {
         )}
         {selectedMessage && (
           <Modal show={showReplyModal} onHide={this.handleCloseReplyModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>Reply to: {selectedMessage.title}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <form>
-                <AutocompleteInput
-                  id="replyTo"
-                  label="To:"
-                  defaultValue={selectedMessage.from}
-                  onSearch={this.searchUsers}
-                />
-                <AutocompleteInput
-                  id="replyCC"
-                  label="CC:"
-                  onSearch={this.searchUsers}
-                />
-                <AutocompleteInput
-                  id="replyBCC"
-                  label="BCC:"
-                  onSearch={this.searchUsers}
-                />
-                <div className="form-group">
-                  <label htmlFor="replySubject">Subject:</label>
-                  <input type="text" className="form-control" id="replySubject" defaultValue={`Re: ${selectedMessage.title}`} />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="replyBody">Message:</label>
-                  <textarea className="form-control" id="replyBody" rows={5}></textarea>
-                </div>
-              </form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={this.handleCloseReplyModal}>
-                Cancel
-              </Button>
-              <Button variant="primary" onClick={this.sendReply}>
-                Send
-              </Button>
-            </Modal.Footer>
-          </Modal>
+          <Modal.Header closeButton>
+            <Modal.Title>Reply to: {selectedMessage.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form>
+              <AutocompleteInput
+                id="replyTo"
+                label="To:"
+                defaultValue={selectedMessage.from}
+                onSearch={this.searchUsers}
+              />
+              <AutocompleteInput
+                id="replyCC"
+                label="CC:"
+                onSearch={this.searchUsers}
+              />
+              <AutocompleteInput
+                id="replyBCC"
+                label="BCC:"
+                onSearch={this.searchUsers}
+              />
+              <div className="form-group">
+                <label htmlFor="replySubject">Subject:</label>
+                <input type="text" className="form-control" id="replySubject" defaultValue={`Re: ${selectedMessage.title}`} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="replyBody">Message:</label>
+                <textarea className="form-control" id="replyBody" rows={5}></textarea>
+              </div>
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <div className={styles.replyModalFooter}>
+            {this.state.isGeneratingReply && <Spinner animation="border" className={styles.spinner} />}
+             {!this.state.isGeneratingReply &&  <div className="left">
+              <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip id={`tooltip-generate-reply`}>Generate AI Reply</Tooltip>}
+                >
+                  <Button className={styles.generateReplyButton} onClick={this.generateReply}>
+                    <img src={MetaIcon} alt="Generate Reply" />
+                  </Button>
+                </OverlayTrigger>
+              </div>} 
+             
+
+              <div className="right">
+                <Button variant="secondary" onClick={this.handleCloseReplyModal}>
+                  Cancel
+                </Button>
+                <Button variant="primary" onClick={this.sendReply}>
+                  Send
+                </Button>
+              </div>
+            </div>
+          </Modal.Footer>
+        </Modal>
         )}
       </div>
     );

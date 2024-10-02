@@ -25,7 +25,7 @@ interface IAnnouncement {
 const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick, onRemoveClick, tenantUrl }) => {
   const [announcements, setAnnouncements] = React.useState<IAnnouncement[]>([]);
   const [error, setError] = React.useState<string | null>(null);
-  const [viewMode, setViewMode] = React.useState<'list' | 'card'>('card'); // Default to 'list'
+  const [viewMode, setViewMode] = React.useState<'list' | 'card'>('list'); // Default to 'list'
   const [isDropdownVisible, setDropdownVisible] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -43,7 +43,9 @@ const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick
         const itemsWithAttachments = items.map(item => ({
           ...item,
           ImageUrl: item.AttachmentFiles.length > 0 ? item.AttachmentFiles[0].ServerRelativeUrl : '',
-        }));
+        }))
+
+        itemsWithAttachments.reverse()
 
         setAnnouncements(itemsWithAttachments);
       } catch (error) {
@@ -90,15 +92,16 @@ const Announcement: React.FC<MicrosoftAnnouncementProps> = ({ pinned, onPinClick
         <div className={styles['card-body']}>
           {announcements.map((announcement, index) => (
             <div key={index} className={`${styles.announcement} ${viewMode === 'list' ? styles.listView : styles.cardView}`}>
+              <div onClick={() => window.open(announcement.LinkUrl, "_blank")} className={styles.textWrapper}>
               <div className={styles.productLaunch}>{announcement.Title}</div>
               <p className={styles.Description}>{announcement.Description}</p>
               {viewMode === 'card' && announcement.ImageUrl && (
                 <div className={styles.medizee}>
-                  <a href={announcement.LinkUrl} target="_blank" rel="noopener noreferrer">
                     <img src={announcement.ImageUrl} alt={announcement.Title} className={styles.image} />
-                  </a>
+                  
                 </div>
               )}
+              </div>
               <hr className={styles.separator} />
             </div>
           ))}

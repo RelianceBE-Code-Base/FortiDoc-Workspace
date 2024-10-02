@@ -148,3 +148,46 @@ $button-color: #01a88c;
   word-wrap: break-word;
 }
 
+
+.replyModalFooter {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.replyModalFooter .left,
+.replyModalFooter .right {
+  display: flex;
+}
+
+.replyModalFooter .left {
+  justify-content: flex-start;
+}
+
+.replyModalFooter .right {
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+
+.generateReplyButton {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.spinner{
+  padding: 0.25rem 0.5rem;
+  margin: 5px;
+  align-self: flex-end;
+
+
+}
