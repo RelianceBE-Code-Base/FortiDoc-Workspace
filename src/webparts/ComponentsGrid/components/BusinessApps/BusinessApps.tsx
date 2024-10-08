@@ -53,7 +53,7 @@ export default class BusinessApps extends React.Component<BusinessAppsProps, IBu
   }
 
   render(): React.ReactNode {
-    const { pinned,onPinClick, onRemoveClick } = this.props;
+    const { pinned, onPinClick, onRemoveClick } = this.props;
 
     return (
       <div className={styles.card}>
@@ -71,9 +71,12 @@ export default class BusinessApps extends React.Component<BusinessAppsProps, IBu
           <div className={styles.iconGrid}>
             {this.state.applications.map((application, index) => {
               return (
-                <a key={index} href={application.link} target="_blank" rel="noopener noreferrer">
-                  <img className={styles.iconLink} src={application.icon} alt={application.name} />
-                </a>
+                <div key={index} className={styles.tooltip}>
+                  <a href={application.link} target="_blank" rel="noopener noreferrer">
+                    <img className={styles.iconLink} src={application.icon} alt={application.name} />
+                  </a>
+                  <span className={styles.tooltiptext}>{application.name}</span>
+                </div>
               );
             })}
           </div>

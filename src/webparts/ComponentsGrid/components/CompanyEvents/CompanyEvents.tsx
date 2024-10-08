@@ -38,25 +38,22 @@ const CompanyEvents: React.FC<MicrosoftEventProps> = ({ pinned, onPinClick, onRe
         }
         const items = await list.items
           .select('ID', 'Title', 'Location', 'EventDate', 'EndDate')
-          .orderBy('EventDate', true)
-          .top(50)
           .get();
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const filteredAndSortedEvents = items
+        const sortedEvents = items
           .filter(event => new Date(event.EventDate) >= today)
           .sort((a, b) => new Date(a.EventDate).getTime() - new Date(b.EventDate).getTime())
           .slice(0, 15);
 
-        setEvents(filteredAndSortedEvents);
+        setEvents(sortedEvents);
       } catch (error) {
         console.error('Error fetching events:', error);
         setError('Failed to load events.');
       }
     };
-
     fetchEvents().catch(error => console.error('Error in fetchEvents:', error));
   }, [tenantUrl]);
 

@@ -28,6 +28,10 @@ interface Message {
   channelId?: string;
 }
 
+function createMarkup(html: string) {
+  return { __html: html };
+}
+
 const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient, pinned, onPinClick, onRemoveClick }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
@@ -57,14 +61,16 @@ const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient, pinned, on
       // Fetch chat messages
       for (const chat of chats.value) {
         const messages = await graphClient.api(`/me/chats/${chat.id}/messages`).top(5).get();
-        allMessages.push(...messages.value.map((m: any) => ({
-          id: m.id,
-          content: m.body.content,
-          createdDateTime: m.createdDateTime,
-          sender: m.from?.user?.displayName || (m.from ? 'System Message' : 'Unknown'),
-          type: 'chat',
-          chatId: chat.id
-        })));
+        allMessages.push(...messages.value
+          .filter((m: any) => m.from && m.from.user)
+          .map((m: any) => ({
+            id: m.id,
+            content: m.body.content,
+            createdDateTime: m.createdDateTime,
+            sender: m.from.user.displayName,
+            type: 'chat',
+            chatId: chat.id
+          })));
       }
 
       // Fetch channel messages
@@ -72,15 +78,18 @@ const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient, pinned, on
         const channels = await graphClient.api(`/teams/${team.id}/channels`).get();
         for (const channel of channels.value) {
           const messages = await graphClient.api(`/teams/${team.id}/channels/${channel.id}/messages`).top(5).get();
-          allMessages.push(...messages.value.map((m: any) => ({
-            id: m.id,
-            content: m.body.content,
-            createdDateTime: m.createdDateTime,
-            sender: m.from?.user?.displayName || (m.from ? 'System Message' : 'Unknown'),
-            type: 'channel',
-            teamId: team.id,
-            channelId: channel.id
-          })));        }
+          allMessages.push(...messages.value
+            .filter((m: any) => m.from && m.from.user)
+            .map((m: any) => ({
+              id: m.id,
+              content: m.body.content,
+              createdDateTime: m.createdDateTime,
+              sender: m.from.user.displayName,
+              type: 'channel',
+              teamId: team.id,
+              channelId: channel.id
+            })));
+        }
       }
 
       allMessages.sort((a, b) => new Date(b.createdDateTime).getTime() - new Date(a.createdDateTime).getTime());
@@ -176,9 +185,12 @@ const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient, pinned, on
                   <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
                     <Card.Title className={styles.messageFrom}>From: {message.sender}</Card.Title>
                     <p className={styles.messageDate}>{calculateReceivedTime(message.createdDateTime)}</p>
-                  </div>
+
+                                  </div>
               
-                <Card.Text className={styles.messageBody}>{message.content.substring(0, 50)}...</Card.Text>
+                <Card.Text className={styles.messageBody}>
+                <div dangerouslySetInnerHTML={createMarkup(message.content.substring(0, 50) + '...')} />
+                </Card.Text>
                 <div className={styles['button-holder']}>
                   <button className={styles.readButton} onClick={() => handleRead(message)}>
                     <FontAwesomeIcon icon={faEnvelopeOpen} /> Read
@@ -195,7 +207,7 @@ const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient, pinned, on
           <Modal.Title>{selectedMessage?.sender}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{selectedMessage?.content}</p>
+        <div dangerouslySetInnerHTML={createMarkup(selectedMessage?.content || '')} />
           <textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}

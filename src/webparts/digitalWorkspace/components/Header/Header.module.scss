@@ -27,27 +27,27 @@
     }
   }
 
-  .searchResults {
-    position: absolute;
-    background: white;
-    border: 1px solid #ddd;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-  }
+  // .searchResults {
+  //   position: absolute;
+  //   background: white;
+  //   border: 1px solid #ddd;
+  //   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  //   z-index: 1000;
+  // }
 
-  .searchResultsList {
-    max-height: 400px;
-    overflow-y: auto;
-  }
+  // .searchResultsList {
+  //   max-height: 400px;
+  //   overflow-y: auto;
+  // }
 
-  .searchResultItem {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
+  // .searchResultItem {
+  //   padding: 10px;
+  //   border-bottom: 1px solid #ddd;
+  // }
 
-  .searchResultItem:last-child {
-    border-bottom: none;
-  }
+  // .searchResultItem:last-child {
+  //   border-bottom: none;
+  // }
 
   .searchForm {
     position: relative;
@@ -101,33 +101,33 @@
 }
 
 
-.searchResults {
-  position: absolute;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 1000;
-  top: 100%;
-  left: 0;
-}
+// .searchResults {
+//   position: absolute;
+//   background: white;
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+//   width: 100%;
+//   max-height: 300px;
+//   overflow-y: auto;
+//   z-index: 1000;
+//   top: 100%;
+//   left: 0;
+// }
 
-.searchResults ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+// .searchResults ul {
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+// }
 
-.searchResults li {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-}
+// .searchResults li {
+//   padding: 10px;
+//   border-bottom: 1px solid #eee;
+// }
 
-.searchResults li a {
-  color: #04a4ec;
-  text-decoration: none;
-}
+// .searchResults li a {
+//   color: #04a4ec;
+//   text-decoration: none;
+// }
 
 .metaIcon {
   width: 30px;
@@ -172,7 +172,7 @@
 .searchResults {
   position: absolute;
   top: 100%;
-  right: 0;
+  left: 70%;
   width: 100%;
   max-width: 400px;
   background-color: white;
