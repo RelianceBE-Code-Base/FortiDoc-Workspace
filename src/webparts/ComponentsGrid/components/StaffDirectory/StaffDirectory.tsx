@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { MSGraphClientV3 } from '@microsoft/sp-http';
-import { FormControl, Modal, Button, Pagination, Tab, Tabs } from 'react-bootstrap';
+import { FormControl, Modal, Button, Tab, Tabs } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import styles from './StaffDirectory.module.scss';
@@ -34,7 +34,6 @@ interface UserDetails extends User {
   reports?: User[];
   files?: any[];
   messages?: any[];
-  linkedinProfile?: any;
 }
 
 const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient, pinned, onPinClick, onRemoveClick }) => {
@@ -44,82 +43,72 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient, pinned, on
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showSearchBox, setShowSearchBox] = useState<boolean>(false);
   const [defaultProfileImage, setDefaultProfileImage] = useState<string>("");
-  const [page, setPage] = useState<number>(1);
   const [nextLink, setNextLink] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const pageSize = 20;
 
   useEffect(() => {
     fetchUsers();
     setDefaultProfileImage("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
   }, []);
 
-  const fetchUsers = async (nextPageLink: string | null = null, query: string = '') => {
+  const fetchUsers = async (link: string | null = null, query: string = '') => {
     try {
-      const filterQuery = query 
-        ? `accountEnabled eq true and startswith(displayName, '${query}')`
-        : `accountEnabled eq true`;
-
-      const response = nextPageLink
-        ? await graphClient.api(nextPageLink).get()
-        : await graphClient
-            .api('/users')
-            .filter(filterQuery)
-            .select('id,displayName,jobTitle,mail,mobilePhone,officeLocation,department,businessPhones,assignedLicenses')
-            .top(20)
-            .get();
-
-      const usersData: User[] = await Promise.all(
-        response.value
-          .filter((user: any) => user.assignedLicenses && user.assignedLicenses.length > 0)
-          .map(async (user: any) => {
-            let photoUrl = null;
-            try {
-              const photoResponse = await graphClient.api(`/users/${user.id}/photo/$value`).get();
-              photoUrl = URL.createObjectURL(photoResponse);
-            } catch (photoError) {
-              console.warn(`Failed to fetch photo for user ${user.id}`, photoError);
-            }
-
-            return {
-              id: user.id,
-              displayName: user.displayName,
-              jobTitle: user.jobTitle,
-              mail: user.mail,
-              mobilePhone: user.mobilePhone,
-              officeLocation: user.officeLocation,
-              department: user.department,
-              businessPhones: user.businessPhones,
-              photoUrl: photoUrl,
-            };
-          })
+      let response;
+      if (link) {
+        response = await graphClient.api(link).get();
+      } else {
+        const filterQuery = query
+          ? `startswith(displayName,'${query}') or startswith(mail,'${query}') or startswith(jobTitle,'${query}') or startswith(department,'${query}')`
+          : '';
+  
+        response = await graphClient
+          .api('/users')
+          .select('id,displayName,jobTitle,mail,mobilePhone,officeLocation,department,businessPhones,accountEnabled,assignedLicenses')
+          .filter(filterQuery)
+          .top(pageSize)
+          .get();
+      }
+  
+      const filteredUsers = response.value.filter((user: any) => 
+        user.accountEnabled && user.assignedLicenses && user.assignedLicenses.length > 0
       );
 
-      if (nextPageLink) {
-        setUsers(prevUsers => [...prevUsers, ...usersData]);
-      } else {
-        setUsers(usersData);
-      }
+      const usersData: User[] = await Promise.all(
+        filteredUsers.map(async (user: any) => {
+          let photoUrl = null;
+          try {
+            const photoResponse = await graphClient.api(`/users/${user.id}/photo/$value`).get();
+            photoUrl = URL.createObjectURL(photoResponse);
+          } catch (photoError) {
+            console.warn(`Failed to fetch photo for user ${user.id}`, photoError);
+          }
 
+          return {
+            id: user.id,
+            displayName: user.displayName,
+            jobTitle: user.jobTitle,
+            mail: user.mail,
+            mobilePhone: user.mobilePhone,
+            officeLocation: user.officeLocation,
+            department: user.department,
+            businessPhones: user.businessPhones,
+            photoUrl: photoUrl,
+          };
+        })
+      );
+
+      setUsers(prevUsers => link ? [...prevUsers, ...usersData] : usersData);
       setNextLink(response['@odata.nextLink'] || null);
-
-      if (response['@odata.count'] !== undefined && response['@odata.count'] !== null) {
-        setTotalPages(Math.ceil(response['@odata.count'] / 20));
-      } else {
-        setTotalPages(1);
-      }
     } catch (error) {
       console.error('Error fetching users', error);
     }
   };
 
-  const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
     setSearchQuery(query);
-    setUsers([]);  // Clear current users
-    setPage(1);
     fetchUsers(null, query);
   };
-
   const handleUserClick = (user: User) => {
     fetchUserDetails(user.id);
     setShowModal(true);
@@ -132,8 +121,11 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient, pinned, on
 
   const fetchUserDetails = async (userId: string) => {
     try {
-      const userResponse = await graphClient.api(`/users/${userId}`).get();
-      let managerResponse, reportsResponse, filesResponse, messagesResponse, linkedinResponse;
+      const userResponse = await graphClient
+        .api(`/users/${userId}`)
+        .select('id,displayName,jobTitle,mail,mobilePhone,officeLocation,department,businessPhones')
+        .get();
+      let managerResponse, reportsResponse, filesResponse, messagesResponse;
 
       try {
         managerResponse = await graphClient.api(`/users/${userId}/manager`).get();
@@ -159,15 +151,12 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient, pinned, on
         messagesResponse = { value: [] };
       }
 
-      linkedinResponse = {}; // Mock LinkedIn data as it would require LinkedIn API
-
       const userDetails: UserDetails = {
         ...userResponse,
         manager: managerResponse,
         reports: reportsResponse.value,
         files: filesResponse.value,
         messages: messagesResponse.value,
-        linkedinProfile: linkedinResponse,
       };
 
       setSelectedUser(userDetails);
@@ -176,18 +165,9 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient, pinned, on
     }
   };
 
-  const handlePageChange = (newPage: number) => {
-    console.log(`handlePageChange called with newPage: ${newPage}`);
-    if (newPage !== page) {
-      setPage(newPage);
-      if (newPage > 1 && nextLink) {
-        console.log(`Fetching next page of users from ${nextLink}`);
-        fetchUsers(nextLink, searchQuery);
-      } else if (newPage === 1) {
-        console.log(`Resetting users and fetching first page`);
-        setUsers([]);  // Reset users for the first page
-        fetchUsers(null, searchQuery);
-      }
+  const handleLoadMore = () => {
+    if (nextLink) {
+      fetchUsers(nextLink, searchQuery);
     }
   };
 
@@ -228,28 +208,24 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient, pinned, on
             <div className={styles.details}>
               <h2 className={styles.title}>{user.displayName}</h2>
               <p className={styles.subtitle}>{user.jobTitle}</p>
+              <p className={styles.subtitle}>{user.department}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {users.length > 0 && totalPages > 0 && (
-        <div className={styles.paginationContainer}>
-          <Pagination>
-            <Pagination.First onClick={() => handlePageChange(1)} disabled={page === 1} />
-            <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 1} />
-            {[...Array(totalPages)].map((_, index) => (
-              <Pagination.Item key={index + 1} active={index + 1 === page} onClick={() => handlePageChange(index + 1)}>
-                {index + 1}
-              </Pagination.Item>
-            ))}
-            <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages} />
-            <Pagination.Last onClick={() => handlePageChange(totalPages)} disabled={page === totalPages} />
-          </Pagination>
+      {nextLink && (
+        <div className={styles.loadMoreContainer}>
+          <button 
+            onClick={handleLoadMore} 
+            className={`${styles.loadMoreButton} ${styles['card-header']}`}
+          >
+            Click to load More ...
+          </button>
         </div>
       )}
 
-<Modal show={showModal} onHide={handleClose} size="lg">
+      <Modal show={showModal} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>{selectedUser?.displayName}</Modal.Title>
         </Modal.Header>
@@ -295,10 +271,6 @@ const StaffDirectory: React.FC<StaffDirectoryProps> = ({ graphClient, pinned, on
                   <li key={idx}>{message.subject}</li>
                 ))}
               </ul>
-            </Tab>
-            <Tab eventKey="linkedin" title="LinkedIn">
-              <h4>LinkedIn Profile:</h4>
-              <p>LinkedIn profile information here</p>
             </Tab>
           </Tabs>
         </Modal.Body>

@@ -191,3 +191,14 @@ $button-color: #01a88c;
 
 
 }
+
+.modalButton {
+  width: 75px;
+  margin-left: 15px;
+  text-align: center;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+}

@@ -369,24 +369,24 @@ class Inbox extends React.Component<InboxProps, InboxState> {
           </Modal.Body>
           <Modal.Footer>
             <div className={styles.replyModalFooter}>
-            {this.state.isGeneratingReply && <Spinner animation="border" className={styles.spinner} />}
-             {!this.state.isGeneratingReply &&  <div className="left">
-              <OverlayTrigger
-                  placement="top"
-                  overlay={<Tooltip id={`tooltip-generate-reply`}>Generate AI Reply</Tooltip>}
-                >
-                  <Button className={styles.generateReplyButton} onClick={this.generateReply}>
-                    <img src={MetaIcon} alt="Generate Reply" />
-                  </Button>
-                </OverlayTrigger>
-              </div>} 
-             
-
-              <div className="right">
-                <Button variant="secondary" onClick={this.handleCloseReplyModal}>
+              {this.state.isGeneratingReply && <Spinner animation="border" className={styles.spinner} />}
+              {!this.state.isGeneratingReply && (
+                <div className="left">
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip id={`tooltip-generate-reply`}>Generate AI Reply</Tooltip>}
+                  >
+                    <Button className={styles.generateReplyButton} onClick={this.generateReply}>
+                      <img src={MetaIcon} alt="Generate Reply" />
+                    </Button>
+                  </OverlayTrigger>
+                </div>
+              )}
+              <div className={`${styles.buttonContainer} right`}>
+                <Button variant="secondary" onClick={this.handleCloseReplyModal} className={styles.modalButton}>
                   Cancel
                 </Button>
-                <Button variant="primary" onClick={this.sendReply}>
+                <Button variant="primary" onClick={this.sendReply} className={styles.modalButton}>
                   Send
                 </Button>
               </div>
