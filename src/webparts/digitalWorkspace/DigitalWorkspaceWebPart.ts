@@ -32,9 +32,9 @@ export default class DigitalWorkspaceWebPart extends BaseClientSideWebPart<IDigi
       .getClient('3') // Specify the version argument
       .then((client: MSGraphClientV3): void => {
         //const tenantUrl = 'https://microdev.sharepoint.com/sites/IntranetPortal2';
-        //const tenantUrl = 'https://cityeyehospital.sharepoint.com/sites/DigitalWorkspace'
+        const tenantUrl = 'https://cityeyehospital.sharepoint.com/sites/DigitalWorkspace'
         //const tenantUrl = 'https://relianceinfo.sharepoint.com/sites/Portal1'
-        const tenantUrl = 'https://reliancedomaintest.sharepoint.com/sites/DigitalWorkspaceAI'
+        //const tenantUrl = 'https://reliancedomaintest.sharepoint.com/sites/DigitalWorkspaceAI'
         // const tenantUrl = 'https://relianceqat.sharepoint.com/sites/DigitalWorkspaceAI';
         // const tenantUrl = 'https://vraghana.sharepoint.com/sites/DigitalWorkspaceAI'
 

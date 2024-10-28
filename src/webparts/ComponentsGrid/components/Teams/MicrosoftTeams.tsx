@@ -155,12 +155,12 @@ const MicrosoftTeams: React.FC<MicrosoftTeamsProps> = ({ graphClient, pinned, on
   return (
     <div className={styles.card}>
       <div className={styles['card-header']}>
-        <img src={TeamsIcon} alt="Teams Icon" />
+        <img src={TeamsIcon} alt="Teams Icon" style={{display: 'flex'}} />
         <p style={{display: 'flex', justifySelf: 'center'}}>Microsoft Teams</p>
           <div style={{display: 'flex'}}>
           <PinIcon pinned={pinned} onPinClick={onPinClick} componentName={''} />
           <button className="btn btn-sm" onClick={onRemoveClick}>
-            <img src={CloseIcon} alt="Close" />
+            <img src={CloseIcon} alt="Close" style={{display: 'flex', height: '24px', width: '24px'}}/>
           </button>
         </div>
       </div>

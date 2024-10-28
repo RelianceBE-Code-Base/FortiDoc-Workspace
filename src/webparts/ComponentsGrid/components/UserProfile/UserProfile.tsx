@@ -11,7 +11,7 @@ const CloseIcon = require('./assets/close-square.png')
 
 const UserProfile: React.FC<IUserProfileProps> = (props) => {
   const [profilePhoto, setProfilePhoto] = React.useState<string>('');
-  const [userName, setUserName] = React.useState<string>('Toba Gbeleyi');
+  const [userName, setUserName] = React.useState<string>('');
   const [unreadEmailCount, setUnreadEmailCount] = React.useState<number>(0);
   const [recentContacts, setRecentContacts] = React.useState<any[]>([]);
 
